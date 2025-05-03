@@ -1,2 +1,5 @@
-/.vs
-/obj
+#Files 
+/.vs/*
+/obj/*
+.vs/*
+obj/*
