@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 namespace backendAlquimia.Data.Entities;
 public class CreacionFinal
 {
-    public Formula formula { get; set; }
-    public List<Producto> productos { get; set; }
+    public int Id { get; set; }
+    public Formula Formula { get; set; }
+    public List<Producto> Productos { get; set; }
 }

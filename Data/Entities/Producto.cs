@@ -6,11 +6,11 @@ namespace backendAlquimia.Data.Entities;
 public class Producto
 {
     public int id { get; set; }
-    public TipoProducto tipoProducto { get; set; }
+    public TipoProducto TipoProducto { get; set; }
     [MaxLength(30)]
-    public string name { get; set; }
+    public string Name { get; set; }
     [MaxLength(50)]
-    public string description { get; set; }
-    public float price { get; set; }
-    public int stock { get; set; }
+    public string Description { get; set; }
+    public float Price { get; set; }
+    public int Stock { get; set; }
 }

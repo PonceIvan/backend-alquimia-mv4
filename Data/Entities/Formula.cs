@@ -9,9 +9,6 @@ namespace backendAlquimia.Data.Entities
         public Intensidad Intensidad { get; set; }
         public Combinacion Combinacion { get; set; }
 
-        public Formula(Combinacion combinacion)
-        {
-            this.Combinacion = combinacion;
-        }
+        
     }
 }
