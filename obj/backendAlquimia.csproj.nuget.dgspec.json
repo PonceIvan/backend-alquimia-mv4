@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Usuario\\Desktop\\TPI2025\\backend-alquimia\\backendAlquimia.csproj": {}
+    "C:\\Users\\axeel\\OneDrive\\Escritorio\\Proyectos\\alquimia-template\\backendAlquimia\\backendAlquimia\\backendAlquimia.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Usuario\\Desktop\\TPI2025\\backend-alquimia\\backendAlquimia.csproj": {
+    "C:\\Users\\axeel\\OneDrive\\Escritorio\\Proyectos\\alquimia-template\\backendAlquimia\\backendAlquimia\\backendAlquimia.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Usuario\\Desktop\\TPI2025\\backend-alquimia\\backendAlquimia.csproj",
+        "projectUniqueName": "C:\\Users\\axeel\\OneDrive\\Escritorio\\Proyectos\\alquimia-template\\backendAlquimia\\backendAlquimia\\backendAlquimia.csproj",
         "projectName": "backendAlquimia",
-        "projectPath": "C:\\Users\\Usuario\\Desktop\\TPI2025\\backend-alquimia\\backendAlquimia.csproj",
-        "packagesPath": "C:\\Users\\Usuario\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Usuario\\Desktop\\TPI2025\\backend-alquimia\\obj\\",
+        "projectPath": "C:\\Users\\axeel\\OneDrive\\Escritorio\\Proyectos\\alquimia-template\\backendAlquimia\\backendAlquimia\\backendAlquimia.csproj",
+        "packagesPath": "C:\\Users\\axeel\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\axeel\\OneDrive\\Escritorio\\Proyectos\\alquimia-template\\backendAlquimia\\backendAlquimia\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Usuario\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\axeel\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -38,13 +42,18 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "direct"
-        }
+          "auditMode": "all"
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
@@ -52,6 +61,12 @@
               "version": "[8.0.0, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
               "target": "Package",
               "version": "[8.0.0, )"
             }
@@ -75,7 +90,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
