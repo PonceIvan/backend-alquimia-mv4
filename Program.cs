@@ -1,4 +1,4 @@
-using backendAlquimia.Models;
+using backendAlquimia.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

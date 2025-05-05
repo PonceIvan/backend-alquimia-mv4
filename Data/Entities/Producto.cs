@@ -13,4 +13,5 @@ public class Producto
     public string Description { get; set; }
     public float Price { get; set; }
     public int Stock { get; set; }
+    public Proveedor Proveedor { get; set; }
 }

@@ -5,4 +5,7 @@ public class CreacionFinal
     public int Id { get; set; }
     public Formula Formula { get; set; }
     public List<Producto> Productos { get; set; }
+    public int CreadorId { get; set; }
+    public Creador Creador { get; set; }
+
 }
