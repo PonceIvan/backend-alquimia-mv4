@@ -68,6 +68,14 @@ namespace backendAlquimia.Data
             modelBuilder.Entity<Producto>()
                 .Property(p => p.id)
                 .HasColumnName("Id");
+
+            modelBuilder.Entity<FamiliaOlfativa>()
+        .Property(f => f.descripcion)
+        .HasMaxLength(100);
+
+            modelBuilder.Entity<Nota>()
+                .Property(n => n.Descripcion)
+                .HasMaxLength(50);
         }
     }
 }

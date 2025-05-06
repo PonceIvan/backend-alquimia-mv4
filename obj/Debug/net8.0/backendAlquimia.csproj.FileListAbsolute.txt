@@ -303,4 +303,3 @@ C:\Users\m1ca3\Desktop\backend-alquimia\backend-alquimia\obj\Debug\net8.0\refint
 C:\Users\m1ca3\Desktop\backend-alquimia\backend-alquimia\obj\Debug\net8.0\backendAlquimia.pdb
 C:\Users\m1ca3\Desktop\backend-alquimia\backend-alquimia\obj\Debug\net8.0\backendAlquimia.genruntimeconfig.cache
 C:\Users\m1ca3\Desktop\backend-alquimia\backend-alquimia\obj\Debug\net8.0\ref\backendAlquimia.dll
-C:\Users\m1ca3\Desktop\backend-alquimia\backend-alquimia\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
