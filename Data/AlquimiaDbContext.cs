@@ -68,6 +68,20 @@ namespace backendAlquimia.Data
             modelBuilder.Entity<Producto>()
                 .Property(p => p.id)
                 .HasColumnName("Id");
+
+            modelBuilder.Entity<Nota>()
+     .Property(n => n.NotasCompatiblesIds)
+     .HasConversion(
+         v => string.Join(',', v),
+         v => v.Split(',', StringSplitOptions.RemoveEmptyEntries)
+               .Select(int.Parse).ToList());
+
+            modelBuilder.Entity<Nota>()
+                .Property(n => n.NotasIncompatiblesIds)
+                .HasConversion(
+                    v => string.Join(',', v),
+                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                          .Select(int.Parse).ToList());
         }
     }
 }

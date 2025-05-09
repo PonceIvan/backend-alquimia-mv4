@@ -1,41 +1,53 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\",
+  "WorkspaceRootPath": "C:\\Users\\Usuario\\Desktop\\backend-alquimia\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|c:\\users\\m1ca3\\desktop\\backend-alquimia\\backend-alquimia\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|c:\\users\\usuario\\desktop\\backend-alquimia\\migrations\\20250509024435_agregarlistasnotascompatibles.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|solutionrelative:migrations\\20250509024435_agregarlistasnotascompatibles.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|c:\\users\\m1ca3\\desktop\\backend-alquimia\\backend-alquimia\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|c:\\users\\m1ca3\\desktop\\backend-alquimia\\backend-alquimia\\migrations\\20250505211501_initialcreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|solutionrelative:migrations\\20250505211501_initialcreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|c:\\users\\m1ca3\\desktop\\backend-alquimia\\backend-alquimia\\data\\entities\\creacionfinal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|solutionrelative:data\\entities\\creacionfinal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|c:\\users\\m1ca3\\desktop\\backend-alquimia\\backend-alquimia\\data\\alquimiadbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|c:\\users\\usuario\\desktop\\backend-alquimia\\data\\alquimiadbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|solutionrelative:data\\alquimiadbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|c:\\users\\m1ca3\\desktop\\backend-alquimia\\backend-alquimia\\data\\entities\\producto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|c:\\users\\usuario\\desktop\\backend-alquimia\\data\\entities\\producto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|solutionrelative:data\\entities\\producto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|c:\\users\\m1ca3\\desktop\\backend-alquimia\\backend-alquimia\\data\\entities\\creador.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|solutionrelative:data\\entities\\creador.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|c:\\users\\usuario\\desktop\\backend-alquimia\\data\\entities\\nota.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|solutionrelative:data\\entities\\nota.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|c:\\users\\m1ca3\\desktop\\backend-alquimia\\backend-alquimia\\data\\entities\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|c:\\users\\usuario\\desktop\\backend-alquimia\\data\\entities\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|solutionrelative:data\\entities\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|c:\\users\\m1ca3\\desktop\\backend-alquimia\\backend-alquimia\\data\\entities\\proveedor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|c:\\users\\usuario\\desktop\\backend-alquimia\\data\\entities\\tipoproducto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|solutionrelative:data\\entities\\tipoproducto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|c:\\users\\usuario\\desktop\\backend-alquimia\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|c:\\users\\usuario\\desktop\\backend-alquimia\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|c:\\users\\usuario\\desktop\\backend-alquimia\\migrations\\20250505211501_initialcreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|solutionrelative:migrations\\20250505211501_initialcreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|c:\\users\\usuario\\desktop\\backend-alquimia\\data\\entities\\creacionfinal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|solutionrelative:data\\entities\\creacionfinal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|c:\\users\\usuario\\desktop\\backend-alquimia\\data\\entities\\creador.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|solutionrelative:data\\entities\\creador.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|c:\\users\\usuario\\desktop\\backend-alquimia\\data\\entities\\proveedor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{FB5350E9-8300-4EC4-A958-135CAB6494E9}|backendAlquimia.csproj|solutionrelative:data\\entities\\proveedor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -46,51 +58,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 11,
+          "SelectedChildIndex": 3,
           "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "20250505211501_InitialCreate.cs",
-              "DocumentMoniker": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\Migrations\\20250505211501_InitialCreate.cs",
-              "RelativeDocumentMoniker": "Migrations\\20250505211501_InitialCreate.cs",
-              "ToolTip": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\Migrations\\20250505211501_InitialCreate.cs",
-              "RelativeToolTip": "Migrations\\20250505211501_InitialCreate.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-05T21:15:02.231Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Creador.cs",
-              "DocumentMoniker": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\Data\\Entities\\Creador.cs",
-              "RelativeDocumentMoniker": "Data\\Entities\\Creador.cs",
-              "ToolTip": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\Data\\Entities\\Creador.cs",
-              "RelativeToolTip": "Data\\Entities\\Creador.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-05T20:49:54.326Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Producto.cs",
-              "DocumentMoniker": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\Data\\Entities\\Producto.cs",
-              "RelativeDocumentMoniker": "Data\\Entities\\Producto.cs",
-              "ToolTip": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\Data\\Entities\\Producto.cs",
-              "RelativeToolTip": "Data\\Entities\\Producto.cs",
-              "ViewState": "AgIAAAUAAAAAAAAAAAA0wA0AAAAkAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-05T20:06:42.3Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
@@ -105,81 +74,154 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 0,
+              "Title": "20250509024435_AgregarListasNotasCompatibles.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\backend-alquimia\\Migrations\\20250509024435_AgregarListasNotasCompatibles.cs",
+              "RelativeDocumentMoniker": "Migrations\\20250509024435_AgregarListasNotasCompatibles.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\backend-alquimia\\Migrations\\20250509024435_AgregarListasNotasCompatibles.cs",
+              "RelativeToolTip": "Migrations\\20250509024435_AgregarListasNotasCompatibles.cs",
+              "ViewState": "AQIAABkAAAAAAAAAAAAgwAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-09T02:44:35.614Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Nota.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\backend-alquimia\\Data\\Entities\\Nota.cs",
+              "RelativeDocumentMoniker": "Data\\Entities\\Nota.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\backend-alquimia\\Data\\Entities\\Nota.cs",
+              "RelativeToolTip": "Data\\Entities\\Nota.cs",
+              "ViewState": "AQIAAAwAAAAAAAAAAAAowBsAAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-09T02:24:01.001Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Producto.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\backend-alquimia\\Data\\Entities\\Producto.cs",
+              "RelativeDocumentMoniker": "Data\\Entities\\Producto.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\backend-alquimia\\Data\\Entities\\Producto.cs",
+              "RelativeToolTip": "Data\\Entities\\Producto.cs",
+              "ViewState": "AQIAAAUAAAAAAAAAAAAxwA8AAAAfAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-05T20:06:42.3Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "Usuario.cs",
-              "DocumentMoniker": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\Data\\Entities\\Usuario.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\backend-alquimia\\Data\\Entities\\Usuario.cs",
               "RelativeDocumentMoniker": "Data\\Entities\\Usuario.cs",
-              "ToolTip": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\Data\\Entities\\Usuario.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\backend-alquimia\\Data\\Entities\\Usuario.cs",
               "RelativeToolTip": "Data\\Entities\\Usuario.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-05T16:14:46.649Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 9,
               "Title": "CreacionFinal.cs",
-              "DocumentMoniker": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\Data\\Entities\\CreacionFinal.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\backend-alquimia\\Data\\Entities\\CreacionFinal.cs",
               "RelativeDocumentMoniker": "Data\\Entities\\CreacionFinal.cs",
-              "ToolTip": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\Data\\Entities\\CreacionFinal.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\backend-alquimia\\Data\\Entities\\CreacionFinal.cs",
               "RelativeToolTip": "Data\\Entities\\CreacionFinal.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAuwAcAAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-05T16:14:49.522Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-05T16:14:49.522Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\backend-alquimia\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\backend-alquimia\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-05T16:08:54.226Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAbAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-05T16:08:54.226Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
               "Title": "AlquimiaDbContext.cs",
-              "DocumentMoniker": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\Data\\AlquimiaDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\backend-alquimia\\Data\\AlquimiaDbContext.cs",
               "RelativeDocumentMoniker": "Data\\AlquimiaDbContext.cs",
-              "ToolTip": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\Data\\AlquimiaDbContext.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\backend-alquimia\\Data\\AlquimiaDbContext.cs",
               "RelativeToolTip": "Data\\AlquimiaDbContext.cs",
-              "ViewState": "AgIAACUAAAAAAAAAAAAkwCoAAAAoAAAAAAAAAA==",
+              "ViewState": "AQIAAEMAAAAAAAAAAAAswE0AAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-05T16:07:41.506Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 5,
+              "Title": "TipoProducto.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\backend-alquimia\\Data\\Entities\\TipoProducto.cs",
+              "RelativeDocumentMoniker": "Data\\Entities\\TipoProducto.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\backend-alquimia\\Data\\Entities\\TipoProducto.cs",
+              "RelativeToolTip": "Data\\Entities\\TipoProducto.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAZAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-09T02:23:12.263Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\appsettings.json",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\backend-alquimia\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
-              "ToolTip": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\appsettings.json",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\backend-alquimia\\appsettings.json",
               "RelativeToolTip": "appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAGAAAAAAAAAA==",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAqAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2025-05-05T16:06:55.771Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Creador.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\backend-alquimia\\Data\\Entities\\Creador.cs",
+              "RelativeDocumentMoniker": "Data\\Entities\\Creador.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\backend-alquimia\\Data\\Entities\\Creador.cs",
+              "RelativeToolTip": "Data\\Entities\\Creador.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-05T20:49:54.326Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 8,
+              "Title": "20250505211501_InitialCreate.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\backend-alquimia\\Migrations\\20250505211501_InitialCreate.cs",
+              "RelativeDocumentMoniker": "Migrations\\20250505211501_InitialCreate.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\backend-alquimia\\Migrations\\20250505211501_InitialCreate.cs",
+              "RelativeToolTip": "Migrations\\20250505211501_InitialCreate.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-05T21:15:02.231Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
               "Title": "Proveedor.cs",
-              "DocumentMoniker": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\Data\\Entities\\Proveedor.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Desktop\\backend-alquimia\\Data\\Entities\\Proveedor.cs",
               "RelativeDocumentMoniker": "Data\\Entities\\Proveedor.cs",
-              "ToolTip": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\Data\\Entities\\Proveedor.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Desktop\\backend-alquimia\\Data\\Entities\\Proveedor.cs",
               "RelativeToolTip": "Data\\Entities\\Proveedor.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-05T16:14:36.313Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-05T16:14:36.313Z"
             }
           ]
         }

@@ -1,5 +1,6 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace backendAlquimia.Data.Entities
 {
@@ -16,5 +17,13 @@ namespace backendAlquimia.Data.Entities
 
         [StringLength(500)]
         public string Descripcion { get; set; }
+        public List<int> NotasCompatiblesIds { get; set; } = new List<int>();
+        public List<int> NotasIncompatiblesIds { get; set; } = new List<int>();
+
+        // Propiedades de navegación (opcional)
+        [NotMapped] // Esto evita que EF intente mapearlas
+        public List<Nota> NotasCompatibles { get; set; }
+        [NotMapped]
+        public List<Nota> NotasIncompatibles { get; set; }
     }
 }
