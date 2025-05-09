@@ -2,7 +2,7 @@
 {
     public class Proveedor : Usuario
     {
-        public string Cuil { get; set; }
+        public int Id { get; set; }
         public List<Producto> Productos { get; set; } = new();
     }
 }

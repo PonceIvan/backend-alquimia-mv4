@@ -8,13 +8,10 @@ namespace backendAlquimia.Data.Entities
         public int Id { get; set; }                       
 
         [StringLength(80)]
-        public string Nombre { get; set; }
-
-        [StringLength(250)]
-        public string Nota { get; set; }                  
+        public string Nombre { get; set; }                  
 
         public System.Collections.Generic.ICollection<Nota> Notas { get; set; }
         [MaxLength(100)]
-        public string descripcion {  get; set; }
+        public string Description {  get; set; }
     }
 }

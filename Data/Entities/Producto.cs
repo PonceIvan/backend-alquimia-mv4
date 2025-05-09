@@ -5,7 +5,8 @@ namespace backendAlquimia.Data.Entities;
 
 public class Producto
 {
-    public int id { get; set; }
+    public int Id { get; set; }
+    public int IdTipoProducto { get; set; }
     public TipoProducto TipoProducto { get; set; }
     [MaxLength(30)]
     public string Name { get; set; }
@@ -13,5 +14,6 @@ public class Producto
     public string Description { get; set; }
     public float Price { get; set; }
     public int Stock { get; set; }
+    public int IdProveedor { get; set; }
     public Proveedor Proveedor { get; set; }
 }
