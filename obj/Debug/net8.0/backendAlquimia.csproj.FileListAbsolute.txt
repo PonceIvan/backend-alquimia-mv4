@@ -303,6 +303,7 @@ C:\Users\m1ca3\Desktop\backend-alquimia\backend-alquimia\obj\Debug\net8.0\refint
 C:\Users\m1ca3\Desktop\backend-alquimia\backend-alquimia\obj\Debug\net8.0\backendAlquimia.pdb
 C:\Users\m1ca3\Desktop\backend-alquimia\backend-alquimia\obj\Debug\net8.0\backendAlquimia.genruntimeconfig.cache
 C:\Users\m1ca3\Desktop\backend-alquimia\backend-alquimia\obj\Debug\net8.0\ref\backendAlquimia.dll
+<<<<<<< HEAD
 C:\Users\m1ca3\Desktop\backend-alquimia\backend-alquimia\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\Usuario\Desktop\backend-alquimia\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\Usuario\Desktop\backend-alquimia\bin\Debug\net8.0\appsettings.json
@@ -473,3 +474,5 @@ C:\Users\Usuario\Desktop\backend-alquimia\bin\Debug\net8.0\tr\Microsoft.CodeAnal
 C:\Users\Usuario\Desktop\backend-alquimia\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 C:\Users\Usuario\Desktop\backend-alquimia\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 C:\Users\Usuario\Desktop\backend-alquimia\bin\Debug\net8.0\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
+=======
+>>>>>>> 235ffba0d6bec48b3470be8fdc200c749a34f719

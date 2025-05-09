@@ -14,5 +14,7 @@ namespace backendAlquimia.Data.Entities
         public string Nota { get; set; }                  
 
         public System.Collections.Generic.ICollection<Nota> Notas { get; set; }
+        [MaxLength(100)]
+        public string descripcion {  get; set; }
     }
 }

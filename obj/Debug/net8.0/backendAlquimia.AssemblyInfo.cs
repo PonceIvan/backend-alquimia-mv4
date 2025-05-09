@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("backendAlquimia")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1da8bd4b25d70c723b2044108fa9072b3568f445")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e3fb5a8961cdf9eaa552c1336745757643902071")]
 [assembly: System.Reflection.AssemblyProductAttribute("backendAlquimia")]
 [assembly: System.Reflection.AssemblyTitleAttribute("backendAlquimia")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

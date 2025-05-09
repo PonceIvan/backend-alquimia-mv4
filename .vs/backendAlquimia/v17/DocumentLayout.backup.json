@@ -46,8 +46,12 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 10,
+          "SelectedChildIndex": 11,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 2,
@@ -133,7 +137,7 @@
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAABQAAAAAAAAAAAAAAAAAAAAbAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-05T16:08:54.226Z",
               "EditorCaption": ""
@@ -157,9 +161,9 @@
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
-              "ToolTip": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\appsettings.json*",
-              "RelativeToolTip": "appsettings.json*",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAABzAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2025-05-05T16:06:55.771Z",
               "EditorCaption": ""

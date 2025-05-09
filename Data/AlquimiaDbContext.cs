@@ -69,6 +69,7 @@ namespace backendAlquimia.Data
                 .Property(p => p.id)
                 .HasColumnName("Id");
 
+<<<<<<< HEAD
             modelBuilder.Entity<Nota>()
      .Property(n => n.NotasCompatiblesIds)
      .HasConversion(
@@ -82,6 +83,15 @@ namespace backendAlquimia.Data
                     v => string.Join(',', v),
                     v => v.Split(',', StringSplitOptions.RemoveEmptyEntries)
                           .Select(int.Parse).ToList());
+=======
+            modelBuilder.Entity<FamiliaOlfativa>()
+        .Property(f => f.descripcion)
+        .HasMaxLength(100);
+
+            modelBuilder.Entity<Nota>()
+                .Property(n => n.Descripcion)
+                .HasMaxLength(50);
+>>>>>>> 235ffba0d6bec48b3470be8fdc200c749a34f719
         }
     }
 }
