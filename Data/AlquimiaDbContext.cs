@@ -44,11 +44,20 @@ namespace backendAlquimia.Data
                 .HasBaseType<Usuario>()
                 .ToTable("Proveedores");
 
-            // Relación entre CreacionFinal y Creador
-            modelBuilder.Entity<CreacionFinal>()
-            .HasOne(cf => cf.Creador)
-            .WithMany(c => c.HistorialDeCreaciones)
-            .HasForeignKey(cf => cf.CreadorId);
+            modelBuilder.Entity<CreacionFinal>()
+               .HasOne(cf => cf.Creador)
+               .WithMany(c => c.HistorialDeCreaciones)
+               .HasForeignKey(cf => cf.CreadorId);
+
+            modelBuilder.Entity<CreacionFinal>()
+                .HasOne(cf => cf.Formula)
+                .WithMany()
+                .HasForeignKey(cf => cf.IdFormula);
+
+            modelBuilder.Entity<CreacionFinal>()
+                .HasOne(cf => cf.Pedido)
+                .WithMany()
+                .HasForeignKey(cf => cf.IdPedido);
 
             // Configuraciones de Combinacion con Nota
             modelBuilder.Entity<Combinacion>()
@@ -68,7 +77,7 @@ namespace backendAlquimia.Data
 
             // Ajuste para el nombre de columna en Producto
             modelBuilder.Entity<Producto>()
-                .Property(p => p.id)
+                .Property(p => p.Id)
                 .HasColumnName("Id");
 
 
@@ -87,7 +96,7 @@ namespace backendAlquimia.Data
                           .Select(int.Parse).ToList());
 
             modelBuilder.Entity<FamiliaOlfativa>()
-            .Property(f => f.descripcion)
+            .Property(f => f.Description)
             .HasMaxLength(100);
 
             modelBuilder.Entity<Nota>()
@@ -102,7 +111,20 @@ namespace backendAlquimia.Data
                     .HasMany(p => p.Productos)
                     .WithMany();
             });
+            modelBuilder.Entity<Formula>()
+            .HasOne<Combinacion>()
+            .WithMany() // O `.WithOne()` si la relación es 1:1
+            .HasForeignKey(f => f.CombinacionId);
 
+            modelBuilder.Entity<Formula>()
+                        .HasOne<Intensidad>()
+                        .WithMany() // O `.WithOne()` si es 1:1
+                        .HasForeignKey(f => f.IntensidadId);
+
+            modelBuilder.Entity<Formula>()
+            .HasOne(f => f.Creador)
+            .WithMany(c => c.Formulas)
+            .HasForeignKey(f => f.CreadorId);
         }
     }
 }
