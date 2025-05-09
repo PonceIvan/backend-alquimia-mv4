@@ -6,6 +6,9 @@ public class CreacionFinal
     public Formula Formula { get; set; }
     public List<Producto> Productos { get; set; }
     public int CreadorId { get; set; }
-    public Creador Creador { get; set; }
+    public int IdPedidoProveedor { get; set }
+    public double ConcentracionAlcohol { get; set; }
+    public double ConcentracionAgua { get; set; }
+    public double ConcentracionEsencia { get; set; }
 
 }
