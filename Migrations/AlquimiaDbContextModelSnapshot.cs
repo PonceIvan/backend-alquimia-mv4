@@ -189,8 +189,8 @@ namespace backendAlquimia.Migrations
 
                     b.Property<string>("Descripcion")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("FamiliaOlfativaId")
                         .HasColumnType("int");
