@@ -30,7 +30,8 @@ namespace backendAlquimia.Controllers
             var nuevoUsuario = new Usuario
             {
                 UserName = dto.Email,
-                Email = dto.Email
+                Email = dto.Email,
+                Name = dto.Name?.Trim()
             };
 
             var result = await _userManager.CreateAsync(nuevoUsuario, dto.Password);
@@ -43,5 +44,34 @@ namespace backendAlquimia.Controllers
 
             return Ok(new { mensaje = "Usuario registrado correctamente." });
         }
+
+        [HttpPost("login-json")]
+        public async Task<IActionResult> LoginJson([FromBody] LoginDTO dto)
+        {
+            
+            if (string.IsNullOrWhiteSpace(dto.Email) || string.IsNullOrWhiteSpace(dto.Password))
+                return BadRequest(new { mensaje = "Email y contraseña son obligatorios." });
+
+            
+            var usuario = await _userManager.FindByEmailAsync(dto.Email);
+
+            if (usuario == null)
+                return Unauthorized(new { mensaje = "Usuario no encontrado." });
+
+        
+            if (string.IsNullOrWhiteSpace(usuario.UserName) || usuario.Id == 0)
+                return StatusCode(500, new { mensaje = "El usuario tiene datos incompletos (UserName o Id)." });
+
+            var result = await _signInManager.CheckPasswordSignInAsync(usuario, dto.Password, lockoutOnFailure: false);
+
+            if (!result.Succeeded)
+                return Unauthorized(new { mensaje = "Credenciales inválidas." });
+
+            await _signInManager.SignInAsync(usuario, isPersistent: false);
+
+            return Ok(new { mensaje = "Login exitoso ✅" });
+        }
+
+
     }
 }

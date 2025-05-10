@@ -12,8 +12,8 @@ using backendAlquimia.Data;
 namespace backendAlquimia.Migrations
 {
     [DbContext(typeof(AlquimiaDbContext))]
-    [Migration("20250510044431_InitFullModel")]
-    partial class InitFullModel
+    [Migration("20250510113625_InitCleanIdentity")]
+    partial class InitCleanIdentity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -499,6 +499,10 @@ namespace backendAlquimia.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
