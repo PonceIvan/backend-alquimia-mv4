@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using backendAlquimia.Data.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace backendAlquimia.Data
 {
-    public class AlquimiaDbContext : DbContext
+    public class AlquimiaDbContext : IdentityDbContext<Usuario, Rol, int>
     {
         public AlquimiaDbContext(DbContextOptions<AlquimiaDbContext> options) : base(options)
         {
@@ -114,17 +115,21 @@ namespace backendAlquimia.Data
             modelBuilder.Entity<Formula>()
             .HasOne<Combinacion>()
             .WithMany() // O `.WithOne()` si la relación es 1:1
-            .HasForeignKey(f => f.CombinacionId);
+            .HasForeignKey(f => f.CombinacionId)
+            .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Formula>()
                         .HasOne<Intensidad>()
                         .WithMany() // O `.WithOne()` si es 1:1
-                        .HasForeignKey(f => f.IntensidadId);
+                        .HasForeignKey(f => f.IntensidadId)
+                        .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Formula>()
             .HasOne(f => f.Creador)
             .WithMany(c => c.Formulas)
-            .HasForeignKey(f => f.CreadorId);
+            .HasForeignKey(f => f.CreadorId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }
