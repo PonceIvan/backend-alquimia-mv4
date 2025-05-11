@@ -1,10 +1,12 @@
-﻿using backendAlquimia.Data.Entities;
+﻿using System.Security.Claims;
+using backendAlquimia.Data.Entities;
 using backendAlquimia.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backendAlquimia.Controllers
 {
+    [ApiController]
     [Route("cuenta")]
     public class CuentaController : Controller
     {
@@ -72,6 +74,59 @@ namespace backendAlquimia.Controllers
             return Ok(new { mensaje = "Login exitoso ✅" });
         }
 
+        [HttpGet("login-google")]
+        public IActionResult LoginWithGoogle()
+        {
+            var redirectUrl = Url.Action("GoogleLoginCallback", "Cuenta");
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties("Google", redirectUrl);
+            return Challenge(properties, "Google");
+        }
 
+        [HttpGet("signin-google")]
+        public async Task<IActionResult> GoogleLoginCallback()
+        {
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+                return Redirect("http://localhost:3000/Login?error=callback");
+
+            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
+
+            if (result.Succeeded)
+            {
+                // El usuario ya existía
+                return Redirect("http://localhost:3000/login/redirectgoogle");
+            }
+
+            // Crear el usuario si no existe
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+            var name = info.Principal.FindFirstValue(ClaimTypes.Name);
+
+            var newUser = new Usuario
+            {
+                Email = email,
+                UserName = email,
+                Name = name
+            };
+
+            var createResult = await _userManager.CreateAsync(newUser);
+            if (!createResult.Succeeded)
+                return Redirect("http://localhost:3000/Login?error=creation");
+
+            await _userManager.AddLoginAsync(newUser, info);
+            await _signInManager.SignInAsync(newUser, isPersistent: false);
+
+            return Redirect("http://localhost:3000/Login/RedirectGoogle");
+        }
+
+        [HttpGet("auth/status")]
+        public IActionResult Estado()
+        {
+            var usuario = User.Identity;
+            return Ok(new
+            {
+                autenticado = usuario?.IsAuthenticated ?? false,
+                nombre = usuario?.Name
+            });
+        }
     }
 }
