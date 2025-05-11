@@ -1,5 +1,7 @@
 using backendAlquimia.Data;
 using backendAlquimia.Data.Entities;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,11 +18,37 @@ builder.Services.AddDbContext<AlquimiaDbContext>(options =>
 builder.Services.AddIdentity<Usuario, Rol>()
     .AddEntityFrameworkStores<AlquimiaDbContext>()
     .AddDefaultTokenProviders();
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.SameSite = SameSiteMode.None; // importante
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // asegura HTTPS
+});
+
+/*builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = IdentityConstants.ApplicationScheme;
+})
+.AddIdentityCookies(); */
+
+builder.Services.AddAuthentication()
+    .AddGoogle(options =>
+    {
+        options.ClientId = builder.Configuration["OAuth:ClientID"];
+        options.ClientSecret = builder.Configuration["OAuth:ClientSecret"];
+        options.CallbackPath = "/signin-google";
+        options.ClaimActions.MapJsonKey("urn:google:picture", "picture", "url");
+    });
+
+
+
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("FrontendPolicy", policy =>
     {
-        policy.WithOrigins("http://localhost:3000") // Next.js dev server
+        policy.WithOrigins("http://localhost:3000",// Next.js dev server
+            "https://localhost:5173"  // Vite auth
+            ) 
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
