@@ -6,12 +6,13 @@ namespace backendAlquimia.Data.Entities
 {
     public class Nota
     {
-        public int Id { get; set; }                       
+        public int Id { get; set; }                         
 
         [StringLength(80)]
         public string Nombre { get; set; }
 
-        
+        public int IdIntensidad { get; set; }
+        public Intensidad Intensidad { get; set; } = new();
         public int FamiliaOlfativaId { get; set; }
         public FamiliaOlfativa FamiliaOlfativa { get; set; }
 
@@ -25,5 +26,7 @@ namespace backendAlquimia.Data.Entities
         public List<Nota> NotasCompatibles { get; set; }
         [NotMapped]
         public List<Nota> NotasIncompatibles { get; set; }
+        [NotMapped]
+        public int ValorIntensidad => Intensidad?.Grado ?? 0;
     }
 }
