@@ -6,5 +6,6 @@ namespace backendAlquimia.Data.Entities;
 public class Usuario : IdentityUser<int>
 {
     public string Name { get; set; }
+    public List<Opinion> Opiniones { get; set; } = new();
 
 }

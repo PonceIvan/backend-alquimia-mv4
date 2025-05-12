@@ -7,7 +7,7 @@ public class Producto
 {
     public int Id { get; set; }
     public int IdTipoProducto { get; set; }
-    public TipoProducto TipoProducto { get; set; }
+    public TipoProducto TipoProducto { get; set; } = new();
     [MaxLength(30)]
     public string Name { get; set; }
     [MaxLength(50)]
@@ -15,5 +15,5 @@ public class Producto
     public float Price { get; set; }
     public int Stock { get; set; }
     public int IdProveedor { get; set; }
-    public Proveedor Proveedor { get; set; }
+    public Proveedor Proveedor { get; set; } = new();
 }
