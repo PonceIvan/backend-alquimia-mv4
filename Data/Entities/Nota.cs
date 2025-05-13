@@ -8,19 +8,18 @@ namespace backendAlquimia.Data.Entities
     {
         public int Id { get; set; }                         
 
-        [StringLength(80)]
+        [StringLength(50)]
         public string Nombre { get; set; }
-
-        public int IdIntensidad { get; set; }
-        public Intensidad Intensidad { get; set; } = new();
         public int FamiliaOlfativaId { get; set; }
         public FamiliaOlfativa FamiliaOlfativa { get; set; }
 
-        [StringLength(500)]
+        [StringLength(100)]
         public string Descripcion { get; set; }
+        [NotMapped]
         public List<int> NotasCompatiblesIds { get; set; } = new List<int>();
+        [NotMapped]
         public List<int> NotasIncompatiblesIds { get; set; } = new List<int>();
-        public PirameOlfativa Sector { get; set; }
+        public PiramideOlfativa Sector { get; set; }
         public int SectorId { get; set; }
 
         // Propiedades de navegación (opcional)
@@ -28,7 +27,5 @@ namespace backendAlquimia.Data.Entities
         public List<Nota> NotasCompatibles { get; set; }
         [NotMapped]
         public List<Nota> NotasIncompatibles { get; set; }
-        [NotMapped]
-        public int ValorIntensidad => Intensidad?.Grado ?? 0;
     }
 }

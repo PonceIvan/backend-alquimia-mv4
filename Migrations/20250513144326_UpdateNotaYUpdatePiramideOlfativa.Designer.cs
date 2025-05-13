@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using backendAlquimia.Data;
 
@@ -11,9 +12,11 @@ using backendAlquimia.Data;
 namespace backendAlquimia.Migrations
 {
     [DbContext(typeof(AlquimiaDbContext))]
-    partial class AlquimiaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250513144326_UpdateNotaYUpdatePiramideOlfativa")]
+    partial class UpdateNotaYUpdatePiramideOlfativa
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -339,10 +342,16 @@ namespace backendAlquimia.Migrations
                     b.Property<int>("FamiliaOlfativaId")
                         .HasColumnType("int");
 
+                    b.Property<int>("IdIntensidad")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IntensidadId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
 
                     b.Property<string>("NotasCompatiblesIds")
                         .IsRequired()
@@ -360,6 +369,8 @@ namespace backendAlquimia.Migrations
                     b.HasIndex("CreadorId");
 
                     b.HasIndex("FamiliaOlfativaId");
+
+                    b.HasIndex("IntensidadId");
 
                     b.HasIndex("SectorId");
 
@@ -818,6 +829,12 @@ namespace backendAlquimia.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Intensidad", "Intensidad")
+                        .WithMany()
+                        .HasForeignKey("IntensidadId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("backendAlquimia.Data.Entities.PiramideOlfativa", "Sector")
                         .WithMany("Notas")
                         .HasForeignKey("SectorId")
@@ -825,6 +842,8 @@ namespace backendAlquimia.Migrations
                         .IsRequired();
 
                     b.Navigation("FamiliaOlfativa");
+
+                    b.Navigation("Intensidad");
 
                     b.Navigation("Sector");
                 });
