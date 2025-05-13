@@ -9,10 +9,8 @@ namespace backendAlquimia.Data.Entities
 
         [StringLength(80)]
         public string Nombre { get; set; }                  
-        public System.Collections.Generic.ICollection<Nota> Notas { get; set; }
         [MaxLength(100)]
         public string Description {  get; set; }
-        public PirameOlfativa Sector { get; set; }
-        public int SectorId { get; set; }
+        
     }
 }
