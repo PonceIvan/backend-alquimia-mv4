@@ -15,17 +15,8 @@ namespace backendAlquimia.Data.Entities
 
         [StringLength(100)]
         public string Descripcion { get; set; }
-        [NotMapped]
-        public List<int> NotasCompatiblesIds { get; set; } = new List<int>();
-        [NotMapped]
-        public List<int> NotasIncompatiblesIds { get; set; } = new List<int>();
         public PiramideOlfativa Sector { get; set; }
         public int SectorId { get; set; }
 
-        // Propiedades de navegación (opcional)
-        [NotMapped] // Esto evita que EF intente mapearlas
-        public List<Nota> NotasCompatibles { get; set; }
-        [NotMapped]
-        public List<Nota> NotasIncompatibles { get; set; }
     }
 }

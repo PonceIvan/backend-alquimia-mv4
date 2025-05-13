@@ -81,21 +81,6 @@ namespace backendAlquimia.Data
                 .Property(p => p.Id)
                 .HasColumnName("Id");
 
-
-            modelBuilder.Entity<Nota>()
-            .Property(n => n.NotasCompatiblesIds)
-            .HasConversion(
-            v => string.Join(',', v),
-            v => v.Split(',', StringSplitOptions.RemoveEmptyEntries)
-               .Select(int.Parse).ToList());
-
-            modelBuilder.Entity<Nota>()
-                .Property(n => n.NotasIncompatiblesIds)
-                .HasConversion(
-                    v => string.Join(',', v),
-                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries)
-                          .Select(int.Parse).ToList());
-
             modelBuilder.Entity<FamiliaOlfativa>()
             .Property(f => f.Description)
             .HasMaxLength(100);
