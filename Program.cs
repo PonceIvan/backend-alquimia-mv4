@@ -20,7 +20,7 @@ builder.Services.AddControllersWithViews().AddJsonOptions(options =>
     options.JsonSerializerOptions.PropertyNamingPolicy = null; // Para que respete nombres C#
 });
 builder.Services.AddDbContext<AlquimiaDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(connectionString));
 builder.Services.AddIdentity<Usuario, Rol>()
     .AddEntityFrameworkStores<AlquimiaDbContext>()
     .AddDefaultTokenProviders();
