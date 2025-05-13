@@ -7,6 +7,12 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var connectionString = Environment.GetEnvironmentVariable("ALQUIMIA_DB_CONNECTION")
+                      ?? builder.Configuration.GetConnectionString("DefaultConnection");
+
+var clientId = builder.Configuration["OAuth:ClientID"];
+var clientSecret = builder.Configuration["OAuth:ClientSecret"];
+
 // Add services to the container.
 //builder.Services.AddControllersWithViews();
 builder.Services.AddControllersWithViews().AddJsonOptions(options =>

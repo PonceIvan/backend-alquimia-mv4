@@ -130,10 +130,10 @@ namespace backendAlquimia.Data
             .HasForeignKey(f => f.CreadorId)
             .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<FamiliaOlfativa>()
-        .HasOne(f => f.Sector)
-        .WithMany(s => s.FamiliasOlfativas)
-        .HasForeignKey(f => f.SectorId);
+        //    modelBuilder.Entity<FamiliaOlfativa>()
+        //.HasOne(f => f.Sector)
+        //.WithMany(s => s.FamiliasOlfativas)
+        //.HasForeignKey(f => f.SectorId);
         }
     }
 }
