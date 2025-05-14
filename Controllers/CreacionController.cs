@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using backendAlquimia.Data;
-using backendAlquimia.Data.Entities;
+﻿using backendAlquimia.Data.Entities;
 using backendAlquimia.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace backendAlquimia.Controllers
 {
@@ -33,6 +26,13 @@ namespace backendAlquimia.Controllers
         public async Task<ActionResult<IEnumerable<Nota>>> GetNotasCorazon()
         {
             var notas = await _notaService.ObtenerNotasDeCorazonAgrupadasPorFamiliaAsync();
+            return Ok(notas);
+        }
+
+        [HttpGet("notasDeFondo")]
+        public async Task<ActionResult<IEnumerable<Nota>>> GetNotasFondo()
+        {
+            var notas = await _notaService.ObtenerNotasDeFondoAgrupadasPorFamiliaAsync();
             return Ok(notas);
         }
     }
