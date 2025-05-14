@@ -17,36 +17,44 @@ namespace backendAlquimia.Services
             _context = context;
         }
 
-        public async Task<List<NotaDTO>> ObtenerNotasDeCorazonAsync()
+        public async Task<List<NotasPorFamiliaDTO>> ObtenerNotasDeCorazonAgrupadasPorFamiliaAsync()
         {
             return await _context.Notas
-                        .Where(n => n.Sector.Nombre == Sector_Corazon)
-                        .Select(n => new NotaDTO
-                        {
-                            Id = n.Id,
-                            Nombre = n.Nombre,
-                            Familia = n.FamiliaOlfativa.Nombre,
-                            Sector = n.Sector.Nombre,
-                            Descripcion = n.Descripcion,
-                            Duracion = n.Sector.Duracion
-                        })
-                        .ToListAsync();
+         .Where(n => n.Sector.Nombre == Sector_Corazon)
+         .GroupBy(n => n.FamiliaOlfativa.Nombre)
+         .Select(grupo => new NotasPorFamiliaDTO
+         {
+             Familia = grupo.Key,
+             Notas = grupo.Select(n => new NotaDTO
+             {
+                 Id = n.Id,
+                 Nombre = n.Nombre,
+                 Familia = n.FamiliaOlfativa.Nombre,
+                 Sector = n.Sector.Nombre,
+                 Descripcion = n.Descripcion,
+                 Duracion = n.Sector.Duracion
+             }).ToList()
+         }).ToListAsync();
         }
 
-        public async Task<List<NotaDTO>> ObtenerNotasDeSalidaAsync()
+        public async Task<List<NotasPorFamiliaDTO>> ObtenerNotasDeSalidaAgrupadasPorFamiliaAsync()
         {
             return await _context.Notas
-                        .Where(n => n.Sector.Nombre == Sector_Salida)
-                        .Select(n => new NotaDTO
-                        {
-                            Id = n.Id,
-                            Nombre = n.Nombre,
-                            Familia = n.FamiliaOlfativa.Nombre,
-                            Sector = n.Sector.Nombre,
-                            Descripcion = n.Descripcion,
-                            Duracion = n.Sector.Duracion
-                        })
-                        .ToListAsync();
+         .Where(n => n.Sector.Nombre == Sector_Salida)
+         .GroupBy(n => n.FamiliaOlfativa.Nombre)
+         .Select(grupo => new NotasPorFamiliaDTO
+         {
+             Familia = grupo.Key,
+             Notas = grupo.Select(n => new NotaDTO
+             {
+                 Id = n.Id,
+                 Nombre = n.Nombre,
+                 Familia = n.FamiliaOlfativa.Nombre,
+                 Sector = n.Sector.Nombre,
+                 Descripcion = n.Descripcion,
+                 Duracion = n.Sector.Duracion
+             }).ToList()
+         }).ToListAsync();
         }
     }
 

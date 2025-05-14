@@ -25,14 +25,14 @@ namespace backendAlquimia.Controllers
         [HttpGet("notasDeSalida")]
         public async Task<ActionResult<IEnumerable<Nota>>> GetNotasSalida()
         {
-            var notas = await _notaService.ObtenerNotasDeSalidaAsync();
+            var notas = await _notaService.ObtenerNotasDeSalidaAgrupadasPorFamiliaAsync();
             return Ok(notas);
         }
 
         [HttpGet("notasDeCorazon")]
         public async Task<ActionResult<IEnumerable<Nota>>> GetNotasCorazon()
         {
-            var notas = await _notaService.ObtenerNotasDeCorazonAsync();
+            var notas = await _notaService.ObtenerNotasDeCorazonAgrupadasPorFamiliaAsync();
             return Ok(notas);
         }
     }
