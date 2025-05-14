@@ -29,81 +29,11 @@ namespace backendAlquimia.Controllers
             return Ok(notas);
         }
 
-        //    // GET: api/Creacion/5
-        //    [HttpGet("{id}")]
-        //    public async Task<ActionResult<Nota>> GetNota(int id)
-        //    {
-        //        var nota = await _context.Notas.FindAsync(id);
-
-        //        if (nota == null)
-        //        {
-        //            return NotFound();
-        //        }
-
-        //        return nota;
-        //    }
-
-        //    // PUT: api/Creacion/5
-        //    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //    [HttpPut("{id}")]
-        //    public async Task<IActionResult> PutNota(int id, Nota nota)
-        //    {
-        //        if (id != nota.Id)
-        //        {
-        //            return BadRequest();
-        //        }
-
-        //        _context.Entry(nota).State = EntityState.Modified;
-
-        //        try
-        //        {
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!NotaExists(id))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-
-        //        return NoContent();
-        //    }
-
-        //    // POST: api/Creacion
-        //    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //    [HttpPost]
-        //    public async Task<ActionResult<Nota>> PostNota(Nota nota)
-        //    {
-        //        _context.Notas.Add(nota);
-        //        await _context.SaveChangesAsync();
-
-        //        return CreatedAtAction("GetNota", new { id = nota.Id }, nota);
-        //    }
-
-        //    // DELETE: api/Creacion/5
-        //    [HttpDelete("{id}")]
-        //    public async Task<IActionResult> DeleteNota(int id)
-        //    {
-        //        var nota = await _context.Notas.FindAsync(id);
-        //        if (nota == null)
-        //        {
-        //            return NotFound();
-        //        }
-
-        //        _context.Notas.Remove(nota);
-        //        await _context.SaveChangesAsync();
-
-        //        return NoContent();
-        //    }
-
-        //    private bool NotaExists(int id)
-        //    {
-        //        return _context.Notas.Any(e => e.Id == id);
-        //    }
+        [HttpGet("notasDeCorazon")]
+        public async Task<ActionResult<IEnumerable<Nota>>> GetNotasCorazon()
+        {
+            var notas = await _notaService.ObtenerNotasDeCorazonAsync();
+            return Ok(notas);
+        }
     }
 }
