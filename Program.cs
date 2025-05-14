@@ -1,5 +1,7 @@
 using backendAlquimia.Data;
 using backendAlquimia.Data.Entities;
+using backendAlquimia.Services.Interfaces;
+using backendAlquimia.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
@@ -15,6 +17,7 @@ var clientSecret = builder.Configuration["OAuth:ClientSecret"];
 
 // Add services to the container.
 //builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<INotaService, NotaService>();
 builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.PropertyNamingPolicy = null; // Para que respete nombres C#
