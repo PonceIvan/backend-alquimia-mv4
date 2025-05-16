@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using backendAlquimia.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,11 +34,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // asegura HTTPS
 });
 
-/*builder.Services.AddAuthentication(options =>
-{
-    options.DefaultScheme = IdentityConstants.ApplicationScheme;
-})
-.AddIdentityCookies(); */
+
 
 builder.Services.AddAuthentication()
     .AddGoogle(options =>
@@ -64,7 +61,11 @@ builder.Services.AddCors(options =>
     });
 });
 var app = builder.Build();
-
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await RoleSeeder.SeedRolesAsync(services);
+}
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
