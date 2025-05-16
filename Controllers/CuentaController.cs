@@ -40,7 +40,13 @@ namespace backendAlquimia.Controllers
             };
 
             var result = await _userManager.CreateAsync(nuevoUsuario, dto.Password);
-
+            var roleExists = await _userManager.IsInRoleAsync(nuevoUsuario, dto.Rol);
+            if (!await _userManager.IsInRoleAsync(nuevoUsuario, dto.Rol))
+            {
+                var roleResult = await _userManager.AddToRoleAsync(nuevoUsuario, dto.Rol);
+                if (!roleResult.Succeeded)
+                    return BadRequest(new { mensaje = "Error al asignar el rol." });
+            }
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 

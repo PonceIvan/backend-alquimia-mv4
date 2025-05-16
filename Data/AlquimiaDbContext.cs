@@ -71,6 +71,11 @@ namespace backendAlquimia.Data
             modelBuilder.Entity<Producto>()
                 .Property(p => p.Id)
                 .HasColumnName("Id");
+            modelBuilder.Entity<Producto>()
+            .HasOne(p => p.Proveedor)
+            .WithMany(u => u.Productos)
+            .HasForeignKey(p => p.IdProveedor)
+            .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<FamiliaOlfativa>()
             .Property(f => f.Description)
