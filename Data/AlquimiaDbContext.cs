@@ -12,7 +12,6 @@ namespace backendAlquimia.Data
 
         // DbSets para cada entidad
         public DbSet<Usuario> Usuarios { get; set; }
-        public DbSet<Creador> Creadores { get; set; }
         public DbSet<Combinacion> Combinaciones { get; set; }
         public DbSet<Nota> Notas { get; set; }
         public DbSet<FamiliaOlfativa> FamiliasOlfativas { get; set; }
@@ -21,7 +20,6 @@ namespace backendAlquimia.Data
         public DbSet<CreacionFinal> CreacionesFinales { get; set; }
         public DbSet<Producto> Productos { get; set; }
         public DbSet<TipoProducto> TiposProducto { get; set; }
-        public DbSet<Proveedor> Proveedores { get; set; }
         public DbSet<Pedido> Pedidos { get; set; }
 
 
@@ -37,13 +35,6 @@ namespace backendAlquimia.Data
                 .Property(u => u.Id)
                 .HasColumnName("Id");
 
-            modelBuilder.Entity<Creador>()
-                .HasBaseType<Usuario>()
-                .ToTable("Creadores");
-
-            modelBuilder.Entity<Proveedor>()
-                .HasBaseType<Usuario>()
-                .ToTable("Proveedores");
 
             modelBuilder.Entity<CreacionFinal>()
                .HasOne(cf => cf.Creador)
