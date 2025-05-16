@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using backendAlquimia.Data.Entities;
 using backendAlquimia.Models;
+using backendAlquimia.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,12 +14,14 @@ namespace backendAlquimia.Controllers
         private readonly UserManager<Usuario> _userManager;
         private readonly SignInManager<Usuario> _signInManager;
         private readonly ILogger<CuentaController> _logger;
+        private readonly IJwtService _jwtService;
 
-        public CuentaController(UserManager<Usuario> userManager, SignInManager<Usuario> signInManager, ILogger<CuentaController> logger)
+        public CuentaController(UserManager<Usuario> userManager, SignInManager<Usuario> signInManager, ILogger<CuentaController> logger, IJwtService jwtService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _jwtService = jwtService;
         }
 
         [HttpPost("registrar-json")]
@@ -82,10 +85,11 @@ namespace backendAlquimia.Controllers
 
             if (!result.Succeeded)
                 return Unauthorized(new { mensaje = "Credenciales inválidas." });
-
+            var roles = await _userManager.GetRolesAsync(usuario);
+            var token = _jwtService.GenerateToken(usuario, roles);
             await _signInManager.SignInAsync(usuario, isPersistent: false);
             _logger.LogInformation("Login exitoso para {Email}", dto.Email);
-            return Ok(new { mensaje = "Login exitoso ✅" });
+            return Ok(new { mensaje = "Login exitoso ✅", token });
         }
 
         [HttpGet("login-google")]
@@ -112,7 +116,6 @@ namespace backendAlquimia.Controllers
 
             if (result.Succeeded)
             {
-                // El usuario ya existía
                 return Redirect("http://localhost:3000/login/redirectgoogle");
             }
 
@@ -130,7 +133,8 @@ namespace backendAlquimia.Controllers
             var createResult = await _userManager.CreateAsync(newUser);
             if (!createResult.Succeeded)
                 return Redirect("http://localhost:3000/Login?error=creation");
-
+            var roles = await _userManager.GetRolesAsync(newUser);
+            var token = _jwtService.GenerateToken(newUser, roles);
             await _userManager.AddLoginAsync(newUser, info);
             await _signInManager.SignInAsync(newUser, isPersistent: false);
             _logger.LogInformation("Google login info recibida para: {Email}", info.Principal.FindFirstValue(ClaimTypes.Email));
