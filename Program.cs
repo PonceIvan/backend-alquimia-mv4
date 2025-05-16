@@ -1,9 +1,8 @@
 using backendAlquimia.Data;
 using backendAlquimia.Data.Entities;
-using backendAlquimia.Services.Interfaces;
 using backendAlquimia.Services;
+using backendAlquimia.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,6 +21,10 @@ builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.PropertyNamingPolicy = null; // Para que respete nombres C#
 });
+builder.Services.AddControllers()
+    .AddJsonOptions(x =>
+        x.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles);
+
 builder.Services.AddDbContext<AlquimiaDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddIdentity<Usuario, Rol>()
@@ -57,7 +60,7 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins("http://localhost:3000",// Next.js dev server
             "https://localhost:5173"  // Vite auth
-            ) 
+            )
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();

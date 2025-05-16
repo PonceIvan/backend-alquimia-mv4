@@ -123,14 +123,52 @@ namespace backendAlquimia.Services
             return true;
         }
 
-        public async Task<List<Nota>> ObtenerNotasCompatiblesAsync(List<int> seleccionadasIds)
+        //public async Task<List<Nota>> ObtenerNotasCompatiblesAsync(List<int> seleccionadasIds)
+        //{
+        //    var seleccionadas = await _context.Notas
+        //    .Where(n => seleccionadasIds.Contains(n.Id))
+        //    .Include(n => n.FamiliaOlfativa)
+        //    .ToListAsync();
+
+        //    var todasLasNotas = await _context.Notas.Include(n => n.FamiliaOlfativa).ToListAsync();
+
+        //    var compatibles = new List<Nota>();
+
+        //    foreach (var candidata in todasLasNotas)
+        //    {
+        //        if (seleccionadas.Any(n => n.Id == candidata.Id)) continue;
+
+        //        bool esCompatible = true;
+
+        //        foreach (var anterior in seleccionadas)
+        //        {
+        //            int grado = await CalcularCompatibilidadAsync(anterior.Id, candidata.Id);
+        //            if (grado < 70)
+        //            {
+        //                esCompatible = false;
+        //                break;
+        //            }
+        //        }
+
+        //        if (esCompatible)
+        //            compatibles.Add(candidata);
+        //    }
+
+        //    return compatibles;
+        //}
+
+        public async Task<List<NotasPorFamiliaDTO>> ObtenerNotasCompatiblesAsync(List<int> seleccionadasIds)
         {
             var seleccionadas = await _context.Notas
-            .Where(n => seleccionadasIds.Contains(n.Id))
-            .Include(n => n.FamiliaOlfativa)
-            .ToListAsync();
+                .Where(n => seleccionadasIds.Contains(n.Id))
+                .Include(n => n.FamiliaOlfativa)
+                .Include(n => n.Sector)
+                .ToListAsync();
 
-            var todasLasNotas = await _context.Notas.Include(n => n.FamiliaOlfativa).ToListAsync();
+            var todasLasNotas = await _context.Notas
+                .Include(n => n.FamiliaOlfativa)
+                .Include(n => n.Sector)
+                .ToListAsync();
 
             var compatibles = new List<Nota>();
 
@@ -154,7 +192,26 @@ namespace backendAlquimia.Services
                     compatibles.Add(candidata);
             }
 
-            return compatibles;
+            // Agrupar las notas compatibles por familia
+            var resultado = compatibles
+                .GroupBy(n => n.FamiliaOlfativa.Nombre)
+                .Select(g => new NotasPorFamiliaDTO
+                {
+                    Familia = g.Key,
+                    Notas = g.Select(n => new NotaDTO
+                    {
+                        Id = n.Id,
+                        Nombre = n.Nombre,
+                        Familia = n.FamiliaOlfativa.Nombre,
+                        Sector = n.Sector.Nombre,
+                        Descripcion = n.Descripcion,
+                        Duracion = n.Sector.Duracion
+                    }).ToList()
+                })
+                .ToList();
+
+            return resultado;
         }
+
     }
 }

@@ -30,6 +30,7 @@ namespace backendAlquimia.Controllers
             return Ok(notas);
         }
 
+        // tiene que ser la primera solicitud.
         [HttpGet("notasDeFondo")]
         public async Task<ActionResult<IEnumerable<Nota>>> GetNotasFondo()
         {
@@ -52,7 +53,6 @@ namespace backendAlquimia.Controllers
         //    return Ok(new { esCompatible = EsCompatible });
         //}
 
-        //POST /api/compatibilidad/sugerencias
         [HttpPost("sugerencias")]
         public async Task<IActionResult> ObtenerNotasCompatiblesAsync([FromBody] NotasSeleccionadasDTO NotasSeleccionadas)
         {
