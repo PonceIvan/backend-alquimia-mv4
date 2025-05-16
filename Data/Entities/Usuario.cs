@@ -8,7 +8,7 @@ public class Usuario : IdentityUser<int>
     public List<Opinion> Opiniones { get; set; } = new();
     public string Name { get; set; }
 
-    
+    public bool EsProveedor { get; set; } = false;
     public List<CreacionFinal>? HistorialDeCreaciones { get; set; }
     public List<Producto>? CarritoDeCompras { get; set; }
     public List<Formula>? Formulas { get; set; }
