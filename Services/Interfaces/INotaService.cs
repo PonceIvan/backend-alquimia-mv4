@@ -1,4 +1,5 @@
-﻿using backendAlquimia.Models;
+﻿using backendAlquimia.Data.Entities;
+using backendAlquimia.Models;
 
 namespace backendAlquimia.Services.Interfaces
 {
@@ -7,5 +8,9 @@ namespace backendAlquimia.Services.Interfaces
         Task<List<NotasPorFamiliaDTO>> ObtenerNotasDeSalidaAgrupadasPorFamiliaAsync();
         Task<List<NotasPorFamiliaDTO>> ObtenerNotasDeCorazonAgrupadasPorFamiliaAsync();
         Task<List<NotasPorFamiliaDTO>> ObtenerNotasDeFondoAgrupadasPorFamiliaAsync();
+        Task<int> CalcularCompatibilidadAsync(int notaAId, int notaBId);
+        Task<bool> EsCompatibleConSeleccionAsync(int nuevaNotaId, List<int> seleccionadasIds);
+        Task<List<Nota>> ObtenerNotasCompatiblesAsync(List<int> seleccionadasIds);
+
     }
 }
