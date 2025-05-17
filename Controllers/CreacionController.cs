@@ -15,11 +15,11 @@ namespace backendAlquimia.Controllers
         {
             _notaService = notaService;
         }
-
-        [HttpGet("notasDeSalida")]
-        public async Task<ActionResult<IEnumerable<Nota>>> GetNotasSalida()
+        // tiene que ser la primera solicitud.
+        [HttpGet("notasDeFondo")]
+        public async Task<ActionResult<IEnumerable<Nota>>> GetNotasFondo()
         {
-            var notas = await _notaService.ObtenerNotasDeSalidaAgrupadasPorFamiliaAsync();
+            var notas = await _notaService.ObtenerNotasDeFondoAgrupadasPorFamiliaAsync();
             return Ok(notas);
         }
 
@@ -30,11 +30,10 @@ namespace backendAlquimia.Controllers
             return Ok(notas);
         }
 
-        // tiene que ser la primera solicitud.
-        [HttpGet("notasDeFondo")]
-        public async Task<ActionResult<IEnumerable<Nota>>> GetNotasFondo()
+        [HttpGet("notasDeSalida")]
+        public async Task<ActionResult<IEnumerable<Nota>>> GetNotasSalida()
         {
-            var notas = await _notaService.ObtenerNotasDeFondoAgrupadasPorFamiliaAsync();
+            var notas = await _notaService.ObtenerNotasDeSalidaAgrupadasPorFamiliaAsync();
             return Ok(notas);
         }
 
@@ -45,18 +44,10 @@ namespace backendAlquimia.Controllers
             return Ok(new { grado });
         }
 
-        //[HttpPost("validarSeleccion")]
-        //// despues de que agrega 4 notas al frasco (o menos, no importa) pone confirmar y se envia un formulario que tiene una lista de esas 4 notas.
-        //public async Task<IActionResult> ValidarNotaSeleccionada([FromBody] NotasSeleccionadasDTO NotasSeleccionadas)
-        //{
-        //    var EsCompatible = _notaService.EsCompatibleConSeleccionAsync(NotasSeleccionadas.NuevaNotaId, NotasSeleccionadas.ListaDeIdsSeleccionadas);
-        //    return Ok(new { esCompatible = EsCompatible });
-        //}
-
         [HttpPost("sugerencias")]
-        public async Task<IActionResult> ObtenerNotasCompatiblesAsync([FromBody] NotasSeleccionadasDTO NotasSeleccionadas)
+        public async Task<IActionResult> ObtenerNotasCompatiblesAsync([FromBody] NotasSeleccionadasDTO dto)
         {
-            var compatibles = await _notaService.ObtenerNotasCompatiblesAsync(NotasSeleccionadas.ListaDeIdsSeleccionadas);
+            var compatibles = await _notaService.ObtenerNotasCompatiblesAsync(dto.ListaDeIdsSeleccionadas, dto.Sector);
             return Ok(compatibles);
         }
 
