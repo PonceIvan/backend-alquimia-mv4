@@ -5,6 +5,10 @@ using backendAlquimia.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using backendAlquimia.Seed;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +19,7 @@ var clientId = builder.Configuration["OAuth:ClientID"];
 var clientSecret = builder.Configuration["OAuth:ClientSecret"];
 
 // Add services to the container.
-//builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<INotaService, NotaService>();
 builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 {
@@ -30,17 +34,36 @@ builder.Services.AddDbContext<AlquimiaDbContext>(options =>
 builder.Services.AddIdentity<Usuario, Rol>()
     .AddEntityFrameworkStores<AlquimiaDbContext>()
     .AddDefaultTokenProviders();
+var jwtSettings = builder.Configuration.GetSection("Jwt");
+var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]);
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = true;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtSettings["Issuer"],
+        ValidAudience = jwtSettings["Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(key)
+    };
+});
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.SameSite = SameSiteMode.None; // importante
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // asegura HTTPS
 });
 
-/*builder.Services.AddAuthentication(options =>
-{
-    options.DefaultScheme = IdentityConstants.ApplicationScheme;
-})
-.AddIdentityCookies(); */
+
 
 builder.Services.AddAuthentication()
     .AddGoogle(options =>
@@ -66,8 +89,16 @@ builder.Services.AddCors(options =>
               .AllowCredentials();
     });
 });
-var app = builder.Build();
 
+
+var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await RoleSeeder.SeedRolesAsync(services);
+    await UserSeeder.SeedAdminAsync(services);
+
+}
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
