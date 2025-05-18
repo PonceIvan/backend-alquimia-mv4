@@ -1,10 +1,11 @@
 ﻿using backendAlquimia.Data.Entities;
+using backendAlquimia.Models;
 using backendAlquimia.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backendAlquimia.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class CreacionController : ControllerBase
     {
@@ -14,11 +15,11 @@ namespace backendAlquimia.Controllers
         {
             _notaService = notaService;
         }
-
-        [HttpGet("notasDeSalida")]
-        public async Task<ActionResult<IEnumerable<Nota>>> GetNotasSalida()
+        // tiene que ser la primera solicitud.
+        [HttpGet("notasDeFondo")]
+        public async Task<ActionResult<IEnumerable<Nota>>> GetNotasFondo()
         {
-            var notas = await _notaService.ObtenerNotasDeSalidaAgrupadasPorFamiliaAsync();
+            var notas = await _notaService.ObtenerNotasDeFondoAgrupadasPorFamiliaAsync();
             return Ok(notas);
         }
 
@@ -29,11 +30,40 @@ namespace backendAlquimia.Controllers
             return Ok(notas);
         }
 
-        [HttpGet("notasDeFondo")]
-        public async Task<ActionResult<IEnumerable<Nota>>> GetNotasFondo()
+        [HttpGet("notasDeSalida")]
+        public async Task<ActionResult<IEnumerable<Nota>>> GetNotasSalida()
         {
-            var notas = await _notaService.ObtenerNotasDeFondoAgrupadasPorFamiliaAsync();
+            var notas = await _notaService.ObtenerNotasDeSalidaAgrupadasPorFamiliaAsync();
             return Ok(notas);
         }
+
+        [HttpGet("grado")]
+        public async Task<IActionResult> ObtenerGradoCompatibilidad(int notaAId, int notaBId)
+        {
+            var grado = await _notaService.CalcularCompatibilidadAsync(notaAId, notaBId);
+            return Ok(new { grado });
+        }
+
+        [HttpPost("sugerencias")]
+        public async Task<IActionResult> ObtenerNotasCompatiblesAsync([FromBody] NotasSeleccionadasDTO dto)
+        {
+            var compatibles = await _notaService.ObtenerNotasCompatiblesAsync(dto.ListaDeIdsSeleccionadas, dto.Sector);
+            return Ok(compatibles);
+        }
+
+        //[HttpPost("confirmar")]
+        //public async Task<IActionResult> ConfirmarSeleccionDeNotas([FromBody] NotasConfirmadas dto)
+        //{
+        //    dto.CreadorId;
+        //    dto.ListaDeIdsSeleccionadas;
+        //}
+
+        // user envia nota
+        // la recibo
+        // proceso esa info para mostrarle las compatibles
+        // actualizo y le devuelvo las compatibles
+        // asi hasta llegar a 4 o hasta confirmar la seleccion
+
+        // necesito que el front me haga post cada vez que el user arrastra la nota al frasco. no se como, cookie? session? local storage?. UNa vez que el usuario ya selecciono todas las notas, hace click en CONFIRMAR Y AHI SE HACE esa solicitud /creacion/confirmar.
     }
 }

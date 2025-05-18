@@ -20,7 +20,7 @@ namespace backendAlquimia.Data
         public DbSet<Producto> Productos { get; set; }
         public DbSet<TipoProducto> TiposProducto { get; set; }
         public DbSet<Pedido> Pedidos { get; set; }
-
+        public DbSet<CompatibilidadesFamilias> CompatibilidadesFamilias { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -98,6 +98,24 @@ namespace backendAlquimia.Data
             .HasOne(n => n.Sector)
             .WithMany(s => s.Notas)
             .HasForeignKey(n => n.SectorId);
+
+            modelBuilder.Entity<CompatibilidadesFamilias>(entity =>
+            {
+                entity.HasKey(c => c.Id);
+
+                entity.HasOne(c => c.Familia1)
+                      .WithMany()
+                      .HasForeignKey(c => c.Familia1Id)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(c => c.Familia2)
+                      .WithMany()
+                      .HasForeignKey(c => c.Familia2Id)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.Property(c => c.GradoDeCompatibilidad)
+                      .IsRequired();
+            });
         }
     }
 }
