@@ -15,6 +15,7 @@ namespace backendAlquimia.Migrations
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
+#pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "9.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
@@ -79,7 +80,7 @@ namespace backendAlquimia.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Intensidades");
+                    b.ToTable("Intensidades", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -197,7 +198,7 @@ namespace backendAlquimia.Migrations
 
                     b.HasIndex("ProductosId");
 
-                    b.ToTable("PedidoProducto");
+                    b.ToTable("PedidoProducto", (string)null);
                 });
 
             modelBuilder.Entity("backendAlquimia.Data.Entities.Combinacion", b =>
@@ -210,36 +211,10 @@ namespace backendAlquimia.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Combinaciones");
+                    b.ToTable("Combinaciones", (string)null);
                 });
 
-            modelBuilder.Entity("backendAlquimia.Data.Entities.CompatibilidadesFamilias", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Familia1Id")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Familia2Id")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GradoDeCompatibilidad")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Familia1Id");
-
-                    b.HasIndex("Familia2Id");
-
-                    b.ToTable("CompatibilidadesFamilias");
-                });
-
-            modelBuilder.Entity("backendAlquimia.Data.Entities.CreacionFinal", b =>
+            /* modelBuilder.Entity("backendAlquimia.Data.Entities.CreacionFinal", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -276,8 +251,8 @@ namespace backendAlquimia.Migrations
 
                     b.HasIndex("IdPedido");
 
-                    b.ToTable("CreacionesFinales");
-                });
+                    b.ToTable("CreacionesFinales", (string)null);
+                }); */
 
             modelBuilder.Entity("backendAlquimia.Data.Entities.FamiliaOlfativa", b =>
                 {
@@ -304,7 +279,7 @@ namespace backendAlquimia.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("FamiliasOlfativas");
+                    b.ToTable("FamiliasOlfativas", (string)null);
                 });
 
             modelBuilder.Entity("backendAlquimia.Data.Entities.Formula", b =>
@@ -320,15 +295,6 @@ namespace backendAlquimia.Migrations
 
                     b.Property<int>("CombinacionId1")
                         .HasColumnType("int");
-
-                    b.Property<double>("ConcentracionAgua")
-                        .HasColumnType("float");
-
-                    b.Property<double>("ConcentracionAlcohol")
-                        .HasColumnType("float");
-
-                    b.Property<double>("ConcentracionEsencia")
-                        .HasColumnType("float");
 
                     b.Property<int>("CreadorId")
                         .HasColumnType("int");
@@ -351,7 +317,7 @@ namespace backendAlquimia.Migrations
 
                     b.HasIndex("IntensidadId1");
 
-                    b.ToTable("Formulas");
+                    b.ToTable("Formulas", (string)null);
                 });
 
             modelBuilder.Entity("backendAlquimia.Data.Entities.Nota", b =>
@@ -389,7 +355,7 @@ namespace backendAlquimia.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Notas");
+                    b.ToTable("Notas", (string)null);
                 });
 
             modelBuilder.Entity("backendAlquimia.Data.Entities.Opinion", b =>
@@ -420,7 +386,7 @@ namespace backendAlquimia.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Opinion");
+                    b.ToTable("Opinion", (string)null);
                 });
 
             modelBuilder.Entity("backendAlquimia.Data.Entities.Pedido", b =>
@@ -453,7 +419,7 @@ namespace backendAlquimia.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PiramideOlfativa");
+                    b.ToTable("PiramideOlfativa", (string)null);
                 });
 
             modelBuilder.Entity("backendAlquimia.Data.Entities.Producto", b =>
@@ -464,6 +430,9 @@ namespace backendAlquimia.Migrations
                         .HasColumnName("Id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    /* b.Property<int?>("CreacionFinalId")
+                        .HasColumnType("int"); */
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -495,13 +464,15 @@ namespace backendAlquimia.Migrations
 
                     b.HasKey("Id");
 
+                    /* b.HasIndex("CreacionFinalId"); */
+
                     b.HasIndex("IdProveedor");
 
                     b.HasIndex("TipoProductoId");
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Productos");
+                    b.ToTable("Productos", (string)null);
                 });
 
             modelBuilder.Entity("backendAlquimia.Data.Entities.Rol", b =>
@@ -548,7 +519,7 @@ namespace backendAlquimia.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TiposProducto");
+                    b.ToTable("TiposProducto", (string)null);
                 });
 
             modelBuilder.Entity("backendAlquimia.Data.Entities.Usuario", b =>
@@ -738,26 +709,7 @@ namespace backendAlquimia.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("backendAlquimia.Data.Entities.CompatibilidadesFamilias", b =>
-                {
-                    b.HasOne("backendAlquimia.Data.Entities.FamiliaOlfativa", "Familia1")
-                        .WithMany()
-                        .HasForeignKey("Familia1Id")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("backendAlquimia.Data.Entities.FamiliaOlfativa", "Familia2")
-                        .WithMany()
-                        .HasForeignKey("Familia2Id")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Familia1");
-
-                    b.Navigation("Familia2");
-                });
-
-            modelBuilder.Entity("backendAlquimia.Data.Entities.CreacionFinal", b =>
+           /*  modelBuilder.Entity("backendAlquimia.Data.Entities.CreacionFinal", b =>
                 {
                     b.HasOne("backendAlquimia.Data.Entities.Usuario", "Creador")
                         .WithMany("HistorialDeCreaciones")
@@ -782,7 +734,7 @@ namespace backendAlquimia.Migrations
                     b.Navigation("Formula");
 
                     b.Navigation("Pedido");
-                });
+                }); */
 
             modelBuilder.Entity("backendAlquimia.Data.Entities.FamiliaOlfativa", b =>
                 {
@@ -862,6 +814,10 @@ namespace backendAlquimia.Migrations
 
             modelBuilder.Entity("backendAlquimia.Data.Entities.Producto", b =>
                 {
+                    /* b.HasOne("backendAlquimia.Data.Entities.CreacionFinal", null)
+                        .WithMany("Productos")
+                        .HasForeignKey("CreacionFinalId"); */
+
                     b.HasOne("backendAlquimia.Data.Entities.Usuario", "Proveedor")
                         .WithMany("Productos")
                         .HasForeignKey("IdProveedor")
@@ -883,6 +839,11 @@ namespace backendAlquimia.Migrations
                     b.Navigation("TipoProducto");
                 });
 
+            /* modelBuilder.Entity("backendAlquimia.Data.Entities.CreacionFinal", b =>
+                {
+                    b.Navigation("Productos");
+                }); */
+
             modelBuilder.Entity("backendAlquimia.Data.Entities.PiramideOlfativa", b =>
                 {
                     b.Navigation("Notas");
@@ -896,12 +857,15 @@ namespace backendAlquimia.Migrations
 
                     b.Navigation("Formulas");
 
+                    /* b.Navigation("HistorialDeCreaciones"); */
+
                     b.Navigation("NotasPreferidas");
 
                     b.Navigation("Opiniones");
 
                     b.Navigation("Productos");
                 });
+#pragma warning restore 612, 618
         }
     }
 }
