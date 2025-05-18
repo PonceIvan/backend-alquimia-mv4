@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace backendAlquimia.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class CreacionController : ControllerBase
     {
@@ -50,6 +50,13 @@ namespace backendAlquimia.Controllers
             var compatibles = await _notaService.ObtenerNotasCompatiblesAsync(dto.ListaDeIdsSeleccionadas, dto.Sector);
             return Ok(compatibles);
         }
+        //[HttpPost("confirmar")]
+        //public async Task<IActionResult> ConfirmarSeleccionDeNotas([FromBody] NotasConfirmadas dto)
+        //{
+        //    dto.CreadorId;
+        //    dto.ListaDeIdsSeleccionadas;
+        //}
+
 
         // user envia nota
         // la recibo
@@ -58,5 +65,7 @@ namespace backendAlquimia.Controllers
         // asi hasta llegar a 4 o hasta confirmar la seleccion
 
         // necesito que el front me haga post cada vez que el user arrastra la nota al frasco. no se como, cookie? session? local storage? 
+        // necesito que el front me haga post cada vez que el user arrastra la nota al frasco. no se como, cookie? session? local storage?. UNa vez que el usuario ya selecciono todas las notas, hace click en CONFIRMAR Y AHI SE HACE esa solicitud /creacion/confirmar.
+
     }
 }
