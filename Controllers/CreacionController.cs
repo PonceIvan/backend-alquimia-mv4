@@ -10,30 +10,32 @@ namespace backendAlquimia.Controllers
     public class CreacionController : ControllerBase
     {
         private readonly INotaService _notaService;
+        private readonly IFormulaService _formulaService;
 
-        public CreacionController(INotaService notaService)
+        public CreacionController(INotaService notaService, IFormulaService formulaService)
         {
             _notaService = notaService;
+            _formulaService = formulaService;
         }
         // tiene que ser la primera solicitud.
         [HttpGet("notasDeFondo")]
         public async Task<ActionResult<IEnumerable<Nota>>> GetNotasFondo()
         {
-            var notas = await _notaService.ObtenerNotasDeFondoAgrupadasPorFamiliaAsync();
+            List<NotasPorFamiliaDTO> notas = await _notaService.ObtenerNotasDeFondoAgrupadasPorFamiliaAsync();
             return Ok(notas);
         }
 
         [HttpGet("notasDeCorazon")]
         public async Task<ActionResult<IEnumerable<Nota>>> GetNotasCorazon()
         {
-            var notas = await _notaService.ObtenerNotasDeCorazonAgrupadasPorFamiliaAsync();
+            List<NotasPorFamiliaDTO> notas = await _notaService.ObtenerNotasDeCorazonAgrupadasPorFamiliaAsync();
             return Ok(notas);
         }
 
         [HttpGet("notasDeSalida")]
         public async Task<ActionResult<IEnumerable<Nota>>> GetNotasSalida()
         {
-            var notas = await _notaService.ObtenerNotasDeSalidaAgrupadasPorFamiliaAsync();
+            List<NotasPorFamiliaDTO> notas = await _notaService.ObtenerNotasDeSalidaAgrupadasPorFamiliaAsync();
             return Ok(notas);
         }
 
@@ -49,6 +51,13 @@ namespace backendAlquimia.Controllers
         {
             var compatibles = await _notaService.ObtenerNotasCompatiblesAsync(dto.ListaDeIdsSeleccionadas, dto.Sector);
             return Ok(compatibles);
+        }
+
+        [HttpGet("intensidad")]
+        public async Task<IActionResult> GetIntensidad()
+        {
+            List<IntensidadDTO> intensidad = await _formulaService.ObtenerIntensidadAsync();
+            return Ok(intensidad);
         }
         //[HttpPost("confirmar")]
         //public async Task<IActionResult> ConfirmarSeleccionDeNotas([FromBody] NotasConfirmadas dto)
