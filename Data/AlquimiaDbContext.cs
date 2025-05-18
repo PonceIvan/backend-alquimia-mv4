@@ -17,7 +17,6 @@ namespace backendAlquimia.Data
         public DbSet<FamiliaOlfativa> FamiliasOlfativas { get; set; }
         public DbSet<Formula> Formulas { get; set; }
         public DbSet<Intensidad> Intensidades { get; set; }
-        public DbSet<CreacionFinal> CreacionesFinales { get; set; }
         public DbSet<Producto> Productos { get; set; }
         public DbSet<TipoProducto> TiposProducto { get; set; }
         public DbSet<Pedido> Pedidos { get; set; }
@@ -34,22 +33,6 @@ namespace backendAlquimia.Data
             modelBuilder.Entity<Usuario>()
                 .Property(u => u.Id)
                 .HasColumnName("Id");
-
-
-            modelBuilder.Entity<CreacionFinal>()
-               .HasOne(cf => cf.Creador)
-               .WithMany(c => c.HistorialDeCreaciones)
-               .HasForeignKey(cf => cf.CreadorId);
-
-            modelBuilder.Entity<CreacionFinal>()
-                .HasOne(cf => cf.Formula)
-                .WithMany()
-                .HasForeignKey(cf => cf.IdFormula);
-
-            modelBuilder.Entity<CreacionFinal>()
-                .HasOne(cf => cf.Pedido)
-                .WithMany()
-                .HasForeignKey(cf => cf.IdPedido);
 
             // Configuraciones de Combinacion con Nota
             modelBuilder.Entity<Combinacion>()
