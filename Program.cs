@@ -20,6 +20,8 @@ var clientId = builder.Configuration["OAuth:ClientID"];
 var clientSecret = builder.Configuration["OAuth:ClientSecret"];
 
 // Add services to the container.
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IProductoService, ProductoService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<INotaService, NotaService>();
 builder.Services.AddControllersWithViews().AddJsonOptions(options =>
@@ -94,6 +96,7 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     await RoleSeeder.SeedRolesAsync(services);
     await UserSeeder.SeedAdminAsync(services);
+    await ProductoSeeder.SeedTiposProductoAsync(services);
 
 }
 // Configure the HTTP request pipeline.

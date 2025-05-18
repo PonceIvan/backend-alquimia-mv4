@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using backendAlquimia.Data;
 
@@ -11,9 +12,11 @@ using backendAlquimia.Data;
 namespace backendAlquimia.Migrations
 {
     [DbContext(typeof(AlquimiaDbContext))]
-    partial class AlquimiaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250517230253_AddProductoTipoProductoRelation")]
+    partial class AddProductoTipoProductoRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,7 +83,7 @@ namespace backendAlquimia.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Intensidades", (string)null);
+                    b.ToTable("Intensidades");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -198,7 +201,7 @@ namespace backendAlquimia.Migrations
 
                     b.HasIndex("ProductosId");
 
-                    b.ToTable("PedidoProducto", (string)null);
+                    b.ToTable("PedidoProducto");
                 });
 
             modelBuilder.Entity("backendAlquimia.Data.Entities.Combinacion", b =>
@@ -211,7 +214,7 @@ namespace backendAlquimia.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Combinaciones", (string)null);
+                    b.ToTable("Combinaciones");
                 });
 
             modelBuilder.Entity("backendAlquimia.Data.Entities.CreacionFinal", b =>
@@ -251,7 +254,7 @@ namespace backendAlquimia.Migrations
 
                     b.HasIndex("IdPedido");
 
-                    b.ToTable("CreacionesFinales", (string)null);
+                    b.ToTable("CreacionesFinales");
                 });
 
             modelBuilder.Entity("backendAlquimia.Data.Entities.FamiliaOlfativa", b =>
@@ -279,7 +282,7 @@ namespace backendAlquimia.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("FamiliasOlfativas", (string)null);
+                    b.ToTable("FamiliasOlfativas");
                 });
 
             modelBuilder.Entity("backendAlquimia.Data.Entities.Formula", b =>
@@ -317,7 +320,7 @@ namespace backendAlquimia.Migrations
 
                     b.HasIndex("IntensidadId1");
 
-                    b.ToTable("Formulas", (string)null);
+                    b.ToTable("Formulas");
                 });
 
             modelBuilder.Entity("backendAlquimia.Data.Entities.Nota", b =>
@@ -355,7 +358,7 @@ namespace backendAlquimia.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Notas", (string)null);
+                    b.ToTable("Notas");
                 });
 
             modelBuilder.Entity("backendAlquimia.Data.Entities.Opinion", b =>
@@ -386,7 +389,7 @@ namespace backendAlquimia.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Opinion", (string)null);
+                    b.ToTable("Opinion");
                 });
 
             modelBuilder.Entity("backendAlquimia.Data.Entities.Pedido", b =>
@@ -419,7 +422,7 @@ namespace backendAlquimia.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PiramideOlfativa", (string)null);
+                    b.ToTable("PiramideOlfativa");
                 });
 
             modelBuilder.Entity("backendAlquimia.Data.Entities.Producto", b =>
@@ -469,7 +472,7 @@ namespace backendAlquimia.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Productos", (string)null);
+                    b.ToTable("Productos");
                 });
 
             modelBuilder.Entity("backendAlquimia.Data.Entities.Rol", b =>
