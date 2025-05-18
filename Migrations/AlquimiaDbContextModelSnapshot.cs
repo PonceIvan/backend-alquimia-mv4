@@ -214,7 +214,6 @@ namespace backendAlquimia.Migrations
                     b.ToTable("Combinaciones");
                 });
 
-<<<<<<< HEAD
             modelBuilder.Entity("backendAlquimia.Data.Entities.CompatibilidadesFamilias", b =>
                 {
                     b.Property<int>("Id")
@@ -281,8 +280,6 @@ namespace backendAlquimia.Migrations
                     b.ToTable("CreacionesFinales");
                 });
 
-=======
->>>>>>> main
             modelBuilder.Entity("backendAlquimia.Data.Entities.FamiliaOlfativa", b =>
                 {
                     b.Property<int>("Id")
@@ -742,7 +739,6 @@ namespace backendAlquimia.Migrations
                         .IsRequired();
                 });
 
-<<<<<<< HEAD
             modelBuilder.Entity("backendAlquimia.Data.Entities.CompatibilidadesFamilias", b =>
                 {
                     b.HasOne("backendAlquimia.Data.Entities.FamiliaOlfativa", "Familia1")
@@ -789,8 +785,6 @@ namespace backendAlquimia.Migrations
                     b.Navigation("Pedido");
                 });
 
-=======
->>>>>>> main
             modelBuilder.Entity("backendAlquimia.Data.Entities.FamiliaOlfativa", b =>
                 {
                     b.HasOne("backendAlquimia.Data.Entities.Usuario", null)

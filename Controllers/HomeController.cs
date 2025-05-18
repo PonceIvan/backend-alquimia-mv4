@@ -7,7 +7,7 @@ namespace backendAlquimia.Controllers
 {
     public class HomeController : Controller
     {
-        /*private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -18,7 +18,7 @@ namespace backendAlquimia.Controllers
         {
             return View();
         }
-
+        /*
         public IActionResult Privacy()
         {
             return View();
