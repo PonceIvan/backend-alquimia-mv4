@@ -51,12 +51,12 @@ namespace backendAlquimia.Controllers
             return Ok(compatibles);
         }
 
-        [HttpPost("confirmar")]
-        public async Task<IActionResult> ConfirmarSeleccionDeNotas([FromBody] NotasConfirmadas dto)
-        {
-            dto.CreadorId;
-            dto.ListaDeIdsSeleccionadas;
-        }
+        //[HttpPost("confirmar")]
+        //public async Task<IActionResult> ConfirmarSeleccionDeNotas([FromBody] NotasConfirmadas dto)
+        //{
+        //    dto.CreadorId;
+        //    dto.ListaDeIdsSeleccionadas;
+        //}
 
         // user envia nota
         // la recibo
