@@ -711,7 +711,11 @@ namespace backendAlquimia.Migrations
 
            /*  modelBuilder.Entity("backendAlquimia.Data.Entities.CreacionFinal", b =>
                 {
+
                     b.HasOne("backendAlquimia.Data.Entities.Usuario", "Creador")
+
+                    b.HasOne("backendAlquimia.Data.Entities.Creador", "Creador")
+
                         .WithMany("HistorialDeCreaciones")
                         .HasForeignKey("CreadorId")
                         .OnDelete(DeleteBehavior.Cascade)
