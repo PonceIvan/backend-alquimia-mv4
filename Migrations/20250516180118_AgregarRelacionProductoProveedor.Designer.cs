@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using backendAlquimia.Data;
 
@@ -11,10 +12,13 @@ using backendAlquimia.Data;
 namespace backendAlquimia.Migrations
 {
     [DbContext(typeof(AlquimiaDbContext))]
-    partial class AlquimiaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250516180118_AgregarRelacionProductoProveedor")]
+    partial class AgregarRelacionProductoProveedor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
+#pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "9.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
@@ -213,32 +217,6 @@ namespace backendAlquimia.Migrations
                     b.ToTable("Combinaciones");
                 });
 
-            modelBuilder.Entity("backendAlquimia.Data.Entities.CompatibilidadesFamilias", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Familia1Id")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Familia2Id")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GradoDeCompatibilidad")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Familia1Id");
-
-                    b.HasIndex("Familia2Id");
-
-                    b.ToTable("CompatibilidadesFamilias");
-                });
-
             modelBuilder.Entity("backendAlquimia.Data.Entities.CreacionFinal", b =>
                 {
                     b.Property<int>("Id")
@@ -320,15 +298,6 @@ namespace backendAlquimia.Migrations
 
                     b.Property<int>("CombinacionId1")
                         .HasColumnType("int");
-
-                    b.Property<double>("ConcentracionAgua")
-                        .HasColumnType("float");
-
-                    b.Property<double>("ConcentracionAlcohol")
-                        .HasColumnType("float");
-
-                    b.Property<double>("ConcentracionEsencia")
-                        .HasColumnType("float");
 
                     b.Property<int>("CreadorId")
                         .HasColumnType("int");
@@ -465,6 +434,9 @@ namespace backendAlquimia.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("CreacionFinalId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -494,6 +466,8 @@ namespace backendAlquimia.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreacionFinalId");
 
                     b.HasIndex("IdProveedor");
 
@@ -738,28 +712,9 @@ namespace backendAlquimia.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("backendAlquimia.Data.Entities.CompatibilidadesFamilias", b =>
-                {
-                    b.HasOne("backendAlquimia.Data.Entities.FamiliaOlfativa", "Familia1")
-                        .WithMany()
-                        .HasForeignKey("Familia1Id")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("backendAlquimia.Data.Entities.FamiliaOlfativa", "Familia2")
-                        .WithMany()
-                        .HasForeignKey("Familia2Id")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Familia1");
-
-                    b.Navigation("Familia2");
-                });
-
             modelBuilder.Entity("backendAlquimia.Data.Entities.CreacionFinal", b =>
                 {
-                    b.HasOne("backendAlquimia.Data.Entities.Creador", "Creador")
+                    b.HasOne("backendAlquimia.Data.Entities.Usuario", "Creador")
                         .WithMany("HistorialDeCreaciones")
                         .HasForeignKey("CreadorId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -862,6 +817,10 @@ namespace backendAlquimia.Migrations
 
             modelBuilder.Entity("backendAlquimia.Data.Entities.Producto", b =>
                 {
+                    b.HasOne("backendAlquimia.Data.Entities.CreacionFinal", null)
+                        .WithMany("Productos")
+                        .HasForeignKey("CreacionFinalId");
+
                     b.HasOne("backendAlquimia.Data.Entities.Usuario", "Proveedor")
                         .WithMany("Productos")
                         .HasForeignKey("IdProveedor")
@@ -883,6 +842,11 @@ namespace backendAlquimia.Migrations
                     b.Navigation("TipoProducto");
                 });
 
+            modelBuilder.Entity("backendAlquimia.Data.Entities.CreacionFinal", b =>
+                {
+                    b.Navigation("Productos");
+                });
+
             modelBuilder.Entity("backendAlquimia.Data.Entities.PiramideOlfativa", b =>
                 {
                     b.Navigation("Notas");
@@ -896,12 +860,15 @@ namespace backendAlquimia.Migrations
 
                     b.Navigation("Formulas");
 
+                    b.Navigation("HistorialDeCreaciones");
+
                     b.Navigation("NotasPreferidas");
 
                     b.Navigation("Opiniones");
 
                     b.Navigation("Productos");
                 });
+#pragma warning restore 612, 618
         }
     }
 }
