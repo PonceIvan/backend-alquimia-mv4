@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using backendAlquimia.Data;
 
@@ -11,9 +12,11 @@ using backendAlquimia.Data;
 namespace backendAlquimia.Migrations
 {
     [DbContext(typeof(AlquimiaDbContext))]
-    partial class AlquimiaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250519002720_FixRelacionCombinacionFormula")]
+    partial class FixRelacionCombinacionFormula
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -295,7 +298,7 @@ namespace backendAlquimia.Migrations
                     b.Property<int>("IntensidadId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("IntensidadId1")
+                    b.Property<int>("IntensidadId1")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -735,15 +738,17 @@ namespace backendAlquimia.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Intensidad", "Intensidad")
+                    b.HasOne("Intensidad", null)
                         .WithMany()
                         .HasForeignKey("IntensidadId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Intensidad", null)
-                        .WithMany("Formulas")
-                        .HasForeignKey("IntensidadId1");
+                    b.HasOne("Intensidad", "Intensidad")
+                        .WithMany()
+                        .HasForeignKey("IntensidadId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Combinacion");
 
@@ -803,11 +808,6 @@ namespace backendAlquimia.Migrations
                     b.Navigation("Proveedor");
 
                     b.Navigation("TipoProducto");
-                });
-
-            modelBuilder.Entity("Intensidad", b =>
-                {
-                    b.Navigation("Formulas");
                 });
 
             modelBuilder.Entity("backendAlquimia.Data.Entities.PiramideOlfativa", b =>

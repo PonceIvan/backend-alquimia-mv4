@@ -77,16 +77,16 @@ namespace backendAlquimia.Data
                     .WithMany();
             });
             modelBuilder.Entity<Formula>()
-            .HasOne<Combinacion>()
-            .WithMany() // O `.WithOne()` si la relación es 1:1
+            .HasOne(f => f.Combinacion)
+            .WithMany()
             .HasForeignKey(f => f.CombinacionId)
             .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Formula>()
-                        .HasOne<Intensidad>()
-                        .WithMany() // O `.WithOne()` si es 1:1
-                        .HasForeignKey(f => f.IntensidadId)
-                        .OnDelete(DeleteBehavior.Restrict);
+            .HasOne(f => f.Intensidad)
+            .WithMany()
+            .HasForeignKey(f => f.IntensidadId)
+            .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Formula>()
             .HasOne(f => f.Creador)
