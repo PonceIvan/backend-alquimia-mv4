@@ -99,7 +99,7 @@ namespace backendAlquimia.Data
 
             modelBuilder.Entity<Formula>()
             .HasOne(f => f.Intensidad)
-            .WithMany()
+            .WithMany(i => i.Formulas)
             .HasForeignKey(f => f.IntensidadId)
             .OnDelete(DeleteBehavior.Restrict);
 

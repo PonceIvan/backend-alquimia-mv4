@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using backendAlquimia.Data;
 
@@ -11,9 +12,11 @@ using backendAlquimia.Data;
 namespace backendAlquimia.Migrations
 {
     [DbContext(typeof(AlquimiaDbContext))]
-    partial class AlquimiaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250519020929_QuitarIntensidadId1")]
+    partial class QuitarIntensidadId1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -439,6 +442,9 @@ namespace backendAlquimia.Migrations
                     b.Property<int>("Stock")
                         .HasColumnType("int");
 
+                    b.Property<int>("TipoProductoId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("UsuarioId")
                         .HasColumnType("int");
 
@@ -446,7 +452,7 @@ namespace backendAlquimia.Migrations
 
                     b.HasIndex("IdProveedor");
 
-                    b.HasIndex("IdTipoProducto");
+                    b.HasIndex("TipoProductoId");
 
                     b.HasIndex("UsuarioId");
 
@@ -493,12 +499,11 @@ namespace backendAlquimia.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("TiposProducto", (string)null);
+                    b.ToTable("TiposProducto");
                 });
 
             modelBuilder.Entity("backendAlquimia.Data.Entities.Usuario", b =>
@@ -781,8 +786,8 @@ namespace backendAlquimia.Migrations
 
                     b.HasOne("backendAlquimia.Data.Entities.TipoProducto", "TipoProducto")
                         .WithMany()
-                        .HasForeignKey("IdTipoProducto")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("TipoProductoId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("backendAlquimia.Data.Entities.Usuario", null)
