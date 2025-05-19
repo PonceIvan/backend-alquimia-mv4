@@ -1,13 +1,12 @@
 using backendAlquimia.Data;
 using backendAlquimia.Data.Entities;
-using backendAlquimia.Services.Interfaces;
+using backendAlquimia.Seed;
 using backendAlquimia.Services;
+using backendAlquimia.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using backendAlquimia.Seed;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -24,10 +23,15 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IProductoService, ProductoService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<INotaService, NotaService>();
+builder.Services.AddScoped<IFormulaService, FormulaService>();
 builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.PropertyNamingPolicy = null; // Para que respete nombres C#
 });
+builder.Services.AddControllers()
+    .AddJsonOptions(x =>
+        x.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles);
+
 builder.Services.AddDbContext<AlquimiaDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddIdentity<Usuario, Rol>()
@@ -82,7 +86,7 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins("http://localhost:3000",// Next.js dev server
             "https://localhost:5173"  // Vite auth
-            ) 
+            )
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();

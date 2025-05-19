@@ -36,6 +36,7 @@ namespace backendAlquimia.Services
                 Price = dto.Price,
                 Stock = dto.Stock,
                 IdTipoProducto = tipoProducto.Id,
+                TipoProducto = tipoProducto,
                 IdProveedor = idProveedor,
                 Proveedor = proveedor // Asignamos el proveedor existente
             };
@@ -59,16 +60,15 @@ namespace backendAlquimia.Services
             return await _context.Productos
                 .Where(p => p.IdProveedor == idProveedor)
                 .Include(p => p.TipoProducto)
-                .Select(p => new ProductoDTO
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Description = p.Description,
-                    Price = p.Price,
-                    Stock = p.Stock,
-                    IdTipoProducto = p.IdTipoProducto,
-                    TipoProducto = p.TipoProducto.Description
-                }).ToListAsync();
+                 .Select(p => new ProductoDTO
+                 {
+                     Id = p.Id,
+                     Name = p.Name,
+                     Description = p.Description,
+                     Price = p.Price,
+                     Stock = p.Stock,
+                     TipoProducto = p.TipoProducto.Description
+                 }).ToListAsync();
         }
 
         public async Task<ProductoDTO> ObtenerProductoPorIdAsync(int idProducto, int idProveedor)
@@ -83,9 +83,9 @@ namespace backendAlquimia.Services
                     Description = p.Description,
                     Price = p.Price,
                     Stock = p.Stock,
-                    IdTipoProducto = p.IdTipoProducto,
                     TipoProducto = p.TipoProducto.Description
-                }).FirstOrDefaultAsync();
+                })
+                .FirstOrDefaultAsync();
         }
 
 
@@ -142,12 +142,15 @@ namespace backendAlquimia.Services
                     .Where(p => p.IdProveedor == idProveedor)
                     .OrderByDescending(p => p.Id)
                     .Take(5)
+                     .Include(p => p.TipoProducto)
                     .Select(p => new ProductoDTO
                     {
                         Id = p.Id,
                         Name = p.Name,
+                        Description = p.Description,
                         Price = p.Price,
-                        Stock = p.Stock
+                        Stock = p.Stock,
+                        TipoProducto = p.TipoProducto.Description
                     }).ToListAsync()
             };
         }

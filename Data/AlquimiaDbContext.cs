@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using backendAlquimia.Data.Entities;
+﻿using backendAlquimia.Data.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace backendAlquimia.Data
 {
@@ -17,11 +17,10 @@ namespace backendAlquimia.Data
         public DbSet<FamiliaOlfativa> FamiliasOlfativas { get; set; }
         public DbSet<Formula> Formulas { get; set; }
         public DbSet<Intensidad> Intensidades { get; set; }
-        public DbSet<CreacionFinal> CreacionesFinales { get; set; }
         public DbSet<Producto> Productos { get; set; }
         public DbSet<TipoProducto> TiposProducto { get; set; }
         public DbSet<Pedido> Pedidos { get; set; }
-
+        public DbSet<CompatibilidadesFamilias> CompatibilidadesFamilias { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -34,22 +33,6 @@ namespace backendAlquimia.Data
             modelBuilder.Entity<Usuario>()
                 .Property(u => u.Id)
                 .HasColumnName("Id");
-
-
-            modelBuilder.Entity<CreacionFinal>()
-               .HasOne(cf => cf.Creador)
-               .WithMany(c => c.HistorialDeCreaciones)
-               .HasForeignKey(cf => cf.CreadorId);
-
-            modelBuilder.Entity<CreacionFinal>()
-                .HasOne(cf => cf.Formula)
-                .WithMany()
-                .HasForeignKey(cf => cf.IdFormula);
-
-            modelBuilder.Entity<CreacionFinal>()
-                .HasOne(cf => cf.Pedido)
-                .WithMany()
-                .HasForeignKey(cf => cf.IdPedido);
 
             // Configuraciones de Combinacion con Nota
             modelBuilder.Entity<Combinacion>()
@@ -109,16 +92,16 @@ namespace backendAlquimia.Data
                     .WithMany();
             });
             modelBuilder.Entity<Formula>()
-            .HasOne<Combinacion>()
-            .WithMany() // O `.WithOne()` si la relación es 1:1
+            .HasOne(f => f.Combinacion)
+            .WithMany()
             .HasForeignKey(f => f.CombinacionId)
             .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Formula>()
-                        .HasOne<Intensidad>()
-                        .WithMany() // O `.WithOne()` si es 1:1
-                        .HasForeignKey(f => f.IntensidadId)
-                        .OnDelete(DeleteBehavior.Restrict);
+            .HasOne(f => f.Intensidad)
+            .WithMany()
+            .HasForeignKey(f => f.IntensidadId)
+            .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Formula>()
             .HasOne(f => f.Creador)
@@ -130,6 +113,24 @@ namespace backendAlquimia.Data
             .HasOne(n => n.Sector)
             .WithMany(s => s.Notas)
             .HasForeignKey(n => n.SectorId);
+
+            modelBuilder.Entity<CompatibilidadesFamilias>(entity =>
+            {
+                entity.HasKey(c => c.Id);
+
+                entity.HasOne(c => c.Familia1)
+                      .WithMany()
+                      .HasForeignKey(c => c.Familia1Id)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(c => c.Familia2)
+                      .WithMany()
+                      .HasForeignKey(c => c.Familia2Id)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.Property(c => c.GradoDeCompatibilidad)
+                      .IsRequired();
+            });
         }
     }
 }

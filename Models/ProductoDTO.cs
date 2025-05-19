@@ -10,7 +10,6 @@ namespace backendAlquimia.Models
 
         public float Price { get; set; }
         public int Stock { get; set; }
-        public int IdTipoProducto { get; set; }
         public string TipoProducto { get; set; }
     }
 }
