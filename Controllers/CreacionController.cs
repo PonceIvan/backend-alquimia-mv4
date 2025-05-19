@@ -59,12 +59,26 @@ namespace backendAlquimia.Controllers
             List<IntensidadDTO> intensidad = await _formulaService.ObtenerIntensidadAsync();
             return Ok(intensidad);
         }
-        //[HttpPost("confirmar")]
-        //public async Task<IActionResult> ConfirmarSeleccionDeNotas([FromBody] NotasConfirmadas dto)
-        //{
-        //    dto.CreadorId;
-        //    dto.ListaDeIdsSeleccionadas;
-        //}
+
+        [HttpPost("formular")]
+        public async Task<IActionResult> FinalizarCreacion([FromBody] POSTFormulaDTO dto)
+        {
+            GETFormulaDTO formulaGuardada = await _formulaService.guardar(dto);
+            return CreatedAtAction(
+                nameof(ObtenerFormulaPorId),
+                new { id = formulaGuardada.Id },
+                formulaGuardada
+                );
+        }
+
+        [HttpGet("formulas/{id}")]
+        public async Task<IActionResult> ObtenerFormulaPorId(int id)
+        {
+            var formula = await _formulaService.ObtenerPorId(id);
+            if (formula == null) return NotFound();
+            return Ok(formula);
+        }
+
 
 
         // user envia nota

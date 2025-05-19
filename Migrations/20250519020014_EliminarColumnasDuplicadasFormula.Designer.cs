@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using backendAlquimia.Data;
 
@@ -11,9 +12,11 @@ using backendAlquimia.Data;
 namespace backendAlquimia.Migrations
 {
     [DbContext(typeof(AlquimiaDbContext))]
-    partial class AlquimiaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250519020014_EliminarColumnasDuplicadasFormula")]
+    partial class EliminarColumnasDuplicadasFormula
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -295,6 +298,9 @@ namespace backendAlquimia.Migrations
                     b.Property<int>("IntensidadId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("IntensidadId1")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CombinacionId");
@@ -302,6 +308,8 @@ namespace backendAlquimia.Migrations
                     b.HasIndex("CreadorId");
 
                     b.HasIndex("IntensidadId");
+
+                    b.HasIndex("IntensidadId1");
 
                     b.ToTable("Formulas");
                 });
@@ -731,10 +739,14 @@ namespace backendAlquimia.Migrations
                         .IsRequired();
 
                     b.HasOne("Intensidad", "Intensidad")
-                        .WithMany("Formulas")
+                        .WithMany()
                         .HasForeignKey("IntensidadId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Intensidad", null)
+                        .WithMany("Formulas")
+                        .HasForeignKey("IntensidadId1");
 
                     b.Navigation("Combinacion");
 
