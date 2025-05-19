@@ -12,8 +12,8 @@ using backendAlquimia.Data;
 namespace backendAlquimia.Migrations
 {
     [DbContext(typeof(AlquimiaDbContext))]
-    [Migration("20250519020929_QuitarIntensidadId1")]
-    partial class QuitarIntensidadId1
+    [Migration("20250519070717_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -442,9 +442,6 @@ namespace backendAlquimia.Migrations
                     b.Property<int>("Stock")
                         .HasColumnType("int");
 
-                    b.Property<int>("TipoProductoId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("UsuarioId")
                         .HasColumnType("int");
 
@@ -452,7 +449,7 @@ namespace backendAlquimia.Migrations
 
                     b.HasIndex("IdProveedor");
 
-                    b.HasIndex("TipoProductoId");
+                    b.HasIndex("IdTipoProducto");
 
                     b.HasIndex("UsuarioId");
 
@@ -499,11 +496,12 @@ namespace backendAlquimia.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("TiposProducto");
+                    b.ToTable("TiposProducto", (string)null);
                 });
 
             modelBuilder.Entity("backendAlquimia.Data.Entities.Usuario", b =>
@@ -786,8 +784,8 @@ namespace backendAlquimia.Migrations
 
                     b.HasOne("backendAlquimia.Data.Entities.TipoProducto", "TipoProducto")
                         .WithMany()
-                        .HasForeignKey("TipoProductoId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("IdTipoProducto")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("backendAlquimia.Data.Entities.Usuario", null)
