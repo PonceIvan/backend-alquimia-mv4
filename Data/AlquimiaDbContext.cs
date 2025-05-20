@@ -60,6 +60,21 @@ namespace backendAlquimia.Data
             .HasForeignKey(p => p.IdProveedor)
             .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Producto>()
+       .HasOne(p => p.TipoProducto)
+       .WithMany()
+       .HasForeignKey(p => p.IdTipoProducto)
+       .OnDelete(DeleteBehavior.Restrict);
+
+
+            modelBuilder.Entity<TipoProducto>(entity =>
+            {
+                entity.ToTable("TiposProducto");
+                entity.Property(t => t.Description)
+                    .HasMaxLength(100)
+                    .IsRequired();
+            });
+
             modelBuilder.Entity<FamiliaOlfativa>()
             .Property(f => f.Description)
             .HasMaxLength(100);

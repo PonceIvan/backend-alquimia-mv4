@@ -439,9 +439,6 @@ namespace backendAlquimia.Migrations
                     b.Property<int>("Stock")
                         .HasColumnType("int");
 
-                    b.Property<int>("TipoProductoId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("UsuarioId")
                         .HasColumnType("int");
 
@@ -449,7 +446,7 @@ namespace backendAlquimia.Migrations
 
                     b.HasIndex("IdProveedor");
 
-                    b.HasIndex("TipoProductoId");
+                    b.HasIndex("IdTipoProducto");
 
                     b.HasIndex("UsuarioId");
 
@@ -496,11 +493,12 @@ namespace backendAlquimia.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("TiposProducto");
+                    b.ToTable("TiposProducto", (string)null);
                 });
 
             modelBuilder.Entity("backendAlquimia.Data.Entities.Usuario", b =>
@@ -783,8 +781,8 @@ namespace backendAlquimia.Migrations
 
                     b.HasOne("backendAlquimia.Data.Entities.TipoProducto", "TipoProducto")
                         .WithMany()
-                        .HasForeignKey("TipoProductoId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("IdTipoProducto")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("backendAlquimia.Data.Entities.Usuario", null)
