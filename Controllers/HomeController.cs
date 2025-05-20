@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Security.Claims;
 using backendAlquimia.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backendAlquimia.Controllers
@@ -29,7 +30,8 @@ namespace backendAlquimia.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }*/
-        [HttpGet("/home/")]
+        [Authorize]
+        [HttpGet("/home/usuario")]
         public IActionResult ObtenerUsuarioInfo()
         {
             var identity = HttpContext.User.Identity;

@@ -52,11 +52,12 @@ namespace backendAlquimia.Controllers
             }
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
-
+            var roles = await _userManager.GetRolesAsync(nuevoUsuario);
+            var token = _jwtService.GenerateToken(nuevoUsuario, roles);
             // Autenticamos automáticamente al usuario después del registro
             await _signInManager.SignInAsync(nuevoUsuario, isPersistent: false);
             _logger.LogInformation("Usuario registrado exitosamente: {Email}", dto.Email);
-            return Ok(new { mensaje = "Usuario registrado correctamente." });
+            return Ok(new { mensaje = "Usuario registrado correctamente.", token });
         }
 
         [HttpPost("login-json")]
