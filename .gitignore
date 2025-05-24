@@ -13,3 +13,8 @@ Tests/obj/*
 Tests/bin/*
 */obj/*
 */bin/*
+
+alquimia.Data/bin/*
+alquimia.Data/obj/*
+alquimia.Services/bin/*
+alquimia.Services/bin/*

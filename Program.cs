@@ -1,8 +1,7 @@
-using backendAlquimia.Data;
-using backendAlquimia.Data.Entities;
+using backendAlquimia.alquimia.Services;
+using backendAlquimia.alquimia.Data;
 using backendAlquimia.Seed;
-using backendAlquimia.Services;
-using backendAlquimia.Services.Interfaces;
+using backendAlquimia.alquimia.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -32,11 +31,11 @@ builder.Services.AddControllers()
     .AddJsonOptions(x =>
         x.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles);
 
-builder.Services.AddDbContext<AlquimiaDbContext>(options =>
-    options.UseSqlServer(connectionString));
-builder.Services.AddIdentity<Usuario, Rol>()
-    .AddEntityFrameworkStores<AlquimiaDbContext>()
-    .AddDefaultTokenProviders();
+//builder.Services.AddDbContext<AlquimiaDbContext>(options =>
+//    options.UseSqlServer(connectionString));
+//builder.Services.AddIdentity<Usuario, Rol>()
+//    .AddEntityFrameworkStores<AlquimiaDbContext>()
+//    .AddDefaultTokenProviders();
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]);
 
@@ -95,14 +94,14 @@ builder.Services.AddCors(options =>
 
 
 var app = builder.Build();
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    await RoleSeeder.SeedRolesAsync(services);
-    await UserSeeder.SeedAdminAsync(services);
-    await ProductoSeeder.SeedTiposProductoAsync(services);
+//using (var scope = app.Services.CreateScope())
+//{
+//    var services = scope.ServiceProvider;
+//    //await RoleSeeder.SeedRolesAsync(services);
+//    await UserSeeder.SeedAdminAsync(services);
+//    await ProductoSeeder.SeedTiposProductoAsync(services);
 
-}
+//}
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
