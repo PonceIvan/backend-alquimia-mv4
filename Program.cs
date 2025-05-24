@@ -1,5 +1,5 @@
 using backendAlquimia.alquimia.Services;
-using backendAlquimia.alquimia.Data;
+//using backendAlquimia.alquimia.Data;
 using backendAlquimia.Seed;
 using backendAlquimia.alquimia.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;

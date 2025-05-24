@@ -29,4 +29,8 @@
     <ProjectReference Include="alquimia.Services\alquimia.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="alquimia.Data\Data\" />
+  </ItemGroup>
+
 </Project>
