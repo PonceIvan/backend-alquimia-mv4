@@ -5,63 +5,64 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using alquimia.Data.Data.Entities;
 
 namespace backendAlquimia.Controllers
 {
     [Authorize]
     [Route("api/proveedor")]
     [ApiController]
-    public class ProveedorController : ControllerBase
+    public class ProviderController : ControllerBase
     {
-        //private readonly IProductoService _productoService;
-        //private readonly IHttpContextAccessor _httpContextAccessor;
-        //private readonly AlquimiaDbContext _context;
-     
+        private readonly IProductService _productoService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly AlquimiaDbContext _context;
 
-        //public ProveedorController(
-        //    IProductoService productoService,
-        //    IHttpContextAccessor httpContextAccessor,
-        //    AlquimiaDbContext context)
+
+        //public providercontroller(
+        //    iproductservice productoservice,
+        //    ihttpcontextaccessor httpcontextaccessor,
+        //    alquimiadbcontext context)
         //{
-        //    _productoService = productoService;
-        //    _httpContextAccessor = httpContextAccessor;
+        //    _productoservice = productoservice;
+        //    _httpcontextaccessor = httpcontextaccessor;
         //    _context = context;
         //}
 
-        //private int ObtenerIdProveedor()
-        //{
-        //    var userIdClaim = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
-        //    return int.Parse(userIdClaim.Value);
-        //}
+        private int ObtenerIdProveedor()
+        {
+            var userIdClaim = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+            return int.Parse(userIdClaim.Value);
+        }
 
-        //[HttpGet("home")]
-        //public async Task<IActionResult> GetHomeData()
-        //{
-        //    var idProveedor = ObtenerIdProveedor();
-        //    var data = await _productoService.GetHomeDataAsync(idProveedor);
-        //    return Ok(data);
-        //}
+        [HttpGet("home")]
+        public async Task<IActionResult> GetHomeData()
+        {
+            var idProveedor = ObtenerIdProveedor();
+            var data = await _productoService.GetHomeDataAsync(idProveedor);
+            return Ok(data);
+        }
 
-        //[HttpGet("productos")]
-        //public async Task<IActionResult> GetProductos()
-        //{
-        //    var idProveedor = ObtenerIdProveedor();
-        //    var productos = await _productoService.ObtenerProductosPorProveedorAsync(idProveedor);
-        //    return Ok(productos);
-        //}
+        [HttpGet("productos")]
+        public async Task<IActionResult> GetProductos()
+        {
+            var idProveedor = ObtenerIdProveedor();
+            var productos = await _productoService.ObtenerProductosPorProveedorAsync(idProveedor);
+            return Ok(productos);
+        }
 
-        //[HttpGet("tipos-producto")]
-        //public async Task<IActionResult> GetTiposProducto()
-        //{
-        //    var tipos = await _context.TiposProducto
-        //        .Select(t => new
-        //        {
-        //            Descripcion = t.Description
-        //        })
-        //        .ToListAsync();
+        [HttpGet("tipos-producto")]
+        public async Task<IActionResult> GetTiposProducto()
+        {
+            var tipos = await _context.TipoProducto
+                .Select(t => new
+                {
+                    Descripcion = t.Description
+                })
+                .ToListAsync();
 
-        //    return Ok(tipos);
-        //}
+            return Ok(tipos);
+        }
 
 
         //[HttpPost("productos")]

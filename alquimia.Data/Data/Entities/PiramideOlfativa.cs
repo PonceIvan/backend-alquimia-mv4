@@ -14,7 +14,7 @@ public partial class PiramideOlfativa
 
     public string Sector { get; set; } = null!;
 
-    public TimeOnly Duracion { get; set; }
+    public TimeSpan Duracion { get; set; }
 
     [InverseProperty("PiramideOlfativa")]
     public virtual ICollection<FormulaNotum> FormulaNota { get; set; } = new List<FormulaNotum>();

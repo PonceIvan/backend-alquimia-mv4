@@ -9,10 +9,10 @@ namespace backendAlquimia.Controllers
     [ApiController]
     public class CreacionController : ControllerBase
     {
-        private readonly INotaService _notaService;
+        private readonly INoteService _notaService;
         private readonly IFormulaService _formulaService;
 
-        public CreacionController(INotaService notaService, IFormulaService formulaService)
+        public CreacionController(INoteService notaService, IFormulaService formulaService)
         {
             _notaService = notaService;
             _formulaService = formulaService;
