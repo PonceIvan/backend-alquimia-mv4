@@ -1,19 +1,19 @@
-﻿//using backendAlquimia.alquimia.Data;
-//using backendAlquimia.Data.Entities;
-//using backendAlquimia.Models;
+﻿using alquimia.Data.Data;
+using backendAlquimia.Models;
+using alquimia.Data.Data.Entities;
 using backendAlquimia.alquimia.Services.Interfaces;
-//using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace backendAlquimia.alquimia.Services
 {
     public class ProductoService : IProductoService
     {
-        //private readonly AlquimiaDbContext _context;
+        private readonly AlquimiaDbContext _context;
 
-        //public ProductoService(AlquimiaDbContext context)
-        //{
-        //    _context = context;
-        //}
+        public ProductoService(AlquimiaDbContext context)
+        {
+            _context = context;
+        }
 
         //public async Task<ProductoDTO> CrearProductoAsync(CreateProductoDTO dto, int idProveedor)
         //{
@@ -125,34 +125,34 @@ namespace backendAlquimia.alquimia.Services
         //}
 
 
-        //public async Task<object> GetHomeDataAsync(int idProveedor)
-        //{
-        //    var totalProductos = await _context.Productos
-        //        .CountAsync(p => p.IdProveedor == idProveedor);
+        public async Task<object> GetHomeDataAsync(int idProveedor)
+        {
+            var totalProductos = await _context.Productos
+                .CountAsync(p => p.IdProveedor == idProveedor);
 
-        //    var stockTotal = await _context.Productos
-        //        .Where(p => p.IdProveedor == idProveedor)
-        //        .SumAsync(p => p.Stock);
+            var stockTotal = await _context.Productos
+                .Where(p => p.IdProveedor == idProveedor)
+                .SumAsync(p => p.Stock);
 
-        //    return new
-        //    {
-        //        TotalProductos = totalProductos,
-        //        StockTotal = stockTotal,
-        //        UltimosProductos = await _context.Productos
-        //            .Where(p => p.IdProveedor == idProveedor)
-        //            .OrderByDescending(p => p.Id)
-        //            .Take(5)
-        //             .Include(p => p.TipoProducto)
-        //            .Select(p => new ProductoDTO
-        //            {
-        //                Id = p.Id,
-        //                Name = p.Name,
-        //                Description = p.Description,
-        //                Price = p.Price,
-        //                Stock = p.Stock,
-        //                TipoProducto = p.TipoProducto.Description
-        //            }).ToListAsync()
-        //    };
-        //}
+            return new
+            {
+                TotalProductos = totalProductos,
+                StockTotal = stockTotal,
+                UltimosProductos = await _context.Productos
+                    .Where(p => p.IdProveedor == idProveedor)
+                    .OrderByDescending(p => p.Id)
+                    .Take(5)
+                     .Include(p => p.TipoProducto)
+                    .Select(p => new ProductoDTO
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                        Description = p.Description,
+                        Price = p.Price,
+                        Stock = p.Stock,
+                        TipoProducto = p.TipoProducto.Description
+                    }).ToListAsync()
+            };
+        }
     }
 }

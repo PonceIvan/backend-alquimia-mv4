@@ -1,18 +1,18 @@
 ﻿using backendAlquimia.alquimia.Services.Interfaces;
-//using backendAlquimia.alquimia.Data;
-//using backendAlquimia.Models;
-//using backendAlquimia.Services.Interfaces;
-//using Microsoft.EntityFrameworkCore;
+//using alquimia.Services.Services.Models;
+using alquimia.Data.Data.Entities;
+using backendAlquimia.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace backendAlquimia.alquimia.Services
+namespace backendAlquimia.alquimia.Services.Services
 {
     public class FormulaService : IFormulaService
     {
-        //private readonly AlquimiaDbContext _context;
-        //public FormulaService(AlquimiaDbContext context)
-        //{
-        //    _context = context;
-        //}
+        private readonly AlquimiaDbContext _context;
+        public FormulaService(AlquimiaDbContext context)
+        {
+            _context = context;
+        }
 
         //public async Task<GETFormulaDTO> guardar(POSTFormulaDTO dto)
         //{
@@ -35,7 +35,7 @@ namespace backendAlquimia.alquimia.Services
         //        throw new Exception("Una o más notas no existen o no pertenecen al sector correspondiente.");
         //    }
 
-        //    var combinacion = new Combinacion
+        //    var combinacion = new FormulaNotum
         //    {
         //        NotaSalida = notasSalida,
         //        NotaCorazon = notasCorazon,
@@ -72,16 +72,16 @@ namespace backendAlquimia.alquimia.Services
         //    };
         //}
 
-        //public async Task<List<IntensidadDTO>> ObtenerIntensidadAsync()
-        //{
-        //    return await _context.Intensidades
-        //        .Select
-        //        (x => new IntensidadDTO
-        //        {
-        //            Id = x.Id,
-        //            Nombre = x.Nombre,
-        //        }).ToListAsync();
-        //}
+        public async Task<List<IntensidadDTO>> ObtenerIntensidadAsync()
+        {
+            return await _context.Intensidades
+                .Select
+                (x => new IntensidadDTO
+                {
+                    Id = x.Id,
+                    Nombre = x.Nombre,
+                }).ToListAsync();
+        }
 
         //public async Task<GETFormulaDTO> ObtenerPorId(int id)
         //{

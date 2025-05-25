@@ -1,9 +1,9 @@
-﻿//using backendAlquimia.alquimia.Data.Entities;
+﻿using alquimia.Data.Data.Entities;
 
 namespace backendAlquimia.alquimia.Services.Interfaces
 {
     public interface IJwtService
     {
-        //string GenerateToken(Usuario user, IList<string> roles);
+        string GenerateToken(Usuario user, IList<string> roles);
     }
 }

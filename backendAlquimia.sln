@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "alquimia.Services", "alquim
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "alquimia.Data", "alquimia.Data\alquimia.Data.csproj", "{0428B043-1168-48FA-AEA9-D7ECD37EE761}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{E631691F-393B-472A-B3E4-18C8AA5A8891}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{0428B043-1168-48FA-AEA9-D7ECD37EE761}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0428B043-1168-48FA-AEA9-D7ECD37EE761}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0428B043-1168-48FA-AEA9-D7ECD37EE761}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E631691F-393B-472A-B3E4-18C8AA5A8891}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E631691F-393B-472A-B3E4-18C8AA5A8891}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E631691F-393B-472A-B3E4-18C8AA5A8891}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E631691F-393B-472A-B3E4-18C8AA5A8891}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
