@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Data.Data.Entities;
 
-public partial class Intensidade
+public partial class Intensity
 {
     [Key]
     public int Id { get; set; }

@@ -17,4 +17,8 @@ public partial class AspNetUserClaim
     public string? ClaimType { get; set; }
 
     public string? ClaimValue { get; set; }
+
+    [ForeignKey("UserId")]
+    [InverseProperty("AspNetUserClaims")]
+    public virtual User User { get; set; } = null!;
 }

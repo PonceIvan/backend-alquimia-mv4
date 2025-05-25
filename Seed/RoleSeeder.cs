@@ -7,19 +7,19 @@ namespace backendAlquimia.Seed
 {
     public class RoleSeeder
     {
-        //private static readonly string[] Roles = { "Admin", "Creador", "Proveedor" };
+        private static readonly string[] Roles = { "Admin", "Creador", "Proveedor" };
 
-        //public static async task seedrolesasync(iserviceprovider serviceprovider)
-        //{
-        //    var rolemanager = serviceprovider.getrequiredservice<rolemanager<rol>>();
+        public static async Task SeedRolesAsync(IServiceProvider serviceprovider)
+        {
+            var rolemanager = serviceprovider.GetRequiredService<RoleManager<Role>>();
 
-        //    foreach (var role in roles)
-        //    {
-        //        if (!await rolemanager.roleexistsasync(role))
-        //        {
-        //            await rolemanager.createasync(new Role { name = role });
-        //        }
-        //    }
-        //}
+            foreach (var role in Roles)
+            {
+                if (!await rolemanager.RoleExistsAsync(role))
+                {
+                    await rolemanager.CreateAsync(new Role { Name = role });
+                }
+            }
+        }
     }
 }

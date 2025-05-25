@@ -17,7 +17,7 @@ namespace backendAlquimia.alquimia.Services
             _config = config;
         }
 
-        public string GenerateToken(Usuario user, IList<string> roles)
+        public string GenerateToken(User user, IList<string> roles)
         {
             var claims = new List<Claim>
         {

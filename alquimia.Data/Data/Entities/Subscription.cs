@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Data.Data.Entities;
 
-[Table("Suscripcion")]
-public partial class Suscripcion
+[Table("Subscription")]
+public partial class Subscription
 {
     [Key]
     public int Id { get; set; }
@@ -18,9 +18,9 @@ public partial class Suscripcion
     public int? IdEstado { get; set; }
 
     [ForeignKey("IdEstado")]
-    [InverseProperty("Suscripcions")]
-    public virtual Estado? IdEstadoNavigation { get; set; }
+    [InverseProperty("Subscriptions")]
+    public virtual Status? IdEstadoNavigation { get; set; }
 
     [InverseProperty("IdSuscripcionNavigation")]
-    public virtual ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
+    public virtual ICollection<User> Users { get; set; } = new List<User>();
 }

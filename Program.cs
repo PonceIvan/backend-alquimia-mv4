@@ -10,7 +10,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using backendAlquimia.alquimia.Services.Services;
 using alquimia.Data.Data.Entities;
-using backendAlquimia.Services.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,7 +35,7 @@ builder.Services.AddControllers()
 
 builder.Services.AddDbContext<AlquimiaDbContext>(options =>
     options.UseSqlServer(connectionString));
-builder.Services.AddIdentity<Usuario, Role>()
+builder.Services.AddIdentity<User, Role>()
     .AddEntityFrameworkStores<AlquimiaDbContext>()
     .AddDefaultTokenProviders();
 var jwtSettings = builder.Configuration.GetSection("Jwt");

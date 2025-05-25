@@ -6,8 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Data.Data.Entities;
 
-[Table("PedidoProducto")]
-public partial class PedidoProducto
+[Table("OrderProduct")]
+[Index("ProductosId", Name = "IX_PedidoProducto_ProductosId")]
+public partial class OrderProduct
 {
     [Key]
     public int PedidoProductoId { get; set; }
@@ -17,10 +18,10 @@ public partial class PedidoProducto
     public int? ProductosId { get; set; }
 
     [ForeignKey("IdPedido")]
-    [InverseProperty("PedidoProductos")]
-    public virtual Pedido? IdPedidoNavigation { get; set; }
+    [InverseProperty("OrderProducts")]
+    public virtual Order? IdPedidoNavigation { get; set; }
 
     [ForeignKey("ProductosId")]
-    [InverseProperty("PedidoProductos")]
-    public virtual Producto? Productos { get; set; }
+    [InverseProperty("OrderProducts")]
+    public virtual Product? Productos { get; set; }
 }

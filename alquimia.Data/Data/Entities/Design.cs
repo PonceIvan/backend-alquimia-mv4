@@ -42,13 +42,13 @@ public partial class Design
     public string? TextColor { get; set; }
 
     [InverseProperty("Design")]
-    public virtual ICollection<EntidadFinal> EntidadFinals { get; set; } = new List<EntidadFinal>();
+    public virtual ICollection<FinalEntity> FinalEntities { get; set; } = new List<FinalEntity>();
 
     [ForeignKey("IdProducto")]
     [InverseProperty("Designs")]
-    public virtual Producto? IdProductoNavigation { get; set; }
+    public virtual Product? IdProductoNavigation { get; set; }
 
     [ForeignKey("TipoProductoId")]
     [InverseProperty("Designs")]
-    public virtual TipoProducto? TipoProducto { get; set; }
+    public virtual ProductType? TipoProducto { get; set; }
 }

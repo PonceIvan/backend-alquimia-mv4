@@ -6,8 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Data.Data.Entities;
 
-[Table("OpinionUsuarioProducto")]
-public partial class OpinionUsuarioProducto
+public partial class UserProductReview
 {
     [Key]
     public int Id { get; set; }
@@ -21,10 +20,10 @@ public partial class OpinionUsuarioProducto
     public DateTime FechaPublicacion { get; set; }
 
     [ForeignKey("IdProducto")]
-    [InverseProperty("OpinionUsuarioProductos")]
-    public virtual Producto? IdProductoNavigation { get; set; }
+    [InverseProperty("UserProductReviews")]
+    public virtual Product? IdProductoNavigation { get; set; }
 
     [ForeignKey("IdUsuario")]
-    [InverseProperty("OpinionUsuarioProductos")]
-    public virtual Usuario IdUsuarioNavigation { get; set; } = null!;
+    [InverseProperty("UserProductReviews")]
+    public virtual User IdUsuarioNavigation { get; set; } = null!;
 }

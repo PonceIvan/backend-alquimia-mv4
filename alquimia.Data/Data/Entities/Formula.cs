@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Data.Data.Entities;
 
+[Index("CreadorId", Name = "IX_Formulas_CreadorId")]
 [Index("IntensidadId", Name = "IX_Formulas_IntensidadId")]
 public partial class Formula
 {
@@ -26,22 +27,28 @@ public partial class Formula
 
     public double ConcentracionEsencia { get; set; }
 
+    public int? CreadorId { get; set; }
+
+    [ForeignKey("CreadorId")]
+    [InverseProperty("Formulas")]
+    public virtual User? Creador { get; set; }
+
     [ForeignKey("FormulaCorazon")]
     [InverseProperty("FormulaFormulaCorazonNavigations")]
-    public virtual FormulaNotum FormulaCorazonNavigation { get; set; } = null!;
+    public virtual FormulaNote FormulaCorazonNavigation { get; set; } = null!;
 
     [ForeignKey("FormulaFondo")]
     [InverseProperty("FormulaFormulaFondoNavigations")]
-    public virtual FormulaNotum FormulaFondoNavigation { get; set; } = null!;
+    public virtual FormulaNote FormulaFondoNavigation { get; set; } = null!;
 
     [ForeignKey("FormulaSalida")]
     [InverseProperty("FormulaFormulaSalidaNavigations")]
-    public virtual FormulaNotum FormulaSalidaNavigation { get; set; } = null!;
+    public virtual FormulaNote FormulaSalidaNavigation { get; set; } = null!;
 
     [ForeignKey("IntensidadId")]
     [InverseProperty("Formulas")]
-    public virtual Intensidade Intensidad { get; set; } = null!;
+    public virtual Intensity Intensidad { get; set; } = null!;
 
     [InverseProperty("IdFormulasNavigation")]
-    public virtual ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
+    public virtual ICollection<User> Users { get; set; } = new List<User>();
 }

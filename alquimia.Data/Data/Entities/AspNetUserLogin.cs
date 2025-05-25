@@ -19,4 +19,8 @@ public partial class AspNetUserLogin
     public string? ProviderDisplayName { get; set; }
 
     public int UserId { get; set; }
+
+    [ForeignKey("UserId")]
+    [InverseProperty("AspNetUserLogins")]
+    public virtual User User { get; set; } = null!;
 }

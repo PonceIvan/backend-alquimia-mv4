@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Data.Data.Entities;
 
-[Table("PiramideOlfativa")]
-public partial class PiramideOlfativa
+[Table("OlfactoryPyramid")]
+public partial class OlfactoryPyramid
 {
     [Key]
     public int Id { get; set; }
@@ -17,8 +17,8 @@ public partial class PiramideOlfativa
     public TimeSpan Duracion { get; set; }
 
     [InverseProperty("PiramideOlfativa")]
-    public virtual ICollection<FormulaNotum> FormulaNota { get; set; } = new List<FormulaNotum>();
+    public virtual ICollection<FormulaNote> FormulaNotes { get; set; } = new List<FormulaNote>();
 
     [InverseProperty("PiramideOlfativa")]
-    public virtual ICollection<Nota> Nota { get; set; } = new List<Nota>();
+    public virtual ICollection<Note> Notes { get; set; } = new List<Note>();
 }

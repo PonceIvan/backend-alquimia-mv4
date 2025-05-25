@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace alquimia.Data.Data.Entities;
 
 [Keyless]
-public partial class NotasPiramideFamilium
+public partial class NotesPyramidFamily
 {
     [StringLength(50)]
     public string Nota { get; set; } = null!;

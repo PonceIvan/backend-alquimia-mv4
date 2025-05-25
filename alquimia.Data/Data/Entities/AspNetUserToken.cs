@@ -19,4 +19,8 @@ public partial class AspNetUserToken
     public string Name { get; set; } = null!;
 
     public string? Value { get; set; }
+
+    [ForeignKey("UserId")]
+    [InverseProperty("AspNetUserTokens")]
+    public virtual User User { get; set; } = null!;
 }

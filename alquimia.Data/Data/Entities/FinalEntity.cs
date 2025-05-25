@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Data.Data.Entities;
 
-[Table("EntidadFinal")]
-public partial class EntidadFinal
+[Table("FinalEntity")]
+public partial class FinalEntity
 {
     [Key]
     public int Id { get; set; }
@@ -19,14 +19,14 @@ public partial class EntidadFinal
     public int? DesignId { get; set; }
 
     [ForeignKey("DesignId")]
-    [InverseProperty("EntidadFinals")]
+    [InverseProperty("FinalEntities")]
     public virtual Design? Design { get; set; }
 
     [ForeignKey("IdUsuario")]
-    [InverseProperty("EntidadFinals")]
-    public virtual Usuario? IdUsuarioNavigation { get; set; }
+    [InverseProperty("FinalEntities")]
+    public virtual User? IdUsuarioNavigation { get; set; }
 
     [ForeignKey("ProductosId")]
-    [InverseProperty("EntidadFinals")]
-    public virtual Producto? Productos { get; set; }
+    [InverseProperty("FinalEntities")]
+    public virtual Product? Productos { get; set; }
 }

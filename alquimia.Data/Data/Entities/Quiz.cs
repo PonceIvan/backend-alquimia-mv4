@@ -16,8 +16,8 @@ public partial class Quiz
 
     [ForeignKey("IdPregunta")]
     [InverseProperty("Quizzes")]
-    public virtual Pregunta? IdPreguntaNavigation { get; set; }
+    public virtual Question? IdPreguntaNavigation { get; set; }
 
     [InverseProperty("IdQuizNavigation")]
-    public virtual ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
+    public virtual ICollection<User> Users { get; set; } = new List<User>();
 }

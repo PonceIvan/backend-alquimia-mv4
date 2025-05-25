@@ -6,7 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Data.Data.Entities;
 
-public partial class FormulaNotum
+[Table("FormulaNote")]
+public partial class FormulaNote
 {
     [Key]
     public int FormulaNotaId { get; set; }
@@ -31,22 +32,22 @@ public partial class FormulaNotum
     public virtual ICollection<Formula> FormulaFormulaSalidaNavigations { get; set; } = new List<Formula>();
 
     [ForeignKey("NotaId1")]
-    [InverseProperty("FormulaNotumNotaId1Navigations")]
-    public virtual Nota NotaId1Navigation { get; set; } = null!;
+    [InverseProperty("FormulaNoteNotaId1Navigations")]
+    public virtual Note NotaId1Navigation { get; set; } = null!;
 
     [ForeignKey("NotaId2")]
-    [InverseProperty("FormulaNotumNotaId2Navigations")]
-    public virtual Nota? NotaId2Navigation { get; set; }
+    [InverseProperty("FormulaNoteNotaId2Navigations")]
+    public virtual Note? NotaId2Navigation { get; set; }
 
     [ForeignKey("NotaId3")]
-    [InverseProperty("FormulaNotumNotaId3Navigations")]
-    public virtual Nota? NotaId3Navigation { get; set; }
+    [InverseProperty("FormulaNoteNotaId3Navigations")]
+    public virtual Note? NotaId3Navigation { get; set; }
 
     [ForeignKey("NotaId4")]
-    [InverseProperty("FormulaNotumNotaId4Navigations")]
-    public virtual Nota? NotaId4Navigation { get; set; }
+    [InverseProperty("FormulaNoteNotaId4Navigations")]
+    public virtual Note? NotaId4Navigation { get; set; }
 
     [ForeignKey("PiramideOlfativaId")]
-    [InverseProperty("FormulaNota")]
-    public virtual PiramideOlfativa? PiramideOlfativa { get; set; }
+    [InverseProperty("FormulaNotes")]
+    public virtual OlfactoryPyramid? PiramideOlfativa { get; set; }
 }

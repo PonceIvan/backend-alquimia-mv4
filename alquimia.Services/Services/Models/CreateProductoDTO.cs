@@ -8,7 +8,7 @@ public class CreateProductoDTO
     [Required]
     public string Description { get; set; }
 
-    public float Price { get; set; }
+    public decimal Price { get; set; }
 
     [Required]
     [Range(0, int.MaxValue)]

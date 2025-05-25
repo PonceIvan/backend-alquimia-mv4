@@ -6,8 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Data.Data.Entities;
 
-[Table("Pedido")]
-public partial class Pedido
+public partial class Order
 {
     public int? UsuarioId { get; set; }
 
@@ -17,16 +16,13 @@ public partial class Pedido
     public int? EstadoId { get; set; }
 
     [ForeignKey("EstadoId")]
-    [InverseProperty("InverseEstado")]
-    public virtual Pedido? Estado { get; set; }
-
-    [InverseProperty("Estado")]
-    public virtual ICollection<Pedido> InverseEstado { get; set; } = new List<Pedido>();
+    [InverseProperty("Orders")]
+    public virtual Status? Estado { get; set; }
 
     [InverseProperty("IdPedidoNavigation")]
-    public virtual ICollection<PedidoProducto> PedidoProductos { get; set; } = new List<PedidoProducto>();
+    public virtual ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
 
     [ForeignKey("UsuarioId")]
-    [InverseProperty("Pedidos")]
-    public virtual Usuario? Usuario { get; set; }
+    [InverseProperty("Orders")]
+    public virtual User? Usuario { get; set; }
 }

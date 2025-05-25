@@ -8,7 +8,7 @@ namespace alquimia.Data.Data.Entities;
 
 [Index("Familia1Id", Name = "IX_CompatibilidadesFamilias_Familia1Id")]
 [Index("Familia2Id", Name = "IX_CompatibilidadesFamilias_Familia2Id")]
-public partial class CompatibilidadesFamilia
+public partial class FamilyCompatibility
 {
     [Key]
     public int Id { get; set; }
@@ -20,10 +20,10 @@ public partial class CompatibilidadesFamilia
     public int GradoDeCompatibilidad { get; set; }
 
     [ForeignKey("Familia1Id")]
-    [InverseProperty("CompatibilidadesFamiliaFamilia1s")]
-    public virtual FamiliasOlfativa Familia1 { get; set; } = null!;
+    [InverseProperty("FamilyCompatibilityFamilia1s")]
+    public virtual OlfactoryFamily Familia1 { get; set; } = null!;
 
     [ForeignKey("Familia2Id")]
-    [InverseProperty("CompatibilidadesFamiliaFamilia2s")]
-    public virtual FamiliasOlfativa Familia2 { get; set; } = null!;
+    [InverseProperty("FamilyCompatibilityFamilia2s")]
+    public virtual OlfactoryFamily Familia2 { get; set; } = null!;
 }

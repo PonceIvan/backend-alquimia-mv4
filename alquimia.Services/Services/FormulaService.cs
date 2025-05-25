@@ -1,5 +1,4 @@
 ﻿using backendAlquimia.alquimia.Services.Interfaces;
-//using alquimia.Services.Services.Models;
 using alquimia.Data.Data.Entities;
 using backendAlquimia.Models;
 using Microsoft.EntityFrameworkCore;
@@ -17,15 +16,15 @@ namespace backendAlquimia.alquimia.Services.Services
         //public async Task<GETFormulaDTO> guardar(POSTFormulaDTO dto)
         //{
         //    var notasSalida = await _context.Notas
-        //        .Where(n => dto.NotasSalidaIds.Contains(n.Id) && n.SectorId == 1)
+        //        .Where(n => dto.NotasSalidaIds.Contains(n.Id) && n.PiramideOlfativa.Id == 1)
         //        .ToListAsync();
 
         //    var notasCorazon = await _context.Notas
-        //        .Where(n => dto.NotasCorazonIds.Contains(n.Id) && n.SectorId == 2)
+        //        .Where(n => dto.NotasCorazonIds.Contains(n.Id) && n.PiramideOlfativa.Id == 2)
         //        .ToListAsync();
 
         //    var notasFondo = await _context.Notas
-        //        .Where(n => dto.NotasFondoIds.Contains(n.Id) && n.SectorId == 3)
+        //        .Where(n => dto.NotasFondoIds.Contains(n.Id) && n.PiramideOlfativa.Id == 3)
         //        .ToListAsync();
 
         //    if (notasSalida.Count != dto.NotasSalidaIds.Count ||
@@ -35,21 +34,22 @@ namespace backendAlquimia.alquimia.Services.Services
         //        throw new Exception("Una o más notas no existen o no pertenecen al sector correspondiente.");
         //    }
 
-        //    var combinacion = new FormulaNotum
-        //    {
-        //        NotaSalida = notasSalida,
-        //        NotaCorazon = notasCorazon,
-        //        NotaFondo = notasFondo
-        //    };
+        //    //var formula = new FormulaNotum
+        //    //{
+        //    //    FormulaSalida = notasSalida,
+        //    //    NotaCorazon = notasCorazon,
+        //    //    NotaFondo = notasFondo
+        //    //};
 
-        //    _context.Combinaciones.Add(combinacion);
+        //    _context.FormulaNota.Add(formula);
         //    await _context.SaveChangesAsync();
-
-        //    var formula = new Formula
+        //    var formulaN = new Formula
         //    {
-        //        CombinacionId = combinacion.Id,
+        //        Id = dto.Id,
         //        IntensidadId = dto.IdIntensidad,
-        //        CreadorId = dto.IdCreador,
+        //        FormulaFondo = dto.IdCreador,
+        //        FormulaCorazon = dto.IdCreador,
+        //        FormulaSalida = dto.IdCreador,
         //        ConcentracionAlcohol = 0,
         //        ConcentracionAgua = 0,
         //        ConcentracionEsencia = 0
@@ -74,7 +74,7 @@ namespace backendAlquimia.alquimia.Services.Services
 
         public async Task<List<IntensidadDTO>> ObtenerIntensidadAsync()
         {
-            return await _context.Intensidades
+            return await _context.Intensities
                 .Select
                 (x => new IntensidadDTO
                 {
@@ -110,17 +110,17 @@ namespace backendAlquimia.alquimia.Services.Services
         //}
 
 
-        //private double calcularConcentracionAgua()
-        //{
-
-        //}
-        //private double calcularConcentracionAlcohol()
-        //{
-
-        //}
-        //private double calcularConcentracionEsencia()
-        //{
-
-        //}
+        private double calcularConcentracionAgua()
+        {
+            return 0.0;
+        }
+        private double calcularConcentracionAlcohol()
+        {
+            return 0.0;
+        }
+        private double calcularConcentracionEsencia()
+        {
+            return 0.0;
+        }
     }
 }

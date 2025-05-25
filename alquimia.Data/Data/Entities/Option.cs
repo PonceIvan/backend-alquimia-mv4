@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Data.Data.Entities;
 
-public partial class Opcione
+public partial class Option
 {
     [Key]
     public int Id { get; set; }
@@ -24,5 +24,5 @@ public partial class Opcione
     public string? Option4 { get; set; }
 
     [InverseProperty("IdOpcionesNavigation")]
-    public virtual ICollection<Pregunta> Pregunta { get; set; } = new List<Pregunta>();
+    public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
 }
