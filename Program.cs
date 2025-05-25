@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using backendAlquimia.alquimia.Services.Services;
 using alquimia.Data.Data.Entities;
+using backendAlquimia.Services.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,9 +22,9 @@ var clientSecret = builder.Configuration["OAuth:ClientSecret"];
 
 // Add services to the container.
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<IProductoService, ProductoService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
-builder.Services.AddScoped<INotaService, NotaService>();
+builder.Services.AddScoped<INoteService, NoteService>();
 builder.Services.AddScoped<IFormulaService, FormulaService>();
 builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 {
