@@ -1,6 +1,7 @@
-﻿using backendAlquimia.Data.Entities;
+﻿using alquimia.Data.Data;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
+using alquimia.Data.Data.Entities;
 
 namespace backendAlquimia.Seed
 {
@@ -8,15 +9,15 @@ namespace backendAlquimia.Seed
     {
         private static readonly string[] Roles = { "Admin", "Creador", "Proveedor" };
 
-        public static async Task SeedRolesAsync(IServiceProvider serviceProvider)
+        public static async Task SeedRolesAsync(IServiceProvider serviceprovider)
         {
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<Rol>>();
+            var rolemanager = serviceprovider.GetRequiredService<RoleManager<Role>>();
 
             foreach (var role in Roles)
             {
-                if (!await roleManager.RoleExistsAsync(role))
+                if (!await rolemanager.RoleExistsAsync(role))
                 {
-                    await roleManager.CreateAsync(new Rol { Name = role });
+                    await rolemanager.CreateAsync(new Role { Name = role });
                 }
             }
         }

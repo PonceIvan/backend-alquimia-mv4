@@ -1,14 +1,15 @@
-using backendAlquimia.Data;
-using backendAlquimia.Data.Entities;
+using backendAlquimia.alquimia.Services;
+using alquimia.Data.Data;
 using backendAlquimia.Seed;
-using backendAlquimia.Services;
-using backendAlquimia.Services.Interfaces;
+using backendAlquimia.alquimia.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using backendAlquimia.alquimia.Services.Services;
+using alquimia.Data.Data.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,9 +21,9 @@ var clientSecret = builder.Configuration["OAuth:ClientSecret"];
 
 // Add services to the container.
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<IProductoService, ProductoService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
-builder.Services.AddScoped<INotaService, NotaService>();
+builder.Services.AddScoped<INoteService, NoteService>();
 builder.Services.AddScoped<IFormulaService, FormulaService>();
 builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 {
@@ -34,7 +35,7 @@ builder.Services.AddControllers()
 
 builder.Services.AddDbContext<AlquimiaDbContext>(options =>
     options.UseSqlServer(connectionString));
-builder.Services.AddIdentity<Usuario, Rol>()
+builder.Services.AddIdentity<User, Role>()
     .AddEntityFrameworkStores<AlquimiaDbContext>()
     .AddDefaultTokenProviders();
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -98,7 +99,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    await RoleSeeder.SeedRolesAsync(services);
+    //await RoleSeeder.SeedRolesAsync(services);
     await UserSeeder.SeedAdminAsync(services);
     await ProductoSeeder.SeedTiposProductoAsync(services);
 
