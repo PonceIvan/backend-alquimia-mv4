@@ -130,5 +130,6 @@ app.UseCors("FrontendPolicy");
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapControllers();
 
 app.Run();
