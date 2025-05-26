@@ -17,4 +17,8 @@ public partial class AspNetRoleClaim
     public string? ClaimType { get; set; }
 
     public string? ClaimValue { get; set; }
+
+    [ForeignKey("RoleId")]
+    [InverseProperty("AspNetRoleClaims")]
+    public virtual Role Role { get; set; } = null!;
 }

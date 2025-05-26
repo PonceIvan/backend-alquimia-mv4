@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Data.Data.Entities;
 
-public partial class User : IdentityUser
+[Index("NormalizedEmail", Name = "EmailIndex")]
+public partial class User
 {
     [Key]
     public int Id { get; set; }
@@ -46,14 +46,22 @@ public partial class User : IdentityUser
 
     public int AccessFailedCount { get; set; }
 
+    [StringLength(256)]
+    public string? NormalizedEmail { get; set; }
+
+    [StringLength(256)]
+    public string? NormalizedUserName { get; set; }
+
+    [StringLength(20)]
+    public string? PhoneNumber { get; set; }
+
+    public bool PhoneNumberConfirmed { get; set; }
+
     [InverseProperty("User")]
     public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; } = new List<AspNetUserClaim>();
 
     [InverseProperty("User")]
     public virtual ICollection<AspNetUserLogin> AspNetUserLogins { get; set; } = new List<AspNetUserLogin>();
-
-    [InverseProperty("User")]
-    public virtual ICollection<AspNetUserRole> AspNetUserRoles { get; set; } = new List<AspNetUserRole>();
 
     [InverseProperty("User")]
     public virtual ICollection<AspNetUserToken> AspNetUserTokens { get; set; } = new List<AspNetUserToken>();
@@ -100,4 +108,8 @@ public partial class User : IdentityUser
 
     [InverseProperty("IdUsuarioNavigation")]
     public virtual ICollection<UserProviderReview> UserProviderReviewIdUsuarioNavigations { get; set; } = new List<UserProviderReview>();
+
+    [ForeignKey("UserId")]
+    [InverseProperty("Users")]
+    public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
 }
