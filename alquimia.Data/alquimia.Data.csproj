@@ -11,9 +11,6 @@
 <PropertyGroup>
   <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
 </PropertyGroup>
-  <ItemGroup>
-    <Folder Include="Data\Entities\" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.0" />
@@ -30,6 +27,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\" />
   </ItemGroup>
  
 </Project>
