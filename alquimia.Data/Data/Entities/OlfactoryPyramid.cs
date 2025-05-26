@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Data.Data.Entities;
 
@@ -14,7 +11,7 @@ public partial class OlfactoryPyramid
 
     public string Sector { get; set; } = null!;
 
-    public TimeOnly Duracion { get; set; }
+    public TimeSpan Duracion { get; set; }
 
     [InverseProperty("PiramideOlfativa")]
     public virtual ICollection<FormulaNote> FormulaNotes { get; set; } = new List<FormulaNote>();
