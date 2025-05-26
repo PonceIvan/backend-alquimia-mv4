@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Data.Data.Entities;
 
-public partial class User : IdentityUser
+public partial class User
 {
     [Key]
     public int Id { get; set; }
@@ -45,6 +44,17 @@ public partial class User : IdentityUser
     public bool LockoutEnabled { get; set; }
 
     public int AccessFailedCount { get; set; }
+
+    [StringLength(256)]
+    public string? NormalizedEmail { get; set; }
+
+    [StringLength(256)]
+    public string? NormalizedUserName { get; set; }
+
+    [StringLength(20)]
+    public string? PhoneNumber { get; set; }
+
+    public bool PhoneNumberConfirmed { get; set; }
 
     [InverseProperty("User")]
     public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; } = new List<AspNetUserClaim>();

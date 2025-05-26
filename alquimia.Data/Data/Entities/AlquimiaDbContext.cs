@@ -175,7 +175,9 @@ public partial class AlquimiaDbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK_Notas");
 
-            entity.HasOne(d => d.FamiliaOlfativa).WithMany(p => p.Notes).HasConstraintName("FK_Notas_FamiliasOlfativas_FamiliaOlfativaId");
+            entity.HasOne(d => d.FamiliaOlfativa).WithMany(p => p.Notes)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_notasFamiliaOlfativa");
 
             entity.HasOne(d => d.PiramideOlfativa).WithMany(p => p.Notes)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -232,16 +234,16 @@ public partial class AlquimiaDbContext : DbContext
         {
             entity.HasOne(d => d.IdPedidoNavigation).WithMany(p => p.OrderProducts).HasConstraintName("FK_pedidoProductoIdPedido");
 
-            entity.HasOne(d => d.Productos).WithMany(p => p.OrderProducts)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK_PedidoProducto_Productos_ProductosId");
+            entity.HasOne(d => d.Productos).WithMany(p => p.OrderProducts).HasConstraintName("FK_pedidoProductoId");
         });
 
         modelBuilder.Entity<Product>(entity =>
         {
             entity.HasOne(d => d.IdProveedorNavigation).WithMany(p => p.ProductIdProveedorNavigations).HasConstraintName("FK_productIdProv");
 
-            entity.HasOne(d => d.TipoProducto).WithMany(p => p.Products).HasConstraintName("FK_Productos_TiposProducto_TipoProductoId");
+            entity.HasOne(d => d.TipoProducto).WithMany(p => p.Products)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ProductTypes");
 
             entity.HasOne(d => d.Usuario).WithMany(p => p.ProductUsuarios).HasConstraintName("FK_productIdUser");
         });
