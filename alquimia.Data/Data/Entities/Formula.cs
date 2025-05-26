@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Data.Data.Entities;
 
-[Index("CreadorId", Name = "IX_Formulas_CreadorId")]
 [Index("IntensidadId", Name = "IX_Formulas_IntensidadId")]
 public partial class Formula
 {

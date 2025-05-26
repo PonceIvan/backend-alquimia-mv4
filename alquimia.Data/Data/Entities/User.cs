@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Data.Data.Entities;
 
+[Index("NormalizedEmail", Name = "EmailIndex")]
 public partial class User
 {
     [Key]
@@ -63,9 +64,6 @@ public partial class User
     public virtual ICollection<AspNetUserLogin> AspNetUserLogins { get; set; } = new List<AspNetUserLogin>();
 
     [InverseProperty("User")]
-    public virtual ICollection<AspNetUserRole> AspNetUserRoles { get; set; } = new List<AspNetUserRole>();
-
-    [InverseProperty("User")]
     public virtual ICollection<AspNetUserToken> AspNetUserTokens { get; set; } = new List<AspNetUserToken>();
 
     [InverseProperty("IdUsuarioNavigation")]
@@ -110,4 +108,8 @@ public partial class User
 
     [InverseProperty("IdUsuarioNavigation")]
     public virtual ICollection<UserProviderReview> UserProviderReviewIdUsuarioNavigations { get; set; } = new List<UserProviderReview>();
+
+    [ForeignKey("UserId")]
+    [InverseProperty("Users")]
+    public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
 }

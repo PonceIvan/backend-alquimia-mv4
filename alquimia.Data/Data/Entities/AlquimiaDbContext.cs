@@ -21,8 +21,6 @@ public partial class AlquimiaDbContext : DbContext
 
     public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
 
-    public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; }
-
     public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
 
     public virtual DbSet<Design> Designs { get; set; }
@@ -75,10 +73,15 @@ public partial class AlquimiaDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=AXEL\\SQLEXPRESS;Database=alquimiaDB;Trusted_Connection=True;TrustServerCertificate=True");
+        => optionsBuilder.UseSqlServer("Server=COMPUDEMICA\\SQLEXPRESS;Database=alquimiaDB;Trusted_Connection=True;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<AspNetRoleClaim>(entity =>
+        {
+            entity.HasOne(d => d.Role).WithMany(p => p.AspNetRoleClaims).HasConstraintName("FK_AspNetRoleClaims_RoleId");
+        });
+
         modelBuilder.Entity<AspNetUserClaim>(entity =>
         {
             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserClaims).HasConstraintName("FK_AspNetUserClaims_Usuarios_UserId");
@@ -87,13 +90,6 @@ public partial class AlquimiaDbContext : DbContext
         modelBuilder.Entity<AspNetUserLogin>(entity =>
         {
             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserLogins).HasConstraintName("FK_AspNetUserLogins_Usuarios_UserId");
-        });
-
-        modelBuilder.Entity<AspNetUserRole>(entity =>
-        {
-            entity.HasKey(e => new { e.UserId, e.RoleId }).HasName("PK_UserRoles");
-
-            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserRoles).HasConstraintName("FK_AspNetUserRoles_Usuarios_UserId");
         });
 
         modelBuilder.Entity<AspNetUserToken>(entity =>
@@ -110,6 +106,9 @@ public partial class AlquimiaDbContext : DbContext
 
         modelBuilder.Entity<FamilyCompatibility>(entity =>
         {
+            entity.Property(e => e.FamiliaMayor).HasComputedColumnSql("(case when [Familia1Id]<[Familia2Id] then [Familia2Id] else [Familia1Id] end)", true);
+            entity.Property(e => e.FamiliaMenor).HasComputedColumnSql("(case when [Familia1Id]<[Familia2Id] then [Familia1Id] else [Familia2Id] end)", true);
+
             entity.HasOne(d => d.Familia1).WithMany(p => p.FamilyCompatibilityFamilia1s)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CompatibilidadesFamilias_FamiliasOlfativas_Familia1Id");
@@ -196,7 +195,7 @@ public partial class AlquimiaDbContext : DbContext
                         .HasConstraintName("FK_NotaIncompatible_notaIncompatible"),
                     j =>
                     {
-                        j.HasKey("NotaId", "NotaIncompatibleId").HasName("PK__Incompat__06842A27FB6E201A");
+                        j.HasKey("NotaId", "NotaIncompatibleId").HasName("PK__Incompat__06842A27C29444C3");
                         j.ToTable("IncompatibleNotes");
                     });
 
@@ -213,7 +212,7 @@ public partial class AlquimiaDbContext : DbContext
                         .HasConstraintName("FK_NotaIncompatible_nota"),
                     j =>
                     {
-                        j.HasKey("NotaId", "NotaIncompatibleId").HasName("PK__Incompat__06842A27FB6E201A");
+                        j.HasKey("NotaId", "NotaIncompatibleId").HasName("PK__Incompat__06842A27C29444C3");
                         j.ToTable("IncompatibleNotes");
                     });
         });
@@ -232,7 +231,7 @@ public partial class AlquimiaDbContext : DbContext
 
         modelBuilder.Entity<OrderProduct>(entity =>
         {
-            entity.HasOne(d => d.IdPedidoNavigation).WithMany(p => p.OrderProducts).HasConstraintName("FK_pedidoProductoIdPedido");
+            entity.HasOne(d => d.IdPedidoNavigation).WithMany(p => p.OrderProducts).HasConstraintName("FK_pedidoIdPedido");
 
             entity.HasOne(d => d.Productos).WithMany(p => p.OrderProducts).HasConstraintName("FK_pedidoProductoId");
         });
@@ -265,6 +264,10 @@ public partial class AlquimiaDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
+            entity.HasIndex(e => e.NormalizedUserName, "UserNameIndex")
+                .IsUnique()
+                .HasFilter("([NormalizedUserName] IS NOT NULL)");
+
             entity.HasOne(d => d.IdEstadoNavigation).WithMany(p => p.Users).HasConstraintName("FK_estado_Users");
 
             entity.HasOne(d => d.IdFormulasNavigation).WithMany(p => p.Users).HasConstraintName("FK_formulas_Users");
@@ -272,6 +275,21 @@ public partial class AlquimiaDbContext : DbContext
             entity.HasOne(d => d.IdQuizNavigation).WithMany(p => p.Users).HasConstraintName("FK_quiz_Users");
 
             entity.HasOne(d => d.IdSuscripcionNavigation).WithMany(p => p.Users).HasConstraintName("FK_suscripcion_Users");
+
+            entity.HasMany(d => d.Roles).WithMany(p => p.Users)
+                .UsingEntity<Dictionary<string, object>>(
+                    "AspNetUserRole",
+                    r => r.HasOne<Role>().WithMany()
+                        .HasForeignKey("RoleId")
+                        .HasConstraintName("FK_AspNetUserRoles_RoleId"),
+                    l => l.HasOne<User>().WithMany()
+                        .HasForeignKey("UserId")
+                        .HasConstraintName("FK_AspNetUserRoles_Usuarios_UserId"),
+                    j =>
+                    {
+                        j.HasKey("UserId", "RoleId").HasName("PK_UserRoles");
+                        j.ToTable("AspNetUserRoles");
+                    });
         });
 
         modelBuilder.Entity<UserProduct>(entity =>

@@ -13,4 +13,11 @@ public partial class Role
 
     [StringLength(256)]
     public string? Name { get; set; }
+
+    [InverseProperty("Role")]
+    public virtual ICollection<AspNetRoleClaim> AspNetRoleClaims { get; set; } = new List<AspNetRoleClaim>();
+
+    [ForeignKey("RoleId")]
+    [InverseProperty("Roles")]
+    public virtual ICollection<User> Users { get; set; } = new List<User>();
 }
