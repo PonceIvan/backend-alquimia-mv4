@@ -1,30 +1,43 @@
-using backendAlquimia.alquimia.Services;
-using alquimia.Data.Data;
-using backendAlquimia.Seed;
+//using alquimia.Data.Data;
+//using backendAlquimia.Seed;
+using alquimia.Data.Data.Entities;
 using backendAlquimia.alquimia.Services.Interfaces;
+using backendAlquimia.alquimia.Services.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
-using backendAlquimia.alquimia.Services.Services;
-using alquimia.Data.Data.Entities;
+//using backendAlquimia.alquimia.Services.Services;
+//using alquimia.Data.Data.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Alquimia API",
+        Version = "v1",
+    });
+});
+
 var connectionString = Environment.GetEnvironmentVariable("ALQUIMIA_DB_CONNECTION")
                       ?? builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddDbContext<AlquimiaDbContext>(options =>
+    options.UseSqlServer(connectionString));
 
 var clientId = builder.Configuration["OAuth:ClientID"];
 var clientSecret = builder.Configuration["OAuth:ClientSecret"];
 
 // Add services to the container.
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddScoped<IJwtService, JwtService>();
+//builder.Services.AddScoped<IProductService, ProductService>();
+//builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<INoteService, NoteService>();
-builder.Services.AddScoped<IFormulaService, FormulaService>();
+//builder.Services.AddScoped<IFormulaService, FormulaService>();
 builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.PropertyNamingPolicy = null; // Para que respete nombres C#
@@ -33,11 +46,11 @@ builder.Services.AddControllers()
     .AddJsonOptions(x =>
         x.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles);
 
-builder.Services.AddDbContext<AlquimiaDbContext>(options =>
-    options.UseSqlServer(connectionString));
-builder.Services.AddIdentity<User, Role>()
-    .AddEntityFrameworkStores<AlquimiaDbContext>()
-    .AddDefaultTokenProviders();
+
+//builder.Services.AddIdentity<User, Role>()
+//    .AddEntityFrameworkStores<AlquimiaDbContext>()
+//    .AddDefaultTokenProviders();
+
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]);
 
@@ -96,31 +109,26 @@ builder.Services.AddCors(options =>
 
 
 var app = builder.Build();
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    //await RoleSeeder.SeedRolesAsync(services);
-    await UserSeeder.SeedAdminAsync(services);
-    await ProductoSeeder.SeedTiposProductoAsync(services);
+//using (var scope = app.Services.CreateScope())
+//{
+//    var services = scope.ServiceProvider;
+//    //await RoleSeeder.SeedRolesAsync(services);
+//    await UserSeeder.SeedAdminAsync(services);
+//    await ProductoSeeder.SeedTiposProductoAsync(services);
 
-}
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
+//}
 
-app.UseHttpsRedirection();
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Alquimia API V1");
+    c.RoutePrefix = string.Empty;
+});
+
 app.UseStaticFiles();
 app.UseCors("FrontendPolicy");
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

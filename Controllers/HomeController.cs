@@ -1,12 +1,11 @@
-using System.Diagnostics;
-using System.Security.Claims;
-using backendAlquimia.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace backendAlquimia.Controllers
 {
-    public class HomeController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class HomeController : ControllerBase
     {
         private readonly ILogger<HomeController> _logger;
 
@@ -15,23 +14,14 @@ namespace backendAlquimia.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public IActionResult GetRoot()
         {
-            return View();
-        }
-        /*
-        public IActionResult Privacy()
-        {
-            return View();
+            return Ok("Bienvenido a la API de Alquimia");
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }*/
-        [Authorize]
-        [HttpGet("/home/usuario")]
+        //[Authorize]
+        [HttpGet("usuario")]
         public IActionResult ObtenerUsuarioInfo()
         {
             var identity = HttpContext.User.Identity;
