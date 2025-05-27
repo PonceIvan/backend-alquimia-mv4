@@ -4,7 +4,7 @@ using System.Security.Claims;
 namespace backendAlquimia.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("home")]
     public class HomeController : ControllerBase
     {
         private readonly ILogger<HomeController> _logger;
