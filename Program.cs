@@ -139,11 +139,6 @@ app.UseCors("FrontendPolicy");
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-Console.WriteLine("Controladores registrados:");
-foreach (var controller in typeof(Program).Assembly.GetTypes()
-             .Where(t => typeof(ControllerBase).IsAssignableFrom(t)))
-{
-    Console.WriteLine($"- {controller.FullName}");
-}
+
 app.MapControllers();
 app.Run();
