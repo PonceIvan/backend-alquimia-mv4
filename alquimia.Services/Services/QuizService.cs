@@ -58,25 +58,29 @@ namespace alquimia.Services.Services
             }
 
             var letraDominante = conteo.OrderByDescending(k => k.Value).First().Key;
-            var letraAFamiliaId = new Dictionary<string, int> { { "A", 1 }, { "B", 2 }, { "C", 3 }, { "D", 4 } };
+            var letraAFamiliaNombre = new Dictionary<string, string> { { "A", "Fresca" },
+            { "B", "Amaderada" },
+            { "C", "Oriental" },
+            { "D", "Floral" } };
 
-            if (!letraAFamiliaId.ContainsKey(letraDominante))
+            if (!letraAFamiliaNombre.TryGetValue(letraDominante, out var nombreFamilia))
                 return null;
 
-            var familiaId = letraAFamiliaId[letraDominante];
+
 
             var familia = await _context.OlfactoryFamilies
-                .FirstOrDefaultAsync(f => f.Id == familiaId);
+                .FirstOrDefaultAsync(f => f.Nombre == nombreFamilia );
 
             if (familia == null)
                 return null;
-
+            Console.WriteLine(familia.Image1 != null ? "Imagen encontrada" : "Imagen es null");
+            Console.WriteLine(ConvertToBase64(familia.Image1)?.Substring(0, 100));
             return new
             {
                 letraDominante,
-                familia.Id,
-                familia.Nombre,
-                familia.Description
+                Nombre = familia.Nombre,
+                Descripcion = familia.Description,
+                Imagen = ConvertToBase64(familia.Image1)
             };
         }
 
