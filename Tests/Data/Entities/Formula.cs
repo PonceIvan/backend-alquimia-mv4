@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace alquimia.Data.Data.Entities;
+namespace Tests.Data.Entities;
 
 [Index("CreadorId", Name = "IX_Formulas_CreadorId")]
 [Index("IntensidadId", Name = "IX_Formulas_IntensidadId")]

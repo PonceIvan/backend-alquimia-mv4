@@ -4,13 +4,15 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace alquimia.Data.Data.Entities;
+namespace Tests.Data.Entities;
 
-public partial class Role
+public partial class Intensity
 {
     [Key]
     public int Id { get; set; }
 
-    [StringLength(256)]
-    public string? Name { get; set; }
+    public string Nombre { get; set; } = null!;
+
+    [InverseProperty("Intensidad")]
+    public virtual ICollection<Formula> Formulas { get; set; } = new List<Formula>();
 }

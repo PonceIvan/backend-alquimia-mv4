@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace alquimia.Data.Data.Entities;
+namespace Tests.Data.Entities;
 
 public partial class AlquimiaDbContext : DbContext
 {
