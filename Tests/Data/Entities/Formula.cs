@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace alquimia.Data.Data.Entities;
+namespace Tests.Data.Entities;
 
 [Index("CreadorId", Name = "IX_Formulas_CreadorId")]
 [Index("IntensidadId", Name = "IX_Formulas_IntensidadId")]
@@ -28,6 +28,10 @@ public partial class Formula
     public double ConcentracionEsencia { get; set; }
 
     public int? CreadorId { get; set; }
+
+    [ForeignKey("CreadorId")]
+    [InverseProperty("Formulas")]
+    public virtual User? Creador { get; set; }
 
     [ForeignKey("FormulaCorazon")]
     [InverseProperty("FormulaFormulaCorazonNavigations")]
