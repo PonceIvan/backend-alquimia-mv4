@@ -8,6 +8,6 @@ namespace backendAlquimia.Models
         public string Family { get; internal set; }
         public string Sector { get; set; }
         public string Description { get; set; }
-        public TimeSpan Duration { get; internal set; }
+        public TimeOnly Duration { get; internal set; }
     }
 }

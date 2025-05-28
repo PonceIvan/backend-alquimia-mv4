@@ -38,7 +38,7 @@ public partial class Product
     public virtual ICollection<FinalEntity> FinalEntities { get; set; } = new List<FinalEntity>();
 
     [ForeignKey("IdProveedor")]
-    [InverseProperty("ProductIdProveedorNavigations")]
+    [InverseProperty("Products")]
     public virtual User? IdProveedorNavigation { get; set; }
 
     [InverseProperty("Productos")]
@@ -53,8 +53,4 @@ public partial class Product
 
     [InverseProperty("Producto")]
     public virtual ICollection<UserProduct> UserProducts { get; set; } = new List<UserProduct>();
-
-    [ForeignKey("UsuarioId")]
-    [InverseProperty("ProductUsuarios")]
-    public virtual User? Usuario { get; set; }
 }

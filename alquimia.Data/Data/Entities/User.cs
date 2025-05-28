@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Data.Data.Entities;
 
-public partial class User: IdentityUser
+[Index("NormalizedEmail", Name = "EmailIndex")]
+public partial class User
 {
     [Key]
     public int Id { get; set; }
@@ -72,9 +72,6 @@ public partial class User: IdentityUser
     [InverseProperty("IdUsuarioNavigation")]
     public virtual ICollection<FinalEntity> FinalEntities { get; set; } = new List<FinalEntity>();
 
-    [InverseProperty("Creador")]
-    public virtual ICollection<Formula> Formulas { get; set; } = new List<Formula>();
-
     [ForeignKey("IdEstado")]
     [InverseProperty("Users")]
     public virtual Status? IdEstadoNavigation { get; set; }
@@ -95,10 +92,7 @@ public partial class User: IdentityUser
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
     [InverseProperty("IdProveedorNavigation")]
-    public virtual ICollection<Product> ProductIdProveedorNavigations { get; set; } = new List<Product>();
-
-    [InverseProperty("Usuario")]
-    public virtual ICollection<Product> ProductUsuarios { get; set; } = new List<Product>();
+    public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 
     [InverseProperty("IdUsuarioNavigation")]
     public virtual ICollection<UserProductReview> UserProductReviews { get; set; } = new List<UserProductReview>();

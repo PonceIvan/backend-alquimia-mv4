@@ -12,8 +12,6 @@ public partial class FormulaNote
     [Key]
     public int FormulaNotaId { get; set; }
 
-    public int? PiramideOlfativaId { get; set; }
-
     public int NotaId1 { get; set; }
 
     public int? NotaId2 { get; set; }
@@ -46,8 +44,4 @@ public partial class FormulaNote
     [ForeignKey("NotaId4")]
     [InverseProperty("FormulaNoteNotaId4Navigations")]
     public virtual Note? NotaId4Navigation { get; set; }
-
-    [ForeignKey("PiramideOlfativaId")]
-    [InverseProperty("FormulaNotes")]
-    public virtual OlfactoryPyramid? PiramideOlfativa { get; set; }
 }

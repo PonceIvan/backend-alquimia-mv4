@@ -1,18 +1,18 @@
 //using alquimia.Data.Data;
 //using backendAlquimia.Seed;
 using alquimia.Data.Data.Entities;
-using alquimia.Services.Services.Interfaces;
 using alquimia.Services.Services;
+using alquimia.Services.Services.Interfaces;
+using backendAlquimia.alquimia.Services;
 using backendAlquimia.alquimia.Services.Interfaces;
 using backendAlquimia.alquimia.Services.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using backendAlquimia.alquimia.Services;
-using System.Web.Mvc;
 //using backendAlquimia.alquimia.Services.Services;
 //using alquimia.Data.Data.Entities;
 
@@ -55,9 +55,9 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.PropertyNamingPolicy = null;
     });
 
-//builder.Services.AddIdentity<User, Role>()
-//    .AddEntityFrameworkStores<AlquimiaDbContext>();
-//.AddDefaultTokenProviders();
+builder.Services.AddIdentity<User, Role>()
+    .AddEntityFrameworkStores<AlquimiaDbContext>()
+.AddDefaultTokenProviders();
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]);

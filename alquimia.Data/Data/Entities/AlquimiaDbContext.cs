@@ -35,7 +35,11 @@ public partial class AlquimiaDbContext : DbContext
 
     public virtual DbSet<FormulaNote> FormulaNotes { get; set; }
 
+    public virtual DbSet<IncompatibleNote> IncompatibleNotes { get; set; }
+
     public virtual DbSet<Intensity> Intensities { get; set; }
+
+    public virtual DbSet<NotasIncompatible> NotasIncompatibles { get; set; }
 
     public virtual DbSet<Note> Notes { get; set; }
 
@@ -75,7 +79,7 @@ public partial class AlquimiaDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=AXEL\\SQLEXPRESS;Database=alquimiaDB;Trusted_Connection=True;TrustServerCertificate=True");
+        => optionsBuilder.UseSqlServer("Server=COMPUDEMICA\\SQLEXPRESS;Database=alquimiaDB;Trusted_Connection=True;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -104,8 +108,6 @@ public partial class AlquimiaDbContext : DbContext
         modelBuilder.Entity<Design>(entity =>
         {
             entity.HasOne(d => d.IdProductoNavigation).WithMany(p => p.Designs).HasConstraintName("FK_design_productId");
-
-            entity.HasOne(d => d.TipoProducto).WithMany(p => p.Designs).HasConstraintName("FK_design_ProductTypes");
         });
 
         modelBuilder.Entity<FamilyCompatibility>(entity =>
@@ -133,8 +135,6 @@ public partial class AlquimiaDbContext : DbContext
 
         modelBuilder.Entity<Formula>(entity =>
         {
-            entity.HasOne(d => d.Creador).WithMany(p => p.Formulas).HasConstraintName("FK_Formulas_Usuarios_CreadorId");
-
             entity.HasOne(d => d.FormulaCorazonNavigation).WithMany(p => p.FormulaFormulaCorazonNavigations)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Formulas_corazon");
@@ -165,13 +165,32 @@ public partial class AlquimiaDbContext : DbContext
             entity.HasOne(d => d.NotaId3Navigation).WithMany(p => p.FormulaNoteNotaId3Navigations).HasConstraintName("FK_nota3");
 
             entity.HasOne(d => d.NotaId4Navigation).WithMany(p => p.FormulaNoteNotaId4Navigations).HasConstraintName("FK_nota4");
+        });
 
-            entity.HasOne(d => d.PiramideOlfativa).WithMany(p => p.FormulaNotes).HasConstraintName("FK_piramideOlfativa");
+        modelBuilder.Entity<IncompatibleNote>(entity =>
+        {
+            entity.HasKey(e => new { e.NotaId, e.NotaIncompatibleId }).HasName("PK__Incompat__06842A27C29444C3");
+
+            entity.Property(e => e.NotaMayor).HasComputedColumnSql("(case when [NotaId]<[NotaIncompatibleId] then [NotaIncompatibleId] else [NotaId] end)", true);
+            entity.Property(e => e.NotaMenor).HasComputedColumnSql("(case when [NotaId]<[NotaIncompatibleId] then [NotaId] else [NotaIncompatibleId] end)", true);
+
+            entity.HasOne(d => d.Nota).WithMany(p => p.IncompatibleNoteNota)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_NotaIncompatible_nota");
+
+            entity.HasOne(d => d.NotaIncompatible).WithMany(p => p.IncompatibleNoteNotaIncompatibles)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_NotaIncompatible_notaIncompatible");
         });
 
         modelBuilder.Entity<Intensity>(entity =>
         {
             entity.Property(e => e.Nombre).HasDefaultValue("");
+        });
+
+        modelBuilder.Entity<NotasIncompatible>(entity =>
+        {
+            entity.ToView("NotasIncompatibles");
         });
 
         modelBuilder.Entity<Note>(entity =>
@@ -185,40 +204,6 @@ public partial class AlquimiaDbContext : DbContext
             entity.HasOne(d => d.PiramideOlfativa).WithMany(p => p.Notes)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_notasPiramideOlfativa");
-
-            entity.HasMany(d => d.Nota).WithMany(p => p.NotaIncompatibles)
-                .UsingEntity<Dictionary<string, object>>(
-                    "IncompatibleNote",
-                    r => r.HasOne<Note>().WithMany()
-                        .HasForeignKey("NotaId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_NotaIncompatible_nota"),
-                    l => l.HasOne<Note>().WithMany()
-                        .HasForeignKey("NotaIncompatibleId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_NotaIncompatible_notaIncompatible"),
-                    j =>
-                    {
-                        j.HasKey("NotaId", "NotaIncompatibleId").HasName("PK__Incompat__06842A27FB6E201A");
-                        j.ToTable("IncompatibleNotes");
-                    });
-
-            entity.HasMany(d => d.NotaIncompatibles).WithMany(p => p.Nota)
-                .UsingEntity<Dictionary<string, object>>(
-                    "IncompatibleNote",
-                    r => r.HasOne<Note>().WithMany()
-                        .HasForeignKey("NotaIncompatibleId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_NotaIncompatible_notaIncompatible"),
-                    l => l.HasOne<Note>().WithMany()
-                        .HasForeignKey("NotaId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_NotaIncompatible_nota"),
-                    j =>
-                    {
-                        j.HasKey("NotaId", "NotaIncompatibleId").HasName("PK__Incompat__06842A27FB6E201A");
-                        j.ToTable("IncompatibleNotes");
-                    });
         });
 
         modelBuilder.Entity<NotesPyramidFamily>(entity =>
@@ -235,20 +220,18 @@ public partial class AlquimiaDbContext : DbContext
 
         modelBuilder.Entity<OrderProduct>(entity =>
         {
-            entity.HasOne(d => d.IdPedidoNavigation).WithMany(p => p.OrderProducts).HasConstraintName("FK_pedidoProductoIdPedido");
+            entity.HasOne(d => d.IdPedidoNavigation).WithMany(p => p.OrderProducts).HasConstraintName("FK_pedidoIdPedido");
 
             entity.HasOne(d => d.Productos).WithMany(p => p.OrderProducts).HasConstraintName("FK_pedidoProductoId");
         });
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasOne(d => d.IdProveedorNavigation).WithMany(p => p.ProductIdProveedorNavigations).HasConstraintName("FK_productIdProv");
+            entity.HasOne(d => d.IdProveedorNavigation).WithMany(p => p.Products).HasConstraintName("FK_productIdProv");
 
             entity.HasOne(d => d.TipoProducto).WithMany(p => p.Products)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ProductTypes");
-
-            entity.HasOne(d => d.Usuario).WithMany(p => p.ProductUsuarios).HasConstraintName("FK_productIdUser");
         });
 
         modelBuilder.Entity<Question>(entity =>
@@ -268,6 +251,10 @@ public partial class AlquimiaDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
+            entity.HasIndex(e => e.NormalizedUserName, "UserNameIndex")
+                .IsUnique()
+                .HasFilter("([NormalizedUserName] IS NOT NULL)");
+
             entity.HasOne(d => d.IdEstadoNavigation).WithMany(p => p.Users).HasConstraintName("FK_estado_Users");
 
             entity.HasOne(d => d.IdFormulasNavigation).WithMany(p => p.Users).HasConstraintName("FK_formulas_Users");
