@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +20,8 @@ public partial class AlquimiaDbContext : DbContext
     public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
 
     public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
+
+    public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; }
 
     public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
 
@@ -81,11 +83,6 @@ public partial class AlquimiaDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<AspNetRoleClaim>(entity =>
-        {
-            entity.HasOne(d => d.Role).WithMany(p => p.AspNetRoleClaims).HasConstraintName("FK_AspNetRoleClaims_RoleId");
-        });
-
         modelBuilder.Entity<AspNetUserClaim>(entity =>
         {
             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserClaims).HasConstraintName("FK_AspNetUserClaims_Usuarios_UserId");
@@ -94,6 +91,13 @@ public partial class AlquimiaDbContext : DbContext
         modelBuilder.Entity<AspNetUserLogin>(entity =>
         {
             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserLogins).HasConstraintName("FK_AspNetUserLogins_Usuarios_UserId");
+        });
+
+        modelBuilder.Entity<AspNetUserRole>(entity =>
+        {
+            entity.HasKey(e => new { e.UserId, e.RoleId }).HasName("PK_UserRoles");
+
+            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserRoles).HasConstraintName("FK_AspNetUserRoles_Usuarios_UserId");
         });
 
         modelBuilder.Entity<AspNetUserToken>(entity =>
@@ -258,21 +262,6 @@ public partial class AlquimiaDbContext : DbContext
             entity.HasOne(d => d.IdQuizNavigation).WithMany(p => p.Users).HasConstraintName("FK_quiz_Users");
 
             entity.HasOne(d => d.IdSuscripcionNavigation).WithMany(p => p.Users).HasConstraintName("FK_suscripcion_Users");
-
-            entity.HasMany(d => d.Roles).WithMany(p => p.Users)
-                .UsingEntity<Dictionary<string, object>>(
-                    "AspNetUserRole",
-                    r => r.HasOne<Role>().WithMany()
-                        .HasForeignKey("RoleId")
-                        .HasConstraintName("FK_AspNetUserRoles_RoleId"),
-                    l => l.HasOne<User>().WithMany()
-                        .HasForeignKey("UserId")
-                        .HasConstraintName("FK_AspNetUserRoles_Usuarios_UserId"),
-                    j =>
-                    {
-                        j.HasKey("UserId", "RoleId").HasName("PK_UserRoles");
-                        j.ToTable("AspNetUserRoles");
-                    });
         });
 
         modelBuilder.Entity<UserProduct>(entity =>
