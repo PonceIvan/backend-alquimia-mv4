@@ -28,10 +28,6 @@ public partial class Formula
 
     public int? CreadorId { get; set; }
 
-    [ForeignKey("CreadorId")]
-    [InverseProperty("Formulas")]
-    public virtual User? Creador { get; set; }
-
     [ForeignKey("FormulaCorazon")]
     [InverseProperty("FormulaFormulaCorazonNavigations")]
     public virtual FormulaNote FormulaCorazonNavigation { get; set; } = null!;

@@ -47,8 +47,4 @@ public partial class Design
     [ForeignKey("IdProducto")]
     [InverseProperty("Designs")]
     public virtual Product? IdProductoNavigation { get; set; }
-
-    [ForeignKey("TipoProductoId")]
-    [InverseProperty("Designs")]
-    public virtual ProductType? TipoProducto { get; set; }
 }

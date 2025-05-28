@@ -14,8 +14,5 @@ public partial class ProductType
     public string Description { get; set; } = null!;
 
     [InverseProperty("TipoProducto")]
-    public virtual ICollection<Design> Designs { get; set; } = new List<Design>();
-
-    [InverseProperty("TipoProducto")]
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 }

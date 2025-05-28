@@ -39,15 +39,13 @@ public partial class Note
     [InverseProperty("NotaId4Navigation")]
     public virtual ICollection<FormulaNote> FormulaNoteNotaId4Navigations { get; set; } = new List<FormulaNote>();
 
+    [InverseProperty("Nota")]
+    public virtual ICollection<IncompatibleNote> IncompatibleNoteNota { get; set; } = new List<IncompatibleNote>();
+
+    [InverseProperty("NotaIncompatible")]
+    public virtual ICollection<IncompatibleNote> IncompatibleNoteNotaIncompatibles { get; set; } = new List<IncompatibleNote>();
+
     [ForeignKey("PiramideOlfativaId")]
     [InverseProperty("Notes")]
     public virtual OlfactoryPyramid PiramideOlfativa { get; set; } = null!;
-
-    [ForeignKey("NotaIncompatibleId")]
-    [InverseProperty("NotaIncompatibles")]
-    public virtual ICollection<Note> Nota { get; set; } = new List<Note>();
-
-    [ForeignKey("NotaId")]
-    [InverseProperty("Nota")]
-    public virtual ICollection<Note> NotaIncompatibles { get; set; } = new List<Note>();
 }
