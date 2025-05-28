@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace backendAlquimia.Controllers
 {
-    [Route("creador")]
+    [Route("creator")]
     [ApiController]
     public class CreatorController : ControllerBase
     {
@@ -38,6 +38,11 @@ namespace backendAlquimia.Controllers
             return Ok(notas);
         }
 
-
+        [HttpPost("compatibilities")]
+        public async Task<IActionResult> PostCompatibleNotes([FromBody] SelectedNotesDTO dto)
+        {
+            var compatibles = await _notaService.GetCompatibleNotesAsync(dto.ListaDeIdsSeleccionadas, dto.Sector);
+            return Ok(compatibles);
+        }
     }
 }
