@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Data.Data.Entities;
 
-public partial class Role
+public partial class Role : IdentityRole
 {
     [Key]
     public int Id { get; set; }
