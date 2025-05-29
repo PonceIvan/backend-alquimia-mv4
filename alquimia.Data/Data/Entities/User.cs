@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Data.Data.Entities;
 
-public partial class User: IdentityUser
+public partial class User: IdentityUser<int>
 {
     [Key]
     public int Id { get; set; }

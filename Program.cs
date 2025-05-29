@@ -1,5 +1,4 @@
 //using alquimia.Data.Data;
-//using backendAlquimia.Seed;
 using alquimia.Data.Data.Entities;
 using alquimia.Services.Services.Interfaces;
 using alquimia.Services.Services;
@@ -13,8 +12,7 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using backendAlquimia.alquimia.Services;
 using System.Web.Mvc;
-//using backendAlquimia.alquimia.Services.Services;
-//using alquimia.Data.Data.Entities;
+using backendAlquimia.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +41,7 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<INoteService, NoteService>();
 builder.Services.AddScoped<IFormulaService, FormulaService>();
 builder.Services.AddScoped<IQuizService, QuizService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
 //builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 //{
 //    options.JsonSerializerOptions.PropertyNamingPolicy = null; // Para que respete nombres C#
@@ -55,8 +54,8 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.PropertyNamingPolicy = null;
     });
 
-//builder.Services.AddIdentity<User, Role>()
-//    .AddEntityFrameworkStores<AlquimiaDbContext>();
+builder.Services.AddIdentity<User, Role>()
+    .AddEntityFrameworkStores<AlquimiaDbContext>();
 //.AddDefaultTokenProviders();
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -118,14 +117,14 @@ builder.Services.AddCors(options =>
 
 
 var app = builder.Build();
-//using (var scope = app.Services.CreateScope())
-//{
-//    var services = scope.ServiceProvider;
-//    //await RoleSeeder.SeedRolesAsync(services);
-//    await UserSeeder.SeedAdminAsync(services);
-//    await ProductoSeeder.SeedTiposProductoAsync(services);
-
-//}
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await RoleSeeder.SeedRolesAsync(services);
+    await UserSeeder.SeedAdminAsync(services);
+    await ProductoSeeder.SeedTiposProductoAsync(services);
+    await UserSeeder.SeedProveedoresAsync(services);
+}
 
 app.UseSwagger();
 app.UseSwaggerUI(c =>

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Data.Data.Entities;
 
-public partial class Role : IdentityRole
+public partial class Role : IdentityRole<int>
 {
     [Key]
     public int Id { get; set; }
