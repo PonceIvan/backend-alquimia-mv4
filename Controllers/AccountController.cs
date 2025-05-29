@@ -40,23 +40,37 @@ namespace backendAlquimia.Controllers
             {
                 UserName = dto.Email,
                 Email = dto.Email,
+                SecurityStamp = Guid.NewGuid().ToString(), // Obligatorio
                 Name = dto.Name?.Trim()
             };
 
             var result = await _userManager.CreateAsync(nuevoUsuario, dto.Password);
-            var roleExists = await _userManager.IsInRoleAsync(nuevoUsuario, dto.Rol);
-            if (!await _userManager.IsInRoleAsync(nuevoUsuario, dto.Rol))
-            {
-                var roleResult = await _userManager.AddToRoleAsync(nuevoUsuario, dto.Rol);
-                if (!roleResult.Succeeded)
-                    return BadRequest(new { mensaje = "Error al asignar el rol." });
-            }
             if (!result.Succeeded)
+            {
+                _logger.LogError("Error al crear el usuario: {Errores}", result.Errors);
                 return BadRequest(result.Errors);
-            var roles = await _userManager.GetRolesAsync(nuevoUsuario);
-            var token = _jwtService.GenerateToken(nuevoUsuario, roles);
-            // Autenticamos automáticamente al usuario después del registro
-            await _signInManager.SignInAsync(nuevoUsuario, isPersistent: false);
+            }
+
+            // 🔁 Recuperar desde base de datos para garantizar que Id esté persistido
+            var usuarioPersistido = await _userManager.FindByEmailAsync(dto.Email);
+            if (usuarioPersistido == null)
+                return StatusCode(500, new { mensaje = "No se pudo recuperar el usuario recién creado." });
+
+            // ✅ Asignar rol si no lo tiene
+            if (!await _userManager.IsInRoleAsync(usuarioPersistido, dto.Rol))
+            {
+                var roleResult = await _userManager.AddToRoleAsync(usuarioPersistido, dto.Rol);
+                if (!roleResult.Succeeded)
+                {
+                    _logger.LogError("Error al asignar el rol: {Errores}", roleResult.Errors);
+                    return BadRequest(new { mensaje = "Error al asignar el rol." });
+                }
+            }
+
+            var roles = await _userManager.GetRolesAsync(usuarioPersistido);
+            var token = _jwtService.GenerateToken(usuarioPersistido, roles);
+
+            await _signInManager.SignInAsync(usuarioPersistido, isPersistent: false);
             _logger.LogInformation("Usuario registrado exitosamente: {Email}", dto.Email);
             return Ok(new { mensaje = "Usuario registrado correctamente.", token });
         }
@@ -129,7 +143,8 @@ namespace backendAlquimia.Controllers
             {
                 Email = email,
                 UserName = email,
-                Name = name
+                Name = name,
+                SecurityStamp = Guid.NewGuid().ToString() // ✅ agregado
             };
 
             var createResult = await _userManager.CreateAsync(newUser);
