@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
@@ -9,6 +8,11 @@ namespace alquimia.Data.Data.Entities;
 
 [Table("AspNetRoles")]          // 👈 mapea a la tabla que ya existe
 public partial class Role : IdentityRole<int>
+
+
+namespace alquimia.Data.Data.Entities;
+
+public partial class Role : IdentityRole
 {
 
 

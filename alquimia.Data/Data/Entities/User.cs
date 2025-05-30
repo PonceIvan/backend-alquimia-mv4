@@ -1,9 +1,14 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace alquimia.Data.Data.Entities;
 
-public partial class User: IdentityUser<int>
+public partial class User : IdentityUser<int>
+
+[Index("NormalizedEmail", Name = "EmailIndex")]
+public partial class User : IdentityUser
 {
     public string Name { get; set; } = null!;
 

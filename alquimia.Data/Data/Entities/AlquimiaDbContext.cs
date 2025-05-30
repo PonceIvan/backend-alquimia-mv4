@@ -1,8 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+
+
 namespace alquimia.Data.Data.Entities;
 
 public partial class AlquimiaDbContext : IdentityDbContext<User, Role, int>
@@ -77,8 +80,6 @@ public partial class AlquimiaDbContext : IdentityDbContext<User, Role, int>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder); // ✅ SIEMPRE antes de todo
-
-        base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<User>(entity =>
         {

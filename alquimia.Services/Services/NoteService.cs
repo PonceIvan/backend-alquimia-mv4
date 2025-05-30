@@ -84,198 +84,82 @@ namespace backendAlquimia.alquimia.Services.Services
                 }).ToListAsync();
         }
 
+        public async Task<List<NotesGroupedByFamilyDTO>> GetCompatibleNotesAsync(List<int> seleccionadasIds, string sector)
+        {
+            var seleccionadas = await _context.Notes
+                .Where(n => seleccionadasIds.Contains(n.Id) && n.PiramideOlfativa.Sector == sector)
+                .Include(n => n.FamiliaOlfativa)
+                .Include(n => n.PiramideOlfativa)
+                .ToListAsync();
 
-        // //////////////////////////////////////
+            var todasLasNotasDelSector = await _context.Notes
+                .Where(n => n.PiramideOlfativa.Sector == sector)
+                .Include(n => n.FamiliaOlfativa)
+                .Include(n => n.PiramideOlfativa)
+                .ToListAsync();
 
-        // Calcula la compatibilidad entre dos notas a partir de la familia.
-        //public async Task<int> CalcularCompatibilidadAsync(int notaAId, int notaBId)
-        //{
-        //    var notaA = await _context.Notes.Include(n => n.FamiliaOlfativa).FirstOrDefaultAsync(n => n.Id == notaAId);
-        //    var notaB = await _context.Notes.Include(n => n.FamiliaOlfativa).FirstOrDefaultAsync(n => n.Id == notaBId);
+            var incompatibilidades = await _context.IncompatibleNotes.ToListAsync();
+            var compatibilidades = await _context.FamilyCompatibilities.ToListAsync();
 
-        //    if (notaA == null || notaB == null)
-        //        throw new ArgumentException("Alguna de las notas no existe");
+            var compatiblesConCompatibilidad = new List<(Note Nota, int MinCompatibilidad)>();
 
-        //    var familia1Id = notaA.FamiliaOlfativaId;
-        //    var familia2Id = notaB.FamiliaOlfativaId;
+            foreach (var candidata in todasLasNotasDelSector)
+            {
+                if (seleccionadas.Any(n => n.Id == candidata.Id))
+                    continue;
 
-        //    var compatibilidad = await _context.FamilyCompatibilities
-        //        .FirstOrDefaultAsync(c =>
-        //            (c.Familia1Id == familia1Id && c.Familia2Id == familia2Id) ||
-        //            (c.Familia1Id == familia2Id && c.Familia2Id == familia1Id));
+                bool esCompatible = true;
+                int minCompatibilidad = int.MaxValue;
 
-        //    return compatibilidad?.GradoDeCompatibilidad ?? 0; // valor neutro si no hay definición
-        //}
+                foreach (var seleccionada in seleccionadas)
+                {
+                    if (incompatibilidades.Any(i =>
+                        (i.NotaId == seleccionada.Id && i.NotaIncompatibleId == candidata.Id) ||
+                        (i.NotaId == candidata.Id && i.NotaIncompatibleId == seleccionada.Id)))
+                    {
+                        esCompatible = false;
+                        break;
+                    }
 
-        //public async Task<bool> EsCompatibleConSeleccionAsync(int nuevaNotaId, List<int> seleccionadasIds)
-        //{
-        //    var nuevaNota = await _context.Notes.Include(n => n.FamiliaOlfativa).FirstOrDefaultAsync(n => n.Id == nuevaNotaId);
-        //    if (nuevaNota == null) return false;
+                    int f1 = Math.Min(seleccionada.FamiliaOlfativaId, candidata.FamiliaOlfativaId);
+                    int f2 = Math.Max(seleccionada.FamiliaOlfativaId, candidata.FamiliaOlfativaId);
 
-        //    var seleccionadas = await _context.Notes
-        //        .Where(n => seleccionadasIds.Contains(n.Id))
-        //        .Include(n => n.FamiliaOlfativa)
-        //        .ToListAsync();
+                    var compat = compatibilidades.FirstOrDefault(c =>
+                        c.FamiliaMenor == f1 && c.FamiliaMayor == f2);
 
-        //    foreach (var anterior in seleccionadas)
-        //    {
-        //        int grado = await CalcularCompatibilidadAsync(anterior.Id, nuevaNota.Id);
-        //        if (grado < 70)
-        //            return false;
-        //    }
+                    if (compat == null || compat.GradoDeCompatibilidad < 70)
+                    {
+                        esCompatible = false;
+                        break;
+                    }
 
-        //    seleccionadasIds.Add(nuevaNotaId);
-        //    return true;
-        //}
+                    minCompatibilidad = Math.Min(minCompatibilidad, compat.GradoDeCompatibilidad);
+                }
 
-        //public async Task<List<Note>> ObtenerNotasCompatiblesAsync(List<int> seleccionadasIds)
-        //{
-        //    var seleccionadas = await _context.Notes
-        //    .Where(n => seleccionadasIds.Contains(n.Id))
-        //    .Include(n => n.FamiliaOlfativa)
-        //    .ToListAsync();
+                if (esCompatible)
+                    compatiblesConCompatibilidad.Add((candidata, minCompatibilidad));
+            }
 
-        //    var todasLasNotas = await _context.Notes.Include(n => n.FamiliaOlfativa).ToListAsync();
+            // Ordenamos antes de agrupar
+            var resultado = compatiblesConCompatibilidad
+                .OrderByDescending(c => c.MinCompatibilidad)
+                .GroupBy(c => c.Nota.FamiliaOlfativa.Nombre)
+                .Select(g => new NotesGroupedByFamilyDTO
+                {
+                    Family = g.Key,
+                    Notes = g.Select(c => new NoteDTO
+                    {
+                        Id = c.Nota.Id,
+                        Name = c.Nota.Nombre,
+                        Description = c.Nota.Descripcion,
+                        Family = c.Nota.FamiliaOlfativa.Nombre,
+                        Sector = c.Nota.PiramideOlfativa.Sector,
+                        Duration = c.Nota.PiramideOlfativa.Duracion
+                    }).ToList()
+                })
+                .ToList();
 
-        //    var compatibles = new List<Note>();
-
-        //    foreach (var candidata in todasLasNotas)
-        //    {
-        //        if (seleccionadas.Any(n => n.Id == candidata.Id)) continue;
-
-        //        bool esCompatible = true;
-
-        //        foreach (var anterior in seleccionadas)
-        //        {
-        //            int grado = await CalcularCompatibilidadAsync(anterior.Id, candidata.Id);
-        //            if (grado < 70)
-        //            {
-        //                esCompatible = false;
-        //                break;
-        //            }
-        //        }
-
-        //        if (esCompatible)
-        //            compatibles.Add(candidata);
-        //    }
-
-        //    return compatibles;
-        //}
-
-        //public async Task<List<NotesGroupedByFamily>> ObtenerNotasCompatiblesAsync(List<int> seleccionadasIds, string Sector)
-        //{
-        //    var seleccionadas = await _context.Notes
-        //        .Where(n => seleccionadasIds.Contains(n.Id) && n.PiramideOlfativa.Sector == Sector)
-        //        .Include(n => n.FamiliaOlfativa)
-        //        .Include(n => n.PiramideOlfativa.Sector)
-        //        .ToListAsync();
-
-        //    var todasLasNotas = await _context.Notes
-        //        .Include(n => n.FamiliaOlfativa)
-        //        .Include(n => n.PiramideOlfativa.Sector)
-        //        .ToListAsync();
-
-        //    var compatibles = new List<Note>();
-
-        //    foreach (var candidata in todasLasNotas)
-        //    {
-        //        if (seleccionadas.Any(n => n.Id == candidata.Id)) continue;
-
-        //        bool esCompatible = true;
-
-        //        foreach (var anterior in seleccionadas)
-        //        {
-        //            int grado = await CalcularCompatibilidadAsync(anterior.Id, candidata.Id);
-        //            if (grado < 70)
-        //            {
-        //                esCompatible = false;
-        //                break;
-        //            }
-        //        }
-
-        //        if (esCompatible)
-        //            compatibles.Add(candidata);
-        //    }
-
-        //    // Agrupar las notas compatibles por familia
-        //    var resultado = compatibles
-        //        .GroupBy(n => n.FamiliaOlfativa.Nombre)
-        //        .Select(g => new NotesGroupedByFamily
-        //        {
-        //            Familia = g.Key,
-        //            Notas = g.Select(n => new NotaDTO
-        //            {
-        //                Id = n.Id,
-        //                Nombre = n.Nombre,
-        //                Familia = n.FamiliaOlfativa.Nombre,
-        //                Sector = n.PiramideOlfativa.Sector,
-        //                Descripcion = n.Descripcion,
-        //                Duracion = n.PiramideOlfativa.Duracion
-        //            }).ToList()
-        //        })
-        //        .ToList();
-
-        //    return resultado;
-        //}
-        //public async Task<List<NotasPorFamiliaDTO>> ObtenerNotasCompatiblesAsync(List<int> seleccionadasIds, string sector)
-        //{
-        //    // Obtener las notas seleccionadas del sector especificado
-        //    var seleccionadas = await _context.Notas
-        //        .Where(n => seleccionadasIds.Contains(n.Id) && n.PiramideOlfativa.Sector == sector)
-        //        .Include(n => n.FamiliaOlfativa)
-        //        .Include(n => n.PiramideOlfativa.Sector)
-        //        .ToListAsync();
-
-        //    if (!seleccionadas.Any())
-        //        return new List<NotasPorFamiliaDTO>(); // O lanzar error si preferís
-
-        //    // Obtener todas las notas del mismo sector, excluyendo las ya seleccionadas
-        //    var todasLasNotas = await _context.Notas
-        //        .Where(n => n.PiramideOlfativa.Sector == sector && !seleccionadasIds.Contains(n.Id))
-        //        .Include(n => n.FamiliaOlfativa)
-        //        .Include(n => n.PiramideOlfativa.Sector)
-        //        .ToListAsync();
-
-        //    var compatibles = new List<Nota>();
-
-        //    foreach (var candidata in todasLasNotas)
-        //    {
-        //        bool esCompatible = true;
-
-        //        foreach (var anterior in seleccionadas)
-        //        {
-        //            int grado = await CalcularCompatibilidadAsync(anterior.Id, candidata.Id);
-        //            if (grado < 70)
-        //            {
-        //                esCompatible = false;
-        //                break;
-        //            }
-        //        }
-
-        //        if (esCompatible)
-        //            compatibles.Add(candidata);
-        //    }
-
-        //    // Agrupar las notas compatibles por familia
-        //    var resultado = compatibles
-        //        .GroupBy(n => n.FamiliaOlfativa.Nombre)
-        //        .Select(g => new NotasPorFamiliaDTO
-        //        {
-        //            Familia = g.Key,
-        //            Notas = g.Select(n => new NotaDTO
-        //            {
-        //                Id = n.Id,
-        //                Nombre = n.Nombre,
-        //                Familia = n.FamiliaOlfativa.Nombre,
-        //                Sector = n.PiramideOlfativa.Sector,
-        //                Descripcion = n.Descripcion,
-        //                Duracion = n.PiramideOlfativa.Duracion
-        //            }).ToList()
-        //        })
-        //        .ToList();
-
-        //    return resultado;
-        //}
-
+            return resultado;
+        }
     }
 }
