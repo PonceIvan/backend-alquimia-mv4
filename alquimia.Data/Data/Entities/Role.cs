@@ -10,9 +10,8 @@ namespace alquimia.Data.Data.Entities;
 public partial class Role : IdentityRole<int>
 
 
-namespace alquimia.Data.Data.Entities;
 
-public partial class Role : IdentityRole
+
 {
 
 
