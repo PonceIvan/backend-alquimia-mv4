@@ -1,8 +1,14 @@
+using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 ﻿using Microsoft.EntityFrameworkCore;
+
 
 namespace alquimia.Data.Data.Entities;
 
-public partial class AlquimiaDbContext : DbContext
+public partial class AlquimiaDbContext : IdentityDbContext<User, Role, int>
 {
     public AlquimiaDbContext()
     {
@@ -13,15 +19,7 @@ public partial class AlquimiaDbContext : DbContext
     {
     }
 
-    public virtual DbSet<AspNetRoleClaim> AspNetRoleClaims { get; set; }
-
-    public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
-
-    public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
-
-    public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; }
-
-    public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
+    
 
     public virtual DbSet<Design> Designs { get; set; }
 
@@ -77,31 +75,49 @@ public partial class AlquimiaDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=COMPUDEMICA\\SQLEXPRESS;Database=alquimiaDB;Trusted_Connection=True;TrustServerCertificate=True");
+        => optionsBuilder.UseSqlServer("Server=localhost;Database=alquimiaDB;Trusted_Connection=True;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<AspNetUserClaim>(entity =>
+        base.OnModelCreating(modelBuilder); // ✅ SIEMPRE antes de todo
+
+        modelBuilder.Entity<User>(entity =>
         {
-            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserClaims).HasConstraintName("FK_AspNetUserClaims_Usuarios_UserId");
+            entity.ToTable("Users");
         });
 
-        modelBuilder.Entity<AspNetUserLogin>(entity =>
+        modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserLogins).HasConstraintName("FK_AspNetUserLogins_Usuarios_UserId");
+            entity.ToTable("AspNetRoles");
         });
 
-        modelBuilder.Entity<AspNetUserRole>(entity =>
+        modelBuilder.Entity<IdentityUserRole<int>>(entity =>
         {
-            entity.HasKey(e => new { e.UserId, e.RoleId }).HasName("PK_UserRoles");
-
-            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserRoles).HasConstraintName("FK_AspNetUserRoles_Usuarios_UserId");
+            entity.ToTable("AspNetUserRoles");
+            entity.HasKey(e => new { e.UserId, e.RoleId });
         });
 
-        modelBuilder.Entity<AspNetUserToken>(entity =>
+        modelBuilder.Entity<IdentityUserClaim<int>>(entity =>
         {
-            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserTokens).HasConstraintName("FK_AspNetUserTokens_Usuarios_UserId");
+            entity.ToTable("AspNetUserClaims");
         });
+
+        modelBuilder.Entity<IdentityUserLogin<int>>(entity =>
+        {
+            entity.ToTable("AspNetUserLogins");
+        });
+
+        modelBuilder.Entity<IdentityUserToken<int>>(entity =>
+        {
+            entity.ToTable("AspNetUserTokens");
+        });
+
+        modelBuilder.Entity<IdentityRoleClaim<int>>(entity =>
+        {
+            entity.ToTable("AspNetRoleClaims");
+        });
+
+
 
         modelBuilder.Entity<Design>(entity =>
         {
