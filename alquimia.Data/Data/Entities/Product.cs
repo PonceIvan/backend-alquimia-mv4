@@ -6,9 +6,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Data.Data.Entities;
 
-[Index("IdProveedor", Name = "IX_Productos_IdProveedor")]
-[Index("TipoProductoId", Name = "IX_Productos_TipoProductoId")]
-[Index("UsuarioId", Name = "IX_Productos_UsuarioId")]
 public partial class Product
 {
     [Key]

@@ -4,10 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Tests.Data.Entities;
+namespace alquimia.Data.Data.Entities;
 
 [PrimaryKey("LoginProvider", "ProviderKey")]
-[Index("UserId", Name = "IX_AspNetUserLogins_UserId")]
 public partial class AspNetUserLogin
 {
     [Key]

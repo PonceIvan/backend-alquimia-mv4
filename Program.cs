@@ -1,4 +1,4 @@
-//using alquimia.Data.Data;
+
 using alquimia.Data.Data.Entities;
 using alquimia.Services.Services;
 using alquimia.Services.Services.Interfaces;
@@ -44,10 +44,10 @@ builder.Services.AddScoped<INoteService, NoteService>();
 builder.Services.AddScoped<IFormulaService, FormulaService>();
 builder.Services.AddScoped<IQuizService, QuizService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
-//builder.Services.AddControllersWithViews().AddJsonOptions(options =>
-//{
-//    options.JsonSerializerOptions.PropertyNamingPolicy = null; // Para que respete nombres C#
-//});
+builder.Services.AddControllersWithViews().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNamingPolicy = null; // Para que respete nombres C#
+});
 builder.Services.AddControllers()
     .AddJsonOptions(x =>
         x.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles)
@@ -57,13 +57,9 @@ builder.Services.AddControllers()
     });
 
 builder.Services.AddIdentity<User, Role>()
-<<<<<<< HEAD
-    .AddEntityFrameworkStores<AlquimiaDbContext>();
-//.AddDefaultTokenProviders();
-=======
     .AddEntityFrameworkStores<AlquimiaDbContext>()
-.AddDefaultTokenProviders();
->>>>>>> 71d3f46eccbad8043d2038784cc033fc7098ec1b
+    .AddDefaultTokenProviders();
+
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]);
@@ -121,6 +117,11 @@ builder.Services.AddCors(options =>
               .AllowCredentials();
     });
 });
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+    options.User.RequireUniqueEmail = true;
+});
 
 
 var app = builder.Build();
@@ -130,7 +131,7 @@ using (var scope = app.Services.CreateScope())
     await RoleSeeder.SeedRolesAsync(services);
     await UserSeeder.SeedAdminAsync(services);
     await ProductoSeeder.SeedTiposProductoAsync(services);
-    await UserSeeder.SeedProveedoresAsync(services);
+    //await UserSeeder.SeedProveedoresAsync(services);
 }
 
 app.UseSwagger();

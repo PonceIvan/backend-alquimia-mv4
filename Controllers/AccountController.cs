@@ -5,6 +5,7 @@ using backendAlquimia.alquimia.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using alquimia.Data.Data.Entities;
+using Humanizer;
 
 namespace backendAlquimia.Controllers
 {
@@ -38,7 +39,7 @@ namespace backendAlquimia.Controllers
 
             var nuevoUsuario = new User
             {
-                UserName = dto.Email,
+                UserName = GenerarUserNameSeguro(dto.Email),
                 Email = dto.Email,
                 SecurityStamp = Guid.NewGuid().ToString(), // Obligatorio
                 Name = dto.Name?.Trim()
@@ -142,7 +143,7 @@ namespace backendAlquimia.Controllers
             var newUser = new User
             {
                 Email = email,
-                UserName = email,
+                UserName = GenerarUserNameSeguro(email),
                 Name = name,
                 SecurityStamp = Guid.NewGuid().ToString() // ✅ agregado
             };
@@ -157,6 +158,59 @@ namespace backendAlquimia.Controllers
             _logger.LogInformation("Google login info recibida para: {Email}", info.Principal.FindFirstValue(ClaimTypes.Email));
             return Redirect("http://localhost:3000/Login/RedirectGoogle");
         }
+        [HttpPost("registrar-proveedor")]
+        public async Task<IActionResult> RegistrarProveedor([FromBody] RegisterDTO dto)
+        {
+            _logger.LogInformation("Intentando registrar proveedor con email: {Email}", dto.Email);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var usuarioExistente = await _userManager.FindByEmailAsync(dto.Email);
+            if (usuarioExistente != null)
+                return BadRequest(new { mensaje = "El email ya está registrado." });
+
+            var nuevoUsuario = new User
+            {
+                UserName = GenerarUserNameSeguro(dto.Email),
+                Email = dto.Email,
+                SecurityStamp = Guid.NewGuid().ToString(),
+                Name = dto.Name?.Trim(),
+                EsProveedor = true // 👈 IMPORTANTE
+            };
+
+            var result = await _userManager.CreateAsync(nuevoUsuario, dto.Password);
+            if (!result.Succeeded)
+            {
+                _logger.LogError("Error al crear el usuario proveedor: {Errores}", result.Errors);
+                return BadRequest(result.Errors);
+            }
+
+            // Reconfirmar existencia
+            var usuarioPersistido = await _userManager.FindByEmailAsync(dto.Email);
+            if (usuarioPersistido == null)
+                return StatusCode(500, new { mensaje = "No se pudo recuperar el proveedor recién creado." });
+
+            // Asignar rol de "Creador" inicialmente
+            var rolInicial = "Creador";
+            if (!await _userManager.IsInRoleAsync(usuarioPersistido, rolInicial))
+            {
+                var roleResult = await _userManager.AddToRoleAsync(usuarioPersistido, rolInicial);
+                if (!roleResult.Succeeded)
+                {
+                    _logger.LogError("Error al asignar rol inicial: {Errores}", roleResult.Errors);
+                    return BadRequest(new { mensaje = "Error al asignar el rol inicial." });
+                }
+            }
+
+            var roles = await _userManager.GetRolesAsync(usuarioPersistido);
+            var token = _jwtService.GenerateToken(usuarioPersistido, roles);
+
+            await _signInManager.SignInAsync(usuarioPersistido, isPersistent: false);
+            _logger.LogInformation("Proveedor registrado exitosamente como Creador: {Email}", dto.Email);
+
+            return Ok(new { mensaje = "Proveedor registrado correctamente como creador en espera de aprobación.", token });
+        }
 
         [HttpGet("auth/status")]
         public IActionResult Estado()
@@ -168,5 +222,25 @@ namespace backendAlquimia.Controllers
                 nombre = usuario?.Name
             });
         }
+
+
+        private string GenerarUserNameSeguro(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
+                return Guid.NewGuid().ToString("N").Substring(0, 8);
+
+            var nombre = email.Split('@')[0];
+
+            // Eliminar caracteres no permitidos
+            nombre = new string(nombre.Where(char.IsLetterOrDigit).ToArray());
+
+            // Si quedó vacío, generamos uno al azar
+            return string.IsNullOrWhiteSpace(nombre)
+                ? Guid.NewGuid().ToString("N").Substring(0, 8)
+                : nombre;
+        }
     }
-}
+
+    
+
+    }

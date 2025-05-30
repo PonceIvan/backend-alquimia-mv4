@@ -6,8 +6,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Data.Data.Entities;
 
-[Index("FamiliaOlfativaId", Name = "IX_Notas_FamiliaOlfativaId")]
-[Index("PiramideOlfativaId", Name = "IX_Notas_PiramideOlfativaId")]
 public partial class Note
 {
     [Key]
