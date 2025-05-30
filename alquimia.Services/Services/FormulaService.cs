@@ -125,7 +125,10 @@ namespace backendAlquimia.alquimia.Services.Services
                 .Select
                 (x => new IntensitiesDTO
         {
-            return 0.0;
+                    Id = x.Id,
+                    Name = x.Nombre,
+                    Description = x.Description
+                }).ToListAsync();
         }
     }
 }
