@@ -7,6 +7,7 @@ using alquimia.Data.Data.Entities;
 using alquimia.Services.Services.Interfaces;
 using alquimia.Services.Services.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Services.Services
 {
@@ -21,23 +22,37 @@ namespace alquimia.Services.Services
             _userManager = userManager;
         }
 
-        public async Task<List<ProviderDTO>> GetAllProvidersAsync()
+        public async Task<List<ProviderDTO>> GetPendingAndApprovedProvidersAsync()
         {
-            var users = await _userManager.GetUsersInRoleAsync("Proveedor");
-
-            return users.Select(u => new ProviderDTO
+            var allUsers = await _userManager.Users
+            .Where(u => u.EsProveedor)
+            .AsNoTracking()
+            .ToListAsync();
+            var list = new List<ProviderDTO>();
+            foreach (var user in allUsers)
             {
-                Id = u.Id,
-                Nombre = u.Name,
-                Email = u.Email,
-                EsAprobado = u.EsProveedor
-            }).ToList();
+                var roles = await _userManager.GetRolesAsync(user);
+                if (roles.Contains("Creador") || roles.Contains("Proveedor"))
+                {
+                    list.Add(new ProviderDTO
+                    {
+                        Id = user.Id,
+                        Nombre = user.Name,
+                        Email = user.Email,
+                        EsAprobado = roles.Contains("Proveedor")
+                    });
+                }
+            }
+            return list;
         }
 
-        public async Task<ProviderDTO?> GetProviderByIdAsync(int id)
+        public async Task<ProviderDTO?> GetPendingOrApprovedProviderByIdAsync(int id)
         {
             var user = await _context.Users.FindAsync(id);
-            if (user == null || !await _userManager.IsInRoleAsync(user, "Proveedor")) return null;
+            if (user == null || !user.EsProveedor) return null;
+
+            var roles = await _userManager.GetRolesAsync(user);
+            if (!roles.Contains("Creador") && !roles.Contains("Proveedor")) return null;
 
             return new ProviderDTO
             {
@@ -48,18 +63,17 @@ namespace alquimia.Services.Services
             };
         }
 
-        public async Task<bool> ApproveProviderAsync(int id)
+        public async Task<bool> ApprovePendingProviderAsync(int id)
         {
             var user = await _context.Users.FindAsync(id);
-            if (user == null || !await _userManager.IsInRoleAsync(user, "Proveedor")) return false;
+            if (user == null || !user.EsProveedor) return false;
 
-            user.EsProveedor = true;
-            await _context.SaveChangesAsync();
-
-            if (await _userManager.IsInRoleAsync(user, "Creador"))
+            var currentRoles = await _userManager.GetRolesAsync(user);
+            if (currentRoles.Contains("Creador"))
                 await _userManager.RemoveFromRoleAsync(user, "Creador");
 
-            await _userManager.AddToRoleAsync(user, "Proveedor");
+            if (!currentRoles.Contains("Proveedor"))
+                await _userManager.AddToRoleAsync(user, "Proveedor");
 
             return true;
         }
@@ -68,12 +82,16 @@ namespace alquimia.Services.Services
         public async Task<bool> DeactivateProviderAsync(int id)
         {
             var user = await _context.Users.FindAsync(id);
-            if (user == null || !await _userManager.IsInRoleAsync(user, "Proveedor")) return false;
+            if (user == null || !user.EsProveedor) return false;
 
             user.EsProveedor = false;
             await _context.SaveChangesAsync();
-            await _userManager.RemoveFromRoleAsync(user, "Proveedor");
-            await _userManager.AddToRoleAsync(user, "Creador");
+            var currentRoles = await _userManager.GetRolesAsync(user);
+            if (currentRoles.Contains("Proveedor"))
+                await _userManager.RemoveFromRoleAsync(user, "Proveedor");
+
+            if (!currentRoles.Contains("Creador"))
+                await _userManager.AddToRoleAsync(user, "Creador");
             return true;
         }
     }

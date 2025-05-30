@@ -19,34 +19,34 @@ namespace backendAlquimia.Controllers
         [HttpGet("home")]
         public async Task<IActionResult> GetAllProviders()
         {
-            var proveedores = await _adminService.GetAllProvidersAsync();
+            var proveedores = await _adminService.GetPendingAndApprovedProvidersAsync();
             return Ok(proveedores);
         }
 
-        [HttpGet("proveedores")]
+        [HttpGet("listProviders")]
         public async Task<IActionResult> GetOnlyProviders()
         {
-            var proveedores = await _adminService.GetAllProvidersAsync(); // Misma lógica por ahora
+            var proveedores = await _adminService.GetPendingAndApprovedProvidersAsync(); 
             return Ok(proveedores);
         }
 
-        [HttpGet("proveedores/{id}")]
+        [HttpGet("getProvider/{id}")]
         public async Task<IActionResult> GetProviderById(int id)
         {
-            var proveedor = await _adminService.GetProviderByIdAsync(id);
+            var proveedor = await _adminService.GetPendingOrApprovedProviderByIdAsync(id);
             if (proveedor == null) return NotFound("Proveedor no encontrado.");
             return Ok(proveedor);
         }
 
-        [HttpPost("proveedor/{id}")]
+        [HttpPost("approveProvider/{id}")]
         public async Task<IActionResult> ApproveProvider(int id)
         {
-            var aprobado = await _adminService.ApproveProviderAsync(id);
+            var aprobado = await _adminService.ApprovePendingProviderAsync(id);
             if (!aprobado) return BadRequest("No se pudo aprobar al proveedor.");
             return Ok("Proveedor aprobado correctamente.");
         }
 
-        [HttpPut("proveedor/{id}/baja")]
+        [HttpPut("deactivateProvider/{id}")]
         public async Task<IActionResult> DeactivateProvider(int id)
         {
             var resultado = await _adminService.DeactivateProviderAsync(id);

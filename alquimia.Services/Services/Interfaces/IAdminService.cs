@@ -9,9 +9,9 @@ namespace alquimia.Services.Services.Interfaces
 {
     public interface IAdminService
     {
-        Task<List<ProviderDTO>> GetAllProvidersAsync();
-        Task<ProviderDTO?> GetProviderByIdAsync(int id);
-        Task<bool> ApproveProviderAsync(int id);
+        Task<List<ProviderDTO>> GetPendingAndApprovedProvidersAsync();
+        Task<ProviderDTO?> GetPendingOrApprovedProviderByIdAsync(int id);
+        Task<bool> ApprovePendingProviderAsync(int id);
         Task<bool> DeactivateProviderAsync(int id);
     }
 }
