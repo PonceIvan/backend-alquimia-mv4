@@ -7,8 +7,7 @@ namespace alquimia.Data.Data.Entities;
 
 public partial class User : IdentityUser<int>
 
-[Index("NormalizedEmail", Name = "EmailIndex")]
-public partial class User : IdentityUser
+
 {
     public string Name { get; set; } = null!;
 

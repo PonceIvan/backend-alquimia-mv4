@@ -19,7 +19,7 @@ public partial class AlquimiaDbContext : IdentityDbContext<User, Role, int>
     {
     }
 
-    
+    //hola
 
     public virtual DbSet<Design> Designs { get; set; }
 
