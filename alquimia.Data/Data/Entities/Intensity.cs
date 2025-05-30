@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Data.Data.Entities;
 
@@ -12,6 +9,9 @@ public partial class Intensity
     public int Id { get; set; }
 
     public string Nombre { get; set; } = null!;
+
+    [StringLength(100)]
+    public string? Description { get; set; }
 
     [InverseProperty("Intensidad")]
     public virtual ICollection<Formula> Formulas { get; set; } = new List<Formula>();

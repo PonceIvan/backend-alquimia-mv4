@@ -7,6 +7,6 @@ namespace backendAlquimia.alquimia.Services.Interfaces
     {
         //Task<GETFormulaDTO> guardar(POSTFormulaDTO dto);
         Task<List<IntensidadDTO>> ObtenerIntensidadAsync();
-        //Task<GETFormulaDTO> ObtenerPorId(int id);
+        Task<List<IntensitiesDTO>> GetIntensitiesAsync();
     }
 }
