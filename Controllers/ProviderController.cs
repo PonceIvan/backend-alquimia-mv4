@@ -3,13 +3,12 @@ using alquimia.Data.Data.Entities;
 using backendAlquimia.alquimia.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace backendAlquimia.Controllers
 {
     [Authorize]
-    [Route("api/proveedor")]
+    [Route("provider")]
     [ApiController]
     public class ProviderController : ControllerBase
     {
@@ -34,13 +33,13 @@ namespace backendAlquimia.Controllers
             return int.Parse(userIdClaim.Value);
         }
 
-        //[HttpGet("home")]
-        //public async Task<IActionResult> GetHomeData()
-        //{
-        //    var idProveedor = ObtenerIdProveedor();
-        //    var data = await _productService.GetHomeDataAsync(idProveedor);
-        //    return Ok(data);
-        //}
+        [HttpGet("home")]
+        public async Task<IActionResult> GetHomeData()
+        {
+            var idProveedor = ObtenerIdProveedor();
+            var data = await _productService.GetHomeDataAsync(idProveedor);
+            return Ok(data);
+        }
 
         //[HttpGet("productos")]
         //public async Task<IActionResult> GetProductos()
@@ -50,18 +49,18 @@ namespace backendAlquimia.Controllers
         //    return Ok(productos);
         //}
 
-        [HttpGet("tipos-producto")]
-        public async Task<IActionResult> GetTiposProducto()
-        {
-            var tipos = await _context.ProductTypes
-                .Select(t => new
-                {
-                    Descripcion = t.Description
-                })
-                .ToListAsync();
+        //[HttpGet("tipos-producto")]
+        //public async Task<IActionResult> GetTiposProducto()
+        //{
+        //    var tipos = await _context.ProductTypes
+        //        .Select(t => new
+        //        {
+        //            Descripcion = t.Description
+        //        })
+        //        .ToListAsync();
 
-            return Ok(tipos);
-        }
+        //    return Ok(tipos);
+        //}
 
 
         //[HttpPost("productos")]
@@ -153,7 +152,6 @@ namespace backendAlquimia.Controllers
         //        return StatusCode(500, new { mensaje = "Error interno al actualizar el producto" });
         //    }
         //}
-
 
     }
 }
