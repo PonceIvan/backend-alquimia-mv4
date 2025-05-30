@@ -6,9 +6,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Data.Data.Entities;
 
-[Index("Familia1Id", Name = "IX_CompatibilidadesFamilias_Familia1Id")]
-[Index("Familia2Id", Name = "IX_CompatibilidadesFamilias_Familia2Id")]
-[Index("FamiliaMenor", "FamiliaMayor", Name = "IX_Unique_Compatibilities", IsUnique = true)]
 public partial class FamilyCompatibility
 {
     [Key]

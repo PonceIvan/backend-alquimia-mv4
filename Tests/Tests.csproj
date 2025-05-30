@@ -12,7 +12,6 @@
   <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
 </PropertyGroup>
 <ItemGroup>
-  <Folder Include="Data\" />
   <Folder Include="Utils\" />
   <Folder Include="TestServices\" />
 </ItemGroup>

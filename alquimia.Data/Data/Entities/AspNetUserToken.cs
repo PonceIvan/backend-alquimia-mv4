@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Tests.Data.Entities;
+namespace alquimia.Data.Data.Entities;
 
 [PrimaryKey("UserId", "LoginProvider", "Name")]
 public partial class AspNetUserToken

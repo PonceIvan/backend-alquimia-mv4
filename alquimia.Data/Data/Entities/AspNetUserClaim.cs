@@ -4,9 +4,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Tests.Data.Entities;
+namespace alquimia.Data.Data.Entities;
 
-[Index("UserId", Name = "IX_AspNetUserClaims_UserId")]
 public partial class AspNetUserClaim
 {
     [Key]
