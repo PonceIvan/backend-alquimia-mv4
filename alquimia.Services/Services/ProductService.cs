@@ -1,5 +1,7 @@
 ﻿using alquimia.Data.Data.Entities;
 using backendAlquimia.alquimia.Services.Interfaces;
+using backendAlquimia.alquimia.Services.Models;
+using backendAlquimia.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace backendAlquimia.alquimia.Services
@@ -122,35 +124,64 @@ namespace backendAlquimia.alquimia.Services
         //    return await ObtenerProductoPorIdAsync(producto.Id, idProveedor);
         //}
 
+        public async Task<HomeProviderDataDTO> GetHomeDataAsync(int idProveedor)
+        {
+            // Obtener todos los productos del proveedor incluyendo sus variantes
+            var productosDelProveedor = await _context.Products
+                .Where(p => p.IdProveedor == idProveedor)
+                .Include(p => p.ProductVariants)
+                .Include(p => p.TipoProducto)
+                .ToListAsync();
 
-        //public async Task<object> GetHomeDataAsync(int idProveedor)
-        //{
-        //    var totalProductos = await _context.Products
-        //        .CountAsync(p => p.IdProveedor == idProveedor);
+            // Calcular total de productos
+            var totalProductos = productosDelProveedor.Count;
 
-        //    var stockTotal = await _context.Products
-        //        .Where(p => p.IdProveedor == idProveedor)
-        //        .SumAsync(p => p.Stock);
+            // Calcular stock total sumando stock de todas las variantes
+            var stockTotal = productosDelProveedor
+                .SelectMany(p => p.ProductVariants)
+                .Sum(v => v.Stock);
 
-        //    return new
-        //    {
-        //        TotalProductos = totalProductos,
-        //        StockTotal = stockTotal,
-        //        UltimosProductos = await _context.Products
-        //            .Where(p => p.IdProveedor == idProveedor)
-        //            .OrderByDescending(p => p.Id)
-        //            .Take(5)
-        //             .Include(p => p.TipoProducto)
-        //            .Select(p => new ProductoDTO
-        //            {
-        //                Id = p.Id,
-        //                Name = p.Name,
-        //                Description = p.Description,
-        //                Price = p.Price,
-        //                Stock = p.Stock,
-        //                TipoProducto = p.TipoProducto.Description
-        //            }).ToListAsync()
-        //    };
-        //}
+            // Obtener los últimos 5 productos con su info resumida
+            var ultimosProductos = productosDelProveedor
+                .OrderByDescending(p => p.Id)
+            .Take(5)
+                .Select(p => new ProductDTO
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    Stock = p.ProductVariants.Sum(v => v.Stock),
+                    // Precio: se toma de la primera variante, podés adaptar esto a promedio si querés
+                    Price = p.ProductVariants.FirstOrDefault()?.Price ?? 0,
+                    TipoProducto = p.TipoProducto.Description
+                })
+                .ToList();
+
+            return new HomeProviderDataDTO
+            {
+                TotalProductos = totalProductos,
+                StockTotal = stockTotal,
+                UltimosProductos = ultimosProductos
+            };
+        }
+        public async Task<PriceRangeDTO> GetPriceRangeFromProductAsync(int noteId)
+        {
+            var note = await _context.Notes.FindAsync(noteId);
+            if (note == null) return new PriceRangeDTO { MinPrice = 0, MaxPrice = 0 };
+
+            var query = _context.ProductVariants
+                .Where(v =>
+                    v.Product.Name.ToLower().Contains(note.Nombre.ToLower()) ||
+                    v.Product.Description.ToLower().Contains(note.Nombre.ToLower()) ||
+                    v.Product.Name.ToLower().Contains(note.Descripcion.ToLower()) ||
+                    v.Product.Description.ToLower().Contains(note.Descripcion.ToLower())
+                );
+
+            return new PriceRangeDTO
+            {
+                MinPrice = await query.MinAsync(v => (decimal?)v.Price) ?? 0,
+                MaxPrice = await query.MaxAsync(v => (decimal?)v.Price) ?? 0
+            };
+        }
     }
 }
