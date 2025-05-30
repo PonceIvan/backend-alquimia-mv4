@@ -118,7 +118,12 @@ namespace backendAlquimia.alquimia.Services.Services
         {
             return 0.0;
         }
-        private double calcularConcentracionEsencia()
+
+        public async Task<List<IntensitiesDTO>> GetIntensitiesAsync()
+        {
+            return await _context.Intensities
+                .Select
+                (x => new IntensitiesDTO
         {
             return 0.0;
         }

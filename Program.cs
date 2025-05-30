@@ -13,8 +13,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-//using backendAlquimia.alquimia.Services.Services;
-//using alquimia.Data.Data.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 

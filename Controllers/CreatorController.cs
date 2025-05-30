@@ -11,10 +11,12 @@ namespace backendAlquimia.Controllers
     public class CreatorController : ControllerBase
     {
         private readonly INoteService _notaService;
+        private readonly IFormulaService _formulaService;
 
-        public CreatorController(INoteService notaService)
+        public CreatorController(INoteService notaService, IFormulaService formulaService)
         {
             _notaService = notaService;
+            _formulaService = formulaService;
         }
 
         [HttpGet("base-notes")]
@@ -43,6 +45,12 @@ namespace backendAlquimia.Controllers
         {
             var compatibles = await _notaService.GetCompatibleNotesAsync(dto.ListaDeIdsSeleccionadas, dto.Sector);
             return Ok(compatibles);
+        }
+        [HttpGet("intensities")]
+        public async Task<ActionResult<IEnumerable<IntensitiesDTO>>> GetIntensities()
+        {
+            var intensities = await _formulaService.GetIntensitiesAsync();
+            return Ok(intensities);
         }
     }
 }
