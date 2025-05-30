@@ -1,14 +1,15 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Data.Data.Entities;
 
-public partial class User : IdentityUser<int>
-
-
+public class User : IdentityUser<int>
 {
+    [Required]
     public string Name { get; set; } = null!;
 
     public int? IdEstado { get; set; }
@@ -33,24 +34,18 @@ public partial class User : IdentityUser<int>
     [ForeignKey("IdSuscripcion")]
     public virtual Subscription? IdSuscripcionNavigation { get; set; }
 
-    [InverseProperty("IdUsuarioNavigation")]
+    // Relaciones propias
     public virtual ICollection<FinalEntity> FinalEntities { get; set; } = new List<FinalEntity>();
-
-    [InverseProperty("Usuario")]
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
-
-    [InverseProperty("IdProveedorNavigation")]
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
-
-    [InverseProperty("IdUsuarioNavigation")]
     public virtual ICollection<UserProductReview> UserProductReviews { get; set; } = new List<UserProductReview>();
-
-    [InverseProperty("Usuario")]
     public virtual ICollection<UserProduct> UserProducts { get; set; } = new List<UserProduct>();
-
-    [InverseProperty("IdProveedorNavigation")]
     public virtual ICollection<UserProviderReview> UserProviderReviewIdProveedorNavigations { get; set; } = new List<UserProviderReview>();
-
-    [InverseProperty("IdUsuarioNavigation")]
     public virtual ICollection<UserProviderReview> UserProviderReviewIdUsuarioNavigations { get; set; } = new List<UserProviderReview>();
+
+    // Identity relaciones
+    public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; } = new List<AspNetUserClaim>();
+    public virtual ICollection<AspNetUserLogin> AspNetUserLogins { get; set; } = new List<AspNetUserLogin>();
+    public virtual ICollection<AspNetUserToken> AspNetUserTokens { get; set; } = new List<AspNetUserToken>();
+    public virtual ICollection<AspNetRole> Roles { get; set; } = new List<AspNetRole>();
 }

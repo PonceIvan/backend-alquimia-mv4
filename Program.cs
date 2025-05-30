@@ -1,5 +1,4 @@
-//using alquimia.Data.Data;
-//using backendAlquimia.Seed;
+
 using alquimia.Data.Data.Entities;
 using alquimia.Services.Services;
 using alquimia.Services.Services.Interfaces;
@@ -13,6 +12,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using backendAlquimia.alquimia.Services;
+using System.Web.Mvc;
+using backendAlquimia.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,10 +43,11 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<INoteService, NoteService>();
 builder.Services.AddScoped<IFormulaService, FormulaService>();
 builder.Services.AddScoped<IQuizService, QuizService>();
-//builder.Services.AddControllersWithViews().AddJsonOptions(options =>
-//{
-//    options.JsonSerializerOptions.PropertyNamingPolicy = null; // Para que respete nombres C#
-//});
+builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddControllersWithViews().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNamingPolicy = null; // Para que respete nombres C#
+});
 builder.Services.AddControllers()
     .AddJsonOptions(x =>
         x.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles)
@@ -52,10 +55,11 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.PropertyNamingPolicy = null;
     });
-//hola XD
+
 builder.Services.AddIdentity<User, Role>()
     .AddEntityFrameworkStores<AlquimiaDbContext>()
-.AddDefaultTokenProviders();
+    .AddDefaultTokenProviders();
+
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]);
@@ -113,17 +117,22 @@ builder.Services.AddCors(options =>
               .AllowCredentials();
     });
 });
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+    options.User.RequireUniqueEmail = true;
+});
 
 
 var app = builder.Build();
-//using (var scope = app.Services.CreateScope())
-//{
-//    var services = scope.ServiceProvider;
-//    //await RoleSeeder.SeedRolesAsync(services);
-//    await UserSeeder.SeedAdminAsync(services);
-//    await ProductoSeeder.SeedTiposProductoAsync(services);
-
-//}
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await RoleSeeder.SeedRolesAsync(services);
+    await UserSeeder.SeedAdminAsync(services);
+    await ProductoSeeder.SeedTiposProductoAsync(services);
+    //await UserSeeder.SeedProveedoresAsync(services);
+}
 
 app.UseSwagger();
 app.UseSwaggerUI(c =>

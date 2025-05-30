@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 namespace alquimia.Data.Data.Entities;
 
 [PrimaryKey("NotaId", "NotaIncompatibleId")]
-[Index("NotaMenor", "NotaMayor", Name = "IX_NotaIncompatibilidad_Unica", IsUnique = true)]
 public partial class IncompatibleNote
 {
     [Key]
