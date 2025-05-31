@@ -1,5 +1,7 @@
 ﻿//using backendAlquimia.alquimia.Data;
 using alquimia.Data.Data.Entities;
+using alquimia.Services.Services;
+using alquimia.Services.Services.Models;
 using backendAlquimia.alquimia.Services.Interfaces;
 using backendAlquimia.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -46,6 +48,15 @@ namespace backendAlquimia.Controllers
             var compatibles = await _notaService.GetCompatibleNotesAsync(dto.ListaDeIdsSeleccionadas, dto.Sector);
             return Ok(compatibles);
         }
+
+        //[HttpPost("envase-pdf")]
+        //public IActionResult DescargarPdf([FromBody] DesignDTO dto)
+        //{
+        //    var pdfBytes = DesignLabelService.CrearPdfDesdeDesign(dto);
+        //    return File(pdfBytes, "application/pdf", "mi-diseño.pdf");
+        //}
+
+
         [HttpGet("intensities")]
         public async Task<ActionResult<IEnumerable<IntensitiesDTO>>> GetIntensities()
         {
