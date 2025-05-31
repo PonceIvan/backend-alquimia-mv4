@@ -1,4 +1,5 @@
-﻿using alquimia.Data.Data.Entities;
+
+using alquimia.Data.Data.Entities;
 using alquimia.Services.Services;
 using alquimia.Services.Services.Interfaces;
 using backendAlquimia.alquimia.Services;
@@ -11,6 +12,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using backendAlquimia.alquimia.Services;
+using System.Web.Mvc;
+using backendAlquimia.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,11 +32,23 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<INoteService, NoteService>();
 builder.Services.AddScoped<IFormulaService, FormulaService>();
 builder.Services.AddScoped<IQuizService, QuizService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddControllersWithViews().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNamingPolicy = null; // Para que respete nombres C#
+});
+builder.Services.AddControllers()
+    .AddJsonOptions(x =>
+        x.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles)
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = null;
+    });
 
-// 🧩 Identity
 builder.Services.AddIdentity<User, Role>()
     .AddEntityFrameworkStores<AlquimiaDbContext>()
     .AddDefaultTokenProviders();
+
 
 // 🔐 JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -100,48 +116,23 @@ builder.Services.AddCors(options =>
         .AllowCredentials();
     });
 });
-
-// 📘 Swagger + JWT Support
-builder.Services.AddSwaggerGen(c =>
+builder.Services.Configure<IdentityOptions>(options =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "Alquimia API",
-        Version = "v1",
-    });
-
-    // ✅ Soporte para el botón "Authorize"
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Description = "JWT Authorization header usando el esquema Bearer. Ej: 'Bearer {token}'",
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer"
-    });
-
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                },
-                Scheme = "oauth2",
-                Name = "Bearer",
-                In = ParameterLocation.Header
-            },
-            new List<string>()
-        }
-    });
+    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+    options.User.RequireUniqueEmail = true;
 });
 
-var app = builder.Build();
 
-// 🌐 Middleware
+var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await RoleSeeder.SeedRolesAsync(services);
+    await UserSeeder.SeedAdminAsync(services);
+    await ProductoSeeder.SeedTiposProductoAsync(services);
+    //await UserSeeder.SeedProveedoresAsync(services);
+}
+
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {

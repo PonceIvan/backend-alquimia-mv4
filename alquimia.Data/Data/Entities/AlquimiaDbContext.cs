@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace alquimia.Data.Data.Entities;
@@ -19,7 +19,7 @@ public partial class AlquimiaDbContext : IdentityDbContext<User, Role, int>
     {
     }
 
-    //hola
+
 
     public virtual DbSet<Design> Designs { get; set; }
 
@@ -54,6 +54,7 @@ public partial class AlquimiaDbContext : IdentityDbContext<User, Role, int>
     public virtual DbSet<Product> Products { get; set; }
 
     public virtual DbSet<ProductType> ProductTypes { get; set; }
+    public virtual DbSet<ProductVariant> ProductVariants { get; set; }
 
     public virtual DbSet<Question> Questions { get; set; }
 
@@ -75,11 +76,13 @@ public partial class AlquimiaDbContext : IdentityDbContext<User, Role, int>
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=localhost;Database=alquimiaDB;Trusted_Connection=True;TrustServerCertificate=True");
+        => optionsBuilder.UseSqlServer("Server=AXEL\\SQLEXPRESS;Database=alquimiaDB;Trusted_Connection=True;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder); // ✅ SIEMPRE antes de todo
+
+        base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<User>(entity =>
         {
@@ -183,7 +186,7 @@ public partial class AlquimiaDbContext : IdentityDbContext<User, Role, int>
 
         modelBuilder.Entity<IncompatibleNote>(entity =>
         {
-            entity.HasKey(e => new { e.NotaId, e.NotaIncompatibleId }).HasName("PK__Incompat__06842A27C29444C3");
+            entity.HasKey(e => new { e.NotaId, e.NotaIncompatibleId }).HasName("PK_Incompat_06842A27C29444C3");
 
             entity.Property(e => e.NotaMayor).HasComputedColumnSql("(case when [NotaId]<[NotaIncompatibleId] then [NotaIncompatibleId] else [NotaId] end)", true);
             entity.Property(e => e.NotaMenor).HasComputedColumnSql("(case when [NotaId]<[NotaIncompatibleId] then [NotaId] else [NotaIncompatibleId] end)", true);
