@@ -46,11 +46,37 @@ namespace backendAlquimia.Controllers
             var compatibles = await _notaService.GetCompatibleNotesAsync(dto.ListaDeIdsSeleccionadas, dto.Sector);
             return Ok(compatibles);
         }
+
         [HttpGet("intensities")]
-        public async Task<ActionResult<IEnumerable<IntensitiesDTO>>> GetIntensities()
+        public async Task<ActionResult<IEnumerable<IntensityDTO>>> GetIntensities()
         {
             var intensities = await _formulaService.GetIntensitiesAsync();
             return Ok(intensities);
+        }
+
+        [HttpPost("save-formula")]
+        public async Task<IActionResult> SaveFormula([FromBody] POSTFormulaDTO formula)
+        {
+            try
+            {
+                int formulaId = await _formulaService.SaveAsync(formula);
+                return CreatedAtAction(nameof(GetFormulaById), new { id = formulaId }, new { FormulaId = formulaId });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Error al guardar la fórmula", detail = ex.Message });
+            }
+        }
+
+        //Ejemplo para usar en CreatedAtAction si ya lo tenés:
+        [HttpGet("get-formula/{id}")]
+        public async Task<IActionResult> GetFormulaById(int id)
+        {
+            var formula = await _formulaService.GetFormulaByIdAsync(id);
+            if (formula == null)
+                return NotFound();
+
+            return Ok(formula);
         }
     }
 }

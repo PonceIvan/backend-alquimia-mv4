@@ -1,5 +1,6 @@
 ﻿using alquimia.Data.Data.Entities;
 using backendAlquimia.alquimia.Services.Interfaces;
+using backendAlquimia.alquimia.Services.Services.Models;
 using backendAlquimia.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,7 +29,7 @@ namespace backendAlquimia.alquimia.Services.Services
                 .Select(grupo => new NotesGroupedByFamilyDTO
                 {
                     Family = grupo.Key,
-                    Notes = grupo.Select(n => new NoteDTO
+                    Notes = grupo.Select(n => new GETNoteDTO
                     {
                         Id = n.Id,
                         Name = n.Nombre,
@@ -50,7 +51,7 @@ namespace backendAlquimia.alquimia.Services.Services
                 .Select(grupo => new NotesGroupedByFamilyDTO
                 {
                     Family = grupo.Key,
-                    Notes = grupo.Select(n => new NoteDTO
+                    Notes = grupo.Select(n => new GETNoteDTO
                     {
                         Id = n.Id,
                         Name = n.Nombre,
@@ -72,7 +73,7 @@ namespace backendAlquimia.alquimia.Services.Services
                 .Select(grupo => new NotesGroupedByFamilyDTO
                 {
                     Family = grupo.Key,
-                    Notes = grupo.Select(n => new NoteDTO
+                    Notes = grupo.Select(n => new GETNoteDTO
                     {
                         Id = n.Id,
                         Name = n.Nombre,
@@ -147,7 +148,7 @@ namespace backendAlquimia.alquimia.Services.Services
                 .Select(g => new NotesGroupedByFamilyDTO
                 {
                     Family = g.Key,
-                    Notes = g.Select(c => new NoteDTO
+                    Notes = g.Select(c => new GETNoteDTO
                     {
                         Id = c.Nota.Id,
                         Name = c.Nota.Nombre,

@@ -5,8 +5,8 @@ namespace backendAlquimia.alquimia.Services.Interfaces
 {
     public interface IFormulaService
     {
-        //Task<GETFormulaDTO> guardar(POSTFormulaDTO dto);
-        Task<List<IntensidadDTO>> ObtenerIntensidadAsync();
-        Task<List<IntensitiesDTO>> GetIntensitiesAsync();
+        Task<GETFormulaDTO> GetFormulaByIdAsync(int id);
+        Task<int> SaveAsync(POSTFormulaDTO formula);
+        Task<List<IntensityDTO>> GetIntensitiesAsync();
     }
 }

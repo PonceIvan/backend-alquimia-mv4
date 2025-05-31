@@ -10,6 +10,5 @@ namespace backendAlquimia.alquimia.Services.Interfaces
         //Task<int> CalcularCompatibilidadAsync(int notaAId, int notaBId);
         //Task<bool> EsCompatibleConSeleccionAsync(int nuevaNotaId, List<int> seleccionadasIds);
         Task<List<NotesGroupedByFamilyDTO>> GetCompatibleNotesAsync(List<int> seleccionadasIds, string Sector);
-
     }
 }
