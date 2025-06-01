@@ -12,10 +12,10 @@ namespace backendAlquimia.alquimia.Services.Services
     {
         private readonly AlquimiaDbContext _context;
         private FormulaConcentration FormulaConcentration { get; set; }
-        public FormulaService(AlquimiaDbContext context, FormulaConcentration _FormulaConcentration)
+        public FormulaService(AlquimiaDbContext context)
         {
             _context = context;
-            FormulaConcentration = _FormulaConcentration;
+            
         }
 
         public async Task<List<IntensitiesDTO>> GetIntensitiesAsync()
