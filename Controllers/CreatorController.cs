@@ -49,12 +49,12 @@ namespace backendAlquimia.Controllers
             return Ok(compatibles);
         }
 
-        //[HttpPost("envase-pdf")]
-        //public IActionResult DescargarPdf([FromBody] DesignDTO dto)
-        //{
-        //    var pdfBytes = DesignLabelService.CrearPdfDesdeDesign(dto);
-        //    return File(pdfBytes, "application/pdf", "mi-diseño.pdf");
-        //}
+        [HttpPost("envase-pdf")]
+        public IActionResult DescargarPdf([FromBody] DesignDTO dto)
+        {
+            var pdfBytes = DesignLabelService.CrearPdfDesdeDesign(dto);
+            return File(pdfBytes, "application/pdf", "myDesign.pdf");
+        }
 
 
         [HttpGet("intensities")]
