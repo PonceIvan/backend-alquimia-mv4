@@ -100,6 +100,40 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.PropertyNamingPolicy = null;
     });
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Alquimia API", Version = "v1" });
+
+    // 🔐 Configuración para JWT
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = @"JWT Authorization header usando el esquema Bearer.  
+                        Ingresá el token así: Bearer {tu token}.",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                },
+                Scheme = "oauth2",
+                Name = "Bearer",
+                In = ParameterLocation.Header
+            },
+            new List<string>()
+        }
+    });
+});
 
 // 🔓 CORS
 builder.Services.AddCors(options =>
