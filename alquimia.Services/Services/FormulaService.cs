@@ -5,6 +5,8 @@ using backendAlquimia.alquimia.Services.Interfaces;
 using backendAlquimia.alquimia.Services.Services;
 using backendAlquimia.Models;
 using Microsoft.EntityFrameworkCore;
+using PdfSharpCore.Drawing;
+using PdfSharpCore.Pdf;
 
 namespace backendAlquimia.alquimia.Services.Services
 {
@@ -152,5 +154,34 @@ namespace backendAlquimia.alquimia.Services.Services
             };
         }
 
+        public static byte[] CrearPdf(GETFormulaDTO dto)
+        {
+            var doc = new PdfDocument();
+            var page = doc.AddPage();
+            var gfx = XGraphics.FromPdfPage(page);
+            var font = new XFont("Verdana", 12);
+            int y = 40;
+            gfx.DrawString("Diseño personalizado", new XFont("Verdana", 18, XFontStyle.Bold), XBrushes.Black, new XPoint(40, y));
+            y += 40;
+
+            gfx.DrawString($"Notas de fondo: {dto.NotasFondoIds}", font, XBrushes.Black, new XPoint(40, y));
+            y += 20;
+            gfx.DrawString($"Notas de corazón: {dto.NotasCorazonIds}", font, XBrushes.Black, new XPoint(40, y));
+            y += 20;
+            gfx.DrawString($"Notas de salida: {dto.NotasSalidaIds}", font, XBrushes.Black, new XPoint(40, y));
+            y += 20;
+            gfx.DrawString($"Intensidad: {dto.Intensity}", font, XBrushes.Black, new XPoint(40, y));
+            y += 20;
+            gfx.DrawString($"Concentración de alcohol: {dto.ConcentracionAlcohol}", font, XBrushes.Black, new XPoint(40, y));
+            y += 20;
+            gfx.DrawString($"Concentración de agua: {dto.ConcentracionAgua}", font, XBrushes.Black, new XPoint(40, y));
+            y += 20;
+            gfx.DrawString($"Concentración de esencia: {dto.ConcentracionEsencia}", font, XBrushes.Black, new XPoint(40, y));
+            y += 20;
+            using var stream = new MemoryStream();
+            doc.Save(stream, false);
+            return stream.ToArray();
+            throw new NotImplementedException();
+        }
     }
 }

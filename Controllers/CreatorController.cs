@@ -3,6 +3,7 @@ using alquimia.Data.Data.Entities;
 using alquimia.Services.Services;
 using alquimia.Services.Services.Models;
 using backendAlquimia.alquimia.Services.Interfaces;
+using backendAlquimia.alquimia.Services.Services;
 using backendAlquimia.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -87,6 +88,13 @@ namespace backendAlquimia.Controllers
                 return NotFound();
 
             return Ok(formula);
+        }
+
+        [HttpPost("print-formula")]
+        public IActionResult ImprimirFormula([FromBody] GETFormulaDTO dto)
+        {
+            var pdfBytes = FormulaService.CrearPdf(dto);
+            return File(pdfBytes, "application/pdf", "myDesign.pdf");
         }
     }
 }
