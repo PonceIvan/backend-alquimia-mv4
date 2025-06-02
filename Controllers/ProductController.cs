@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace backendAlquimia.Controllers
 {
-    [Authorize] // solo puede acceder el creador
+    [Authorize]
     [Route("product")]
     [ApiController]
     public class ProductController : ControllerBase

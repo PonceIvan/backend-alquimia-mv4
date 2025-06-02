@@ -1,7 +1,5 @@
 ﻿using alquimia.Data.Data.Entities;
-using alquimia.Services.Services.Models;
 using backendAlquimia.alquimia.Services.Interfaces;
-using backendAlquimia.alquimia.Services.Services;
 using backendAlquimia.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -163,6 +161,34 @@ namespace backendAlquimia.alquimia.Services.Services
                 .ToList();
 
             return resultado;
+        }
+
+        public async Task<NoteDTO> GetNoteInfoAsync(int id)
+        {
+            var found = await _context.Notes
+                .Include(n => n.PiramideOlfativa)
+                .Include(n => n.FamiliaOlfativa)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (found == null)
+            {
+                return null;
+            }
+
+            return NoteToDTO(found);
+        }
+
+        private NoteDTO NoteToDTO(Note found)
+        {
+            return new NoteDTO
+            {
+                Id = found.Id,
+                Name = found.Nombre,
+                Family = found.FamiliaOlfativa.Nombre,
+                Sector = found.PiramideOlfativa.Sector,
+                Description = found.Descripcion,
+                Duration = found.PiramideOlfativa.Duracion
+            };
         }
     }
 }

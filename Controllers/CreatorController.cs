@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace backendAlquimia.Controllers
 {
+    //[Authorize]
     [Route("creator")]
     [ApiController]
     public class CreatorController : ControllerBase
@@ -96,17 +97,28 @@ namespace backendAlquimia.Controllers
         {
             try
             {
-            var formula = await _formulaService.GetFormulaByIdAsync(id);
-            if (formula == null)
-                return NotFound();
+                var formula = await _formulaService.GetFormulaByIdAsync(id);
+                if (formula == null)
+                    return NotFound();
 
-            return Ok(formula);
-        }
+                return Ok(formula);
+            }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return StatusCode(500, "Internal server error");
             }
+        }
+
+        [HttpGet("note-info/{id}")]
+        public async Task<IActionResult> GetNoteInfo(int id)
+        {
+            var note = await _notaService.GetNoteInfoAsync(id);
+            if (note == null)
+            {
+                return NotFound();
+            }
+            return Ok(note);
         }
     }
 }
