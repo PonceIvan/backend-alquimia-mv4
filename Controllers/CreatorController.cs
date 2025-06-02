@@ -5,6 +5,7 @@ using alquimia.Services.Services.Models;
 using backendAlquimia.alquimia.Services.Interfaces;
 using backendAlquimia.Models;
 using Microsoft.AspNetCore.Mvc;
+using Note = alquimia.Data.Data.Entities.Note;
 
 namespace backendAlquimia.Controllers
 {

@@ -1,6 +1,7 @@
 ﻿//using backendAlquimia.alquimia.Data;
 using alquimia.Data.Data.Entities;
 using backendAlquimia.alquimia.Services.Interfaces;
+using backendAlquimia.alquimia.Services.Services.Models;
 using backendAlquimia.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +36,8 @@ namespace backendAlquimia.Controllers
             return int.Parse(userIdClaim.Value);
         }
 
+        /// /////////////////////////////////////////////////////////////////////
+
         [HttpGet("home")]
         public async Task<IActionResult> GetHomeData()
         {
@@ -43,6 +46,8 @@ namespace backendAlquimia.Controllers
             return Ok(data);
         }
 
+        /// /////////////////////////////////////////////////////////////////////
+
         [HttpGet("productos")]
         public async Task<IActionResult> GetProductos()
         {
@@ -50,6 +55,9 @@ namespace backendAlquimia.Controllers
             var productos = await _productService.ObtenerProductosPorProveedorAsync(idProveedor);
             return Ok(productos);
         }
+
+
+        /// /////////////////////////////////////////////////////////////////////
 
         [HttpGet("tipos-producto")]
         public async Task<IActionResult> GetTiposProducto()
@@ -63,42 +71,25 @@ namespace backendAlquimia.Controllers
 
             return Ok(tipos);
         }
+        /// /////////////////////////////////////////////////////////////////////
 
-
-        [HttpPost("productos")]
-        public async Task<IActionResult> CrearProducto([FromBody] CreateProductoDTO dto)
+        [HttpPost("create/{idProveedor:int}")]
+        public async Task<IActionResult> CrearProducto(int idProveedor, [FromBody] CreateProductoDTO dto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new
-                {
-                    mensaje = "Datos inválidos",
-                    errores = ModelState.Values.SelectMany(v => v.Errors)
-                });
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             try
             {
-                var idProveedor = ObtenerIdProveedor();
-                var producto = await _productService.CrearProductoAsync(dto, idProveedor);
-                return CreatedAtAction(nameof(GetProducto), new { idProducto = producto.Id }, producto);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return BadRequest(new { mensaje = ex.Message });
+                var productoCreado = await _productService.CrearProductoAsync(dto, idProveedor);
+                return Ok(productoCreado);
             }
             catch (Exception ex)
             {
-                // Loggear el error para diagnóstico
-                Console.WriteLine($"Error al crear producto: {ex}");
-                return StatusCode(500, new
-                {
-                    mensaje = "Error interno al crear el producto",
-                    detalle = ex.Message
-                });
+                return StatusCode(500, ex.Message);
             }
         }
-
+        /// /////////////////////////////////////////////////////////////////////
+        
         [HttpGet("productos/{idProducto}")]
         public async Task<IActionResult> GetProducto(int idProducto)
         {
@@ -110,7 +101,7 @@ namespace backendAlquimia.Controllers
 
             return Ok(producto);
         }
-
+        /// /////////////////////////////////////////////////////////////////////
         [HttpDelete("productos/{idProducto}")]
         public async Task<IActionResult> EliminarProducto(int idProducto)
         {
@@ -130,7 +121,52 @@ namespace backendAlquimia.Controllers
                 return StatusCode(500, new { mensaje = "Error interno al eliminar el producto" });
             }
         }
+        /// /////////////////////////////////////////////////////////////////////
 
+        // POST api/products/{productId}/variants
+        [HttpPost("{productId}/variants")]
+        public async Task<IActionResult> AddVariants(int productId, [FromBody] CreateProductVariantDTO dto)
+        {
+            try
+            {
+                await _productService.AddVariantsToProductAsync(productId, dto);
+                return NoContent(); // 204 OK, porque solo agregamos datos
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                // Loggear ex.Message si tenés un logger configurado
+                return StatusCode(500, "Error interno al agregar variantes");
+            }
+        }
+        /// /////////////////////////////////////////////////////////////////////
+        //ACTUALIZAR VARIANTE!!!!
+
+        [HttpPut("variants/{variantId}")]
+        public async Task<IActionResult> ActualizarVariante(int variantId, [FromBody] UpdateProductVariantDTO dto)
+        {
+            await _productService.ActualizarVarianteAsync(variantId, dto);
+            return NoContent();
+        }
+
+        /// /////////////////////////////////////////////////////////////////////
+
+        [HttpDelete("variants/{variantId}")]
+        public async Task<IActionResult> EliminarVariante(int variantId)
+        {
+            var eliminado = await _productService.EliminarVarianteAsync(variantId);
+            if (!eliminado)
+                return NotFound();
+
+            return NoContent();
+        }
+
+        
+        /// /////////////////////////////////////////////////////////////////////
+     
 
         [HttpPut("productos/{idProducto}")]
         public async Task<IActionResult> ActualizarProducto(int idProducto, [FromBody] UpdateProductoDTO dto)

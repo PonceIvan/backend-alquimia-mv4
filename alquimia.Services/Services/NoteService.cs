@@ -2,6 +2,7 @@
 using backendAlquimia.alquimia.Services.Interfaces;
 using backendAlquimia.Models;
 using Microsoft.EntityFrameworkCore;
+using Note = alquimia.Data.Data.Entities.Note;
 
 namespace backendAlquimia.alquimia.Services.Services
 {
