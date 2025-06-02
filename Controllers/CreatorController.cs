@@ -1,6 +1,9 @@
 ﻿//using backendAlquimia.alquimia.Data;
 using alquimia.Data.Data.Entities;
+using alquimia.Services.Services;
+using alquimia.Services.Services.Models;
 using backendAlquimia.alquimia.Services.Interfaces;
+using backendAlquimia.alquimia.Services.Services;
 using backendAlquimia.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -59,12 +62,12 @@ namespace backendAlquimia.Controllers
             return Ok(compatibles);
         }
 
-        //[HttpPost("envase-pdf")]
-        //public IActionResult DescargarPdf([FromBody] DesignDTO dto)
-        //{
-        //    var pdfBytes = DesignLabelService.CrearPdfDesdeDesign(dto);
-        //    return File(pdfBytes, "application/pdf", "mi-diseño.pdf");
-        //}
+        [HttpPost("envase-pdf")]
+        public IActionResult DescargarPdf([FromBody] DesignDTO dto)
+        {
+            var pdfBytes = DesignLabelService.CrearPdfDesdeDesign(dto);
+            return File(pdfBytes, "application/pdf", "myDesign.pdf");
+        }
 
 
         [HttpGet("intensities")]

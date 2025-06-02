@@ -23,7 +23,31 @@ builder.Services.AddSwaggerGen(c =>
         Title = "Alquimia API",
         Version = "v1",
     });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Ingrese el token JWT en este formato: Bearer {su_token}"
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
 });
+
 
 var connectionString = Environment.GetEnvironmentVariable("ALQUIMIA_DB_CONNECTION")
                       ?? builder.Configuration.GetConnectionString("DefaultConnection");
@@ -48,6 +72,7 @@ builder.Services.AddScoped<INoteService, NoteService>();
 builder.Services.AddScoped<IFormulaService, FormulaService>();
 builder.Services.AddScoped<IQuizService, QuizService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.PropertyNamingPolicy = null; // Para que respete nombres C#
