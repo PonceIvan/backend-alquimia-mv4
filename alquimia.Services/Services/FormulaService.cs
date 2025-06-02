@@ -7,7 +7,9 @@ using backendAlquimia.Models;
 using Microsoft.EntityFrameworkCore;
 using PdfSharpCore.Drawing;
 using PdfSharpCore.Pdf;
+using Formula = alquimia.Data.Data.Entities.Formula;
 using FormulaNote = alquimia.Data.Data.Entities.FormulaNote;
+using Note = alquimia.Data.Data.Entities.Note;
 
 namespace backendAlquimia.alquimia.Services.Services
 {
