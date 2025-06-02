@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using alquimia.Data.Data.Entities;
+using alquimia.Services.Services.Models;
 
 namespace alquimia.Services.Services.Interfaces
 {
@@ -11,6 +12,8 @@ namespace alquimia.Services.Services.Interfaces
     {
         Task <List<Product>> BringMyProducts();
         Task<List<Formula>> BringMyFormulas();
-        Task<List<string>> BringMyData();
+        Task<UserProfileDto?> BringMyData();
+        Task<List<Product>> BringMyWishlist();
+        Task<UserProfileDto?> UpdateMyData(UserProfileDto updatedData);
     }
 }
