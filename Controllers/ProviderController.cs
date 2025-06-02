@@ -83,13 +83,17 @@ namespace backendAlquimia.Controllers
                 var productoCreado = await _productService.CrearProductoAsync(dto, idProveedor);
                 return Ok(productoCreado);
             }
+            catch (KeyNotFoundException ex)
+            {
+                return BadRequest(new { mensaje = ex.Message });
+            }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                return StatusCode(500, new { mensaje = "Error interno: " + ex.Message });
             }
         }
         /// /////////////////////////////////////////////////////////////////////
-        
+
         [HttpGet("productos/{idProducto}")]
         public async Task<IActionResult> GetProducto(int idProducto)
         {

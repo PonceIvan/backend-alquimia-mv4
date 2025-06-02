@@ -66,32 +66,48 @@ namespace backendAlquimia.alquimia.Services
 
         public async Task<ProductDTO> CrearProductoAsync(CreateProductoDTO dto, int idProveedor)
         {
-            var tipoProducto = await _context.ProductTypes
-                .FirstOrDefaultAsync(t => t.Description == dto.TipoProductoDescription);
-
-            if (tipoProducto == null)
-                throw new KeyNotFoundException("Tipo de producto no válido");
-
-            var producto = new Product
+            try
             {
-                Name = dto.Name,
-                Description = dto.Description,
-                TipoProductoId = tipoProducto.Id,
-                IdProveedor = idProveedor,
-                ProductVariants = dto.Variants.Select(v => new ProductVariant
+                var tipoProducto = await _context.ProductTypes
+                    .FirstOrDefaultAsync(t => t.Description == dto.TipoProductoDescription);
+
+                if (tipoProducto == null)
+                    throw new KeyNotFoundException("Tipo de producto no válido");
+
+                var producto = new Product
                 {
-                    Volume = v.Volume,
-                    Unit = v.Unit,
-                    Price = v.Price,
-                    Stock = v.Stock,
-                    IsHypoallergenic = v.IsHypoallergenic
-                }).ToList()
-            };
+                    Name = dto.Name,
+                    Description = dto.Description,
+                    TipoProductoId = tipoProducto.Id,
+                    IdProveedor = idProveedor,
+                    ProductVariants = dto.Variants?.Select(v => new ProductVariant
+                    {
+                        Volume = v.Volume,
+                        Unit = v.Unit,
+                        Price = v.Price,
+                        Stock = v.Stock,
+                        IsHypoallergenic = v.IsHypoallergenic
+                    }).ToList() ?? new List<ProductVariant>()
+                };
 
-            _context.Products.Add(producto);
-            await _context.SaveChangesAsync();
+                _context.Products.Add(producto);
 
-            return await ObtenerProductoPorIdAsync(producto.Id, idProveedor);
+                await _context.SaveChangesAsync();
+
+                return await ObtenerProductoPorIdAsync(producto.Id, idProveedor);
+            }
+            catch (DbUpdateException ex)
+            {
+                // Log de la excepción con inner exception
+                var innerMessage = ex.InnerException?.Message ?? ex.Message;
+                Console.WriteLine($"[Error al guardar producto] {innerMessage}");
+                throw new Exception($"Error al guardar producto: {innerMessage}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Error general] {ex.Message}");
+                throw;
+            }
         }
 
         public async Task<bool> EliminarProductoAsync(int idProducto, int idProveedor)

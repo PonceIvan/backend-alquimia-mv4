@@ -29,9 +29,6 @@ public partial class ProductVariant
     public bool? IsHypoallergenic { get; set; }
 
 
-    [StringLength(255)]
-    public string? Url { get; set; }
-
     [ForeignKey("ProductId")]
     [InverseProperty("ProductVariants")]
     [JsonIgnore]

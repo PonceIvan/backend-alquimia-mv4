@@ -93,6 +93,13 @@ public partial class AlquimiaDbContext : IdentityDbContext<User, Role, int>
 
         base.OnModelCreating(modelBuilder);
 
+        
+        
+        modelBuilder.Entity<ProductVariant>(entity =>
+        {
+            entity.ToTable("ProductVariants");
+        });
+
         modelBuilder.Entity<User>(entity =>
         {
             entity.ToTable("Users");
@@ -325,4 +332,6 @@ public partial class AlquimiaDbContext : IdentityDbContext<User, Role, int>
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+
 }
