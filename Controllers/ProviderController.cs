@@ -1,5 +1,4 @@
-﻿//using backendAlquimia.alquimia.Data;
-using alquimia.Data.Data.Entities;
+﻿using alquimia.Data.Data.Entities;
 using backendAlquimia.alquimia.Services.Interfaces;
 using backendAlquimia.alquimia.Services.Services.Models;
 using backendAlquimia.Models;
@@ -168,9 +167,9 @@ namespace backendAlquimia.Controllers
             return NoContent();
         }
 
-        
+
         /// /////////////////////////////////////////////////////////////////////
-     
+
 
         [HttpPut("productos/{idProducto}")]
         public async Task<IActionResult> ActualizarProducto(int idProducto, [FromBody] UpdateProductoDTO dto)

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Data.Data.Entities;
 
@@ -25,7 +22,7 @@ public partial class Formula
 
     public double ConcentracionEsencia { get; set; }
 
-    public int? CreadorId { get; set; }
+    public int CreadorId { get; set; }
 
     [ForeignKey("FormulaCorazon")]
     [InverseProperty("FormulaFormulaCorazonNavigations")]

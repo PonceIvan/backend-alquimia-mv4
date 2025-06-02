@@ -1,10 +1,11 @@
-
+﻿
 using alquimia.Data.Data.Entities;
 using alquimia.Services.Services;
 using alquimia.Services.Services.Interfaces;
 using backendAlquimia.alquimia.Services;
 using backendAlquimia.alquimia.Services.Interfaces;
 using backendAlquimia.alquimia.Services.Services;
+using backendAlquimia.Seed;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -12,18 +13,56 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using backendAlquimia.alquimia.Services;
-using System.Web.Mvc;
-using backendAlquimia.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // 🔗 Base de datos
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Alquimia API",
+        Version = "v1",
+    });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Ingrese el token JWT en este formato: Bearer {su_token}"
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
+
+
+
 var connectionString = Environment.GetEnvironmentVariable("ALQUIMIA_DB_CONNECTION")
                       ?? builder.Configuration.GetConnectionString("DefaultConnection");
 
+//builder.Services.AddDbContext<AlquimiaDbContext>(options =>
+//    options.UseSqlServer(connectionString));
 builder.Services.AddDbContext<AlquimiaDbContext>(options =>
-    options.UseSqlServer(connectionString));
+{
+    options.UseSqlServer(connectionString);
+    options.EnableSensitiveDataLogging(); // 👈 esto
+});
+
 
 // 🧠 Servicios de dominio
 builder.Services.AddHttpContextAccessor();
@@ -33,6 +72,7 @@ builder.Services.AddScoped<INoteService, NoteService>();
 builder.Services.AddScoped<IFormulaService, FormulaService>();
 builder.Services.AddScoped<IQuizService, QuizService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.PropertyNamingPolicy = null; // Para que respete nombres C#

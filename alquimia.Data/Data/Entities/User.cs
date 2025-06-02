@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Data.Data.Entities;
 
@@ -21,6 +18,9 @@ public class User : IdentityUser<int>
     public int? IdSuscripcion { get; set; }
 
     public bool EsProveedor { get; set; }
+    //public string? CUIL { get; set; }
+    //public string? Ubicacion { get; set; }
+    //public string? CodigoPostal { get; set; }
 
     [ForeignKey("IdEstado")]
     public virtual Status? IdEstadoNavigation { get; set; }
@@ -42,10 +42,4 @@ public class User : IdentityUser<int>
     public virtual ICollection<UserProduct> UserProducts { get; set; } = new List<UserProduct>();
     public virtual ICollection<UserProviderReview> UserProviderReviewIdProveedorNavigations { get; set; } = new List<UserProviderReview>();
     public virtual ICollection<UserProviderReview> UserProviderReviewIdUsuarioNavigations { get; set; } = new List<UserProviderReview>();
-
-    // Identity relaciones
-    public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; } = new List<AspNetUserClaim>();
-    public virtual ICollection<AspNetUserLogin> AspNetUserLogins { get; set; } = new List<AspNetUserLogin>();
-    public virtual ICollection<AspNetUserToken> AspNetUserTokens { get; set; } = new List<AspNetUserToken>();
-    public virtual ICollection<AspNetRole> Roles { get; set; } = new List<AspNetRole>();
 }

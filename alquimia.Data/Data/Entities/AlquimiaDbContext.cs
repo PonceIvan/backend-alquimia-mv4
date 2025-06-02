@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -87,6 +84,7 @@ public partial class AlquimiaDbContext : IdentityDbContext<User, Role, int>
             "TrustServerCertificate=False;" +
             "Connection Timeout=30");
     }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder); // ✅ SIEMPRE antes de todo
@@ -187,7 +185,7 @@ public partial class AlquimiaDbContext : IdentityDbContext<User, Role, int>
 
         modelBuilder.Entity<FormulaNote>(entity =>
         {
-            entity.Property(e => e.FormulaNotaId).ValueGeneratedNever();
+            entity.Property(e => e.FormulaNotaId).ValueGeneratedOnAdd();
 
             entity.HasOne(d => d.NotaId1Navigation).WithMany(p => p.FormulaNoteNotaId1Navigations)
                 .OnDelete(DeleteBehavior.ClientSetNull)

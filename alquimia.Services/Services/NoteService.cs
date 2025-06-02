@@ -1,5 +1,7 @@
 ﻿using alquimia.Data.Data.Entities;
+using alquimia.Services.Services.Models;
 using backendAlquimia.alquimia.Services.Interfaces;
+using backendAlquimia.alquimia.Services.Services;
 using backendAlquimia.Models;
 using Microsoft.EntityFrameworkCore;
 using Note = alquimia.Data.Data.Entities.Note;
@@ -38,7 +40,8 @@ namespace backendAlquimia.alquimia.Services.Services
                         Description = n.Descripcion,
                         Duration = n.PiramideOlfativa.Duracion
                     }).ToList()
-                }).ToListAsync();
+                })
+                .ToListAsync();
         }
 
         public async Task<List<NotesGroupedByFamilyDTO>> GetTopNotesGroupedByFamilyAsync()
