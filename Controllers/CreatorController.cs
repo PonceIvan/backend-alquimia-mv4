@@ -94,11 +94,19 @@ namespace backendAlquimia.Controllers
         [HttpGet("get-formula/{id}")]
         public async Task<IActionResult> GetFormulaById(int id)
         {
+            try
+            {
             var formula = await _formulaService.GetFormulaByIdAsync(id);
             if (formula == null)
                 return NotFound();
 
             return Ok(formula);
+        }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Internal server error");
+            }
         }
     }
 }
