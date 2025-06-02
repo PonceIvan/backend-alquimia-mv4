@@ -1,6 +1,9 @@
 ﻿//using backendAlquimia.alquimia.Data;
 using alquimia.Data.Data.Entities;
+using alquimia.Services.Services;
+using alquimia.Services.Services.Models;
 using backendAlquimia.alquimia.Services.Interfaces;
+using backendAlquimia.alquimia.Services.Services;
 using backendAlquimia.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +20,18 @@ namespace backendAlquimia.Controllers
         {
             _notaService = notaService;
             _formulaService = formulaService;
+        }
+
+        [HttpGet("create")]
+        public IActionResult Create()
+        {
+            return Ok("Bienvenido a crear tu perfume");
+        }
+
+        [HttpGet("start")]
+        public IActionResult Start()
+        {
+            return Ok("Vas a crear tu perfume ahora. Arrastra las notas al frasco");
         }
 
         [HttpGet("base-notes")]
@@ -46,11 +61,55 @@ namespace backendAlquimia.Controllers
             var compatibles = await _notaService.GetCompatibleNotesAsync(dto.ListaDeIdsSeleccionadas, dto.Sector);
             return Ok(compatibles);
         }
+
+        [HttpPost("envase-pdf")]
+        public IActionResult DescargarPdf([FromBody] DesignDTO dto)
+        {
+            var pdfBytes = DesignLabelService.CrearPdfDesdeDesign(dto);
+            return File(pdfBytes, "application/pdf", "myDesign.pdf");
+        }
+
+
         [HttpGet("intensities")]
-        public async Task<ActionResult<IEnumerable<IntensitiesDTO>>> GetIntensities()
+        public async Task<ActionResult<IEnumerable<IntensityDTO>>> GetIntensities()
         {
             var intensities = await _formulaService.GetIntensitiesAsync();
             return Ok(intensities);
+        }
+
+        [HttpPost("save-formula")]
+        public async Task<IActionResult> SaveFormula([FromBody] POSTFormulaDTO dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                var formulaId = await _formulaService.SaveAsync(dto);
+                return Ok(new { formulaId });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = "Error al guardar la fórmula", details = ex.Message });
+            }
+        }
+
+        [HttpGet("get-formula/{id}")]
+        public async Task<IActionResult> GetFormulaById(int id)
+        {
+            try
+            {
+            var formula = await _formulaService.GetFormulaByIdAsync(id);
+            if (formula == null)
+                return NotFound();
+
+            return Ok(formula);
+        }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Internal server error");
+            }
         }
     }
 }

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Data.Data.Entities;
 
@@ -21,6 +18,9 @@ public class User : IdentityUser<int>
     public int? IdSuscripcion { get; set; }
 
     public bool EsProveedor { get; set; }
+    //public string? CUIL { get; set; }
+    //public string? Ubicacion { get; set; }
+    //public string? CodigoPostal { get; set; }
 
     [ForeignKey("IdEstado")]
     public virtual Status? IdEstadoNavigation { get; set; }

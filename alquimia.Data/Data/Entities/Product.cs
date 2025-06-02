@@ -15,7 +15,8 @@ public partial class Product
 
     [StringLength(50)]
     public string Description { get; set; } = null!;
-
+    public decimal Price { get; set; }
+    public int Stock { get; set; }
     public int? IdProveedor { get; set; }
     public int? UsuarioId { get; set; }
     [InverseProperty("IdProductoNavigation")]
