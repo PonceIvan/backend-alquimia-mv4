@@ -1,5 +1,7 @@
 ﻿//using backendAlquimia.alquimia.Data;
 using alquimia.Data.Data.Entities;
+using alquimia.Services.Services;
+using alquimia.Services.Services.Models;
 using backendAlquimia.alquimia.Services.Interfaces;
 using backendAlquimia.alquimia.Services.Services;
 using backendAlquimia.Models;
