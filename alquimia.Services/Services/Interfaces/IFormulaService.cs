@@ -1,5 +1,4 @@
-﻿using alquimia.Services.Services.Models;
-using backendAlquimia.Models;
+﻿using backendAlquimia.Models;
 
 namespace backendAlquimia.alquimia.Services.Interfaces
 {
@@ -7,6 +6,6 @@ namespace backendAlquimia.alquimia.Services.Interfaces
     {
         Task<GETFormulaDTO> GetFormulaByIdAsync(int id);
         Task<int> SaveAsync(POSTFormulaDTO formula);
-        Task<List<IntensitiesDTO>> GetIntensitiesAsync();
+        Task<List<IntensityDTO>> GetIntensitiesAsync();
     }
 }

@@ -11,7 +11,7 @@ public partial class Intensity
     public string Nombre { get; set; } = null!;
 
     [StringLength(100)]
-    public string? Description { get; set; }
+    public string Description { get; set; }
 
     [InverseProperty("Intensidad")]
     public virtual ICollection<Formula> Formulas { get; set; } = new List<Formula>();
