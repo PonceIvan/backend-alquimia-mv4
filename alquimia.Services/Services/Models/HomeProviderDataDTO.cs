@@ -1,5 +1,6 @@
 ﻿using backendAlquimia.Models;
 
+
 namespace backendAlquimia.alquimia.Services
 {
     public class HomeProviderDataDTO

@@ -1,5 +1,8 @@
-﻿using backendAlquimia.alquimia.Services.Interfaces;
-using alquimia.Data.Data.Entities;
+﻿using alquimia.Data.Data.Entities;
+using alquimia.Services.Extensions;
+using alquimia.Services.Services;
+using alquimia.Services.Services.Models;
+using backendAlquimia.alquimia.Services.Interfaces;
 using backendAlquimia.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,122 +16,140 @@ namespace backendAlquimia.alquimia.Services.Services
             _context = context;
         }
 
-        //public async Task<GETFormulaDTO> guardar(POSTFormulaDTO dto)
-        //{
-        //    var notasSalida = await _context.Notas
-        //        .Where(n => dto.NotasSalidaIds.Contains(n.Id) && n.PiramideOlfativa.Id == 1)
-        //        .ToListAsync();
-
-        //    var notasCorazon = await _context.Notas
-        //        .Where(n => dto.NotasCorazonIds.Contains(n.Id) && n.PiramideOlfativa.Id == 2)
-        //        .ToListAsync();
-
-        //    var notasFondo = await _context.Notas
-        //        .Where(n => dto.NotasFondoIds.Contains(n.Id) && n.PiramideOlfativa.Id == 3)
-        //        .ToListAsync();
-
-        //    if (notasSalida.Count != dto.NotasSalidaIds.Count ||
-        //        notasCorazon.Count != dto.NotasCorazonIds.Count ||
-        //        notasFondo.Count != dto.NotasFondoIds.Count)
-        //    {
-        //        throw new Exception("Una o más notas no existen o no pertenecen al sector correspondiente.");
-        //    }
-
-        //    //var formula = new FormulaNotum
-        //    //{
-        //    //    FormulaSalida = notasSalida,
-        //    //    NotaCorazon = notasCorazon,
-        //    //    NotaFondo = notasFondo
-        //    //};
-
-        //    _context.FormulaNota.Add(formula);
-        //    await _context.SaveChangesAsync();
-        //    var formulaN = new Formula
-        //    {
-        //        Id = dto.Id,
-        //        IntensidadId = dto.IdIntensidad,
-        //        FormulaFondo = dto.IdCreador,
-        //        FormulaCorazon = dto.IdCreador,
-        //        FormulaSalida = dto.IdCreador,
-        //        ConcentracionAlcohol = 0,
-        //        ConcentracionAgua = 0,
-        //        ConcentracionEsencia = 0
-        //    };
-
-        //    _context.Formulas.Add(formula);
-        //    await _context.SaveChangesAsync();
-
-        //    return new GETFormulaDTO
-        //    {
-        //        Id = formula.Id,
-        //        NotasSalidaIds = dto.NotasSalidaIds,
-        //        NotasCorazonIds = dto.NotasCorazonIds,
-        //        NotasFondoIds = dto.NotasFondoIds,
-        //        IdIntensidad = dto.IdIntensidad,
-        //        IdCreador = dto.IdCreador,
-        //        ConcentracionAlcohol = 0,
-        //        ConcentracionAgua = 0,
-        //        ConcentracionEsencia = 0
-        //    };
-        //}
-
-        public async Task<List<IntensidadDTO>> ObtenerIntensidadAsync()
+        public async Task<List<IntensityDTO>> GetIntensitiesAsync()
         {
             return await _context.Intensities
                 .Select
-                (x => new IntensidadDTO
+                (x => new IntensityDTO
                 {
-                    Id = x.Id,
-                    Nombre = x.Nombre,
-                }).ToListAsync();
-        }
-
-        //public async Task<GETFormulaDTO> ObtenerPorId(int id)
-        //{
-        //    var formula = await _context.Formulas
-        //        .Include(f => f.Combinacion)
-        //        .Include(f => f.Combinacion.NotaSalida)
-        //        .Include(f => f.Combinacion.NotaCorazon)
-        //        .Include(f => f.Combinacion.NotaFondo)
-        //        .FirstOrDefaultAsync(f => f.Id == id);
-
-        //    if (formula == null)
-        //        return null;
-
-        //    return new GETFormulaDTO
-        //    {
-        //        Id = formula.Id,
-        //        NotasSalidaIds = formula.Combinacion.NotaSalida.Select(n => n.Id).ToList(),
-        //        NotasCorazonIds = formula.Combinacion.NotaCorazon.Select(n => n.Id).ToList(),
-        //        NotasFondoIds = formula.Combinacion.NotaFondo.Select(n => n.Id).ToList(),
-        //        IdIntensidad = formula.IntensidadId,
-        //        IdCreador = formula.CreadorId,
-        //        ConcentracionAlcohol = formula.ConcentracionAlcohol,
-        //        ConcentracionAgua = formula.ConcentracionAgua,
-        //        ConcentracionEsencia = formula.ConcentracionEsencia
-        //    };
-        //}
-
-
-        private double calcularConcentracionAgua()
-        {
-            return 0.0;
-        }
-        private double calcularConcentracionAlcohol()
-        {
-            return 0.0;
-        }
-
-        public async Task<List<IntensitiesDTO>> GetIntensitiesAsync()
-        {
-            return await _context.Intensities
-                .Select
-                (x => new IntensitiesDTO
-        {
-                    Id = x.Id,
                     Name = x.Nombre,
                     Description = x.Description
                 }).ToListAsync();
         }
+
+        public async Task<int> SaveAsync(POSTFormulaDTO dto)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                var top = new FormulaNote
+                {
+                    NotaId1 = dto.TopNotes.Note1.Id,
+                    NotaId2 = dto.TopNotes.Note2?.Id,
+                    NotaId3 = dto.TopNotes.Note3?.Id,
+                    NotaId4 = dto.TopNotes.Note4?.Id
+                };
+                _context.FormulaNotes.Add(top);
+                await _context.SaveChangesAsync();
+                Console.WriteLine(top.FormulaNotaId);
+
+                var heart = new FormulaNote
+                {
+                    NotaId1 = dto.HeartNotes.Note1.Id,
+                    NotaId2 = dto.HeartNotes.Note2?.Id,
+                    NotaId3 = dto.HeartNotes.Note3?.Id,
+                    NotaId4 = dto.HeartNotes.Note4?.Id
+                };
+                _context.FormulaNotes.Add(heart);
+                await _context.SaveChangesAsync();
+                Console.WriteLine(heart.FormulaNotaId);
+
+                var _base = new FormulaNote
+                {
+                    NotaId1 = dto.BaseNotes.Note1.Id,
+                    NotaId2 = dto.BaseNotes.Note2?.Id,
+                    NotaId3 = dto.BaseNotes.Note3?.Id,
+                    NotaId4 = dto.BaseNotes.Note4?.Id
+                };
+                _context.FormulaNotes.Add(_base);
+                await _context.SaveChangesAsync();
+                Console.WriteLine(_base.FormulaNotaId);
+
+                var formulaConcentration = new FormulaConcentration().CalculateConcentrationBasedOnIntensity(dto.IntensityId);
+                Console.WriteLine($"Alcohol: {formulaConcentration.Alcohol}, Agua: {formulaConcentration.Water}, Esencia: {formulaConcentration.Essence}");
+
+                var formula = new Formula
+                {
+                    FormulaSalida = top.FormulaNotaId,
+                    FormulaCorazon = heart.FormulaNotaId,
+                    FormulaFondo = _base.FormulaNotaId,
+                    IntensidadId = dto.IntensityId,
+                    ConcentracionAlcohol = formulaConcentration.Alcohol,
+                    ConcentracionAgua = formulaConcentration.Water,
+                    ConcentracionEsencia = formulaConcentration.Essence,
+                    CreadorId = dto.CreatorId
+                };
+
+                _context.Formulas.Add(formula);
+                await _context.SaveChangesAsync();
+
+                if (dto.CreatorId != null)
+                {
+                    var user = await _context.Users.FindAsync(dto.CreatorId);
+                    if (user != null)
+                    {
+                        user.IdFormulas = formula.Id;
+                        _context.Users.Update(user);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
+                await transaction.CommitAsync();
+                return formula.Id;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+        public async Task<GETFormulaDTO> GetFormulaByIdAsync(int id)
+        {
+            var found = await _context.Formulas
+                .IncludeFormulaNotesWithDetails()
+                .FirstOrDefaultAsync(f => f.Id == id);
+
+            if (found == null) return null;
+
+            return new GETFormulaDTO
+            {
+                Intensity = new IntensityDTO
+                {
+                    Name = found.Intensidad.Nombre,
+                    Description = found.Intensidad.Description
+                },
+                IdCreador = found.CreadorId,
+                ConcentracionAlcohol = found.ConcentracionAlcohol,
+                ConcentracionAgua = found.ConcentracionAgua,
+                ConcentracionEsencia = found.ConcentracionEsencia,
+                NotasSalidaIds = MapFormulaNoteToDTO(found.FormulaSalidaNavigation),
+                NotasCorazonIds = MapFormulaNoteToDTO(found.FormulaCorazonNavigation),
+                NotasFondoIds = MapFormulaNoteToDTO(found.FormulaFondoNavigation)
+            };
+        }
+
+        private GETNoteDTO MapNoteToDTO(Note note)
+        {
+            return new GETNoteDTO
+            {
+                Name = note.Nombre,
+                Description = note.Descripcion,
+                Family = note.FamiliaOlfativa.Nombre,
+                Sector = note.PiramideOlfativa.Sector,
+                Duration = note.PiramideOlfativa.Duracion
+            };
+        }
+        private GETFormulaNoteDTO MapFormulaNoteToDTO(FormulaNote note)
+        {
+            return new GETFormulaNoteDTO
+            {
+                Note1 = MapNoteToDTO(note.NotaId1Navigation),
+                Note2 = note.NotaId2.HasValue ? MapNoteToDTO(note.NotaId2Navigation!) : null,
+                Note3 = note.NotaId3.HasValue ? MapNoteToDTO(note.NotaId3Navigation!) : null,
+                Note4 = note.NotaId4.HasValue ? MapNoteToDTO(note.NotaId4Navigation!) : null
+            };
+        }
+
     }
 }

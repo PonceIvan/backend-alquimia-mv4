@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace alquimia.Services.Services.Models
 {
-    public class QuestionDTO
+    public class POSTNoteIdDTO
     {
         public int Id { get; set; }
-        public string Pregunta { get; set; }
-        public List<OptionDTO> Opciones { get; set; }
     }
 }

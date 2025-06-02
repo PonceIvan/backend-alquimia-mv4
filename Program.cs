@@ -1,10 +1,11 @@
-
+﻿
 using alquimia.Data.Data.Entities;
 using alquimia.Services.Services;
 using alquimia.Services.Services.Interfaces;
 using backendAlquimia.alquimia.Services;
 using backendAlquimia.alquimia.Services.Interfaces;
 using backendAlquimia.alquimia.Services.Services;
+using backendAlquimia.Seed;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -12,9 +13,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using backendAlquimia.alquimia.Services;
-using System.Web.Mvc;
-using backendAlquimia.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,8 +28,14 @@ builder.Services.AddSwaggerGen(c =>
 var connectionString = Environment.GetEnvironmentVariable("ALQUIMIA_DB_CONNECTION")
                       ?? builder.Configuration.GetConnectionString("DefaultConnection");
 
+//builder.Services.AddDbContext<AlquimiaDbContext>(options =>
+//    options.UseSqlServer(connectionString));
 builder.Services.AddDbContext<AlquimiaDbContext>(options =>
-    options.UseSqlServer(connectionString));
+{
+    options.UseSqlServer(connectionString);
+    options.EnableSensitiveDataLogging(); // 👈 esto
+});
+
 
 var clientId = builder.Configuration["OAuth:ClientID"];
 var clientSecret = builder.Configuration["OAuth:ClientSecret"];
