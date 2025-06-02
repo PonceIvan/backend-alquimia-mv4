@@ -42,4 +42,5 @@ public class User : IdentityUser<int>
     public virtual ICollection<UserProduct> UserProducts { get; set; } = new List<UserProduct>();
     public virtual ICollection<UserProviderReview> UserProviderReviewIdProveedorNavigations { get; set; } = new List<UserProviderReview>();
     public virtual ICollection<UserProviderReview> UserProviderReviewIdUsuarioNavigations { get; set; } = new List<UserProviderReview>();
+
 }

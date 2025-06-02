@@ -72,6 +72,7 @@ public partial class AlquimiaDbContext : IdentityDbContext<User, Role, int>
     public virtual DbSet<UserProviderReview> UserProviderReviews { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+
     {
         optionsBuilder.UseSqlServer(
             "Server=tcp:alquimiadb.database.windows.net,1433;" +
@@ -84,6 +85,7 @@ public partial class AlquimiaDbContext : IdentityDbContext<User, Role, int>
             "TrustServerCertificate=False;" +
             "Connection Timeout=30");
     }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

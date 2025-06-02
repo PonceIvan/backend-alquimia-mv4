@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using alquimia.Data.Data.Entities;
 using alquimia.Services.Services.Interfaces;
@@ -31,18 +30,17 @@ namespace alquimia.Services.Services
                 Pregunta = q.Pregunta,
                 Opciones = new List<OptionDTO>
                 {
-                    new OptionDTO { Letra = "A", Texto = q.IdOpcionesNavigation?.Option1 ?? "", ImagenBase64 = ConvertToBase64(q.IdOpcionesNavigation?.Image1) },
-                    new OptionDTO { Letra = "B", Texto = q.IdOpcionesNavigation?.Option2 ?? "", ImagenBase64 = ConvertToBase64(q.IdOpcionesNavigation?.Image2) },
-                    new OptionDTO { Letra = "C", Texto = q.IdOpcionesNavigation?.Option3 ?? "", ImagenBase64 = ConvertToBase64(q.IdOpcionesNavigation?.Image3) },
-                    new OptionDTO { Letra = "D", Texto = q.IdOpcionesNavigation?.Option4 ?? "", ImagenBase64 = ConvertToBase64(q.IdOpcionesNavigation?.Image4) },
+                    new OptionDTO { Letra = "A", Texto = q.IdOpcionesNavigation?.Option1 ?? "", ImagenUrl = q.IdOpcionesNavigation?.Image1 },
+                    new OptionDTO { Letra = "B", Texto = q.IdOpcionesNavigation?.Option2 ?? "",ImagenUrl  = q.IdOpcionesNavigation?.Image2 },
+                    new OptionDTO { Letra = "C", Texto = q.IdOpcionesNavigation?.Option3 ?? "", ImagenUrl = q.IdOpcionesNavigation?.Image3 },
+                    new OptionDTO { Letra = "D", Texto = q.IdOpcionesNavigation?.Option4 ?? "", ImagenUrl  = q.IdOpcionesNavigation?.Image4 },
                 }
             }).ToList();
         }
 
         public Task SaveAnswersAsync(List<AnswerDTO> respuestas)
         {
-            // Aquí se podría guardar en base de datos si quisieras
-            // Por ahora asumimos que se guarda en memoria o no se persiste
+            // No persiste por ahora
             return Task.CompletedTask;
         }
 
@@ -58,36 +56,31 @@ namespace alquimia.Services.Services
             }
 
             var letraDominante = conteo.OrderByDescending(k => k.Value).First().Key;
-            var letraAFamiliaNombre = new Dictionary<string, string> { { "A", "Fresca" },
-            { "B", "Amaderada" },
-            { "C", "Oriental" },
-            { "D", "Floral" } };
+
+            var letraAFamiliaNombre = new Dictionary<string, string>
+            {
+                { "A", "Fresca" },
+                { "B", "Amaderada" },
+                { "C", "Oriental" },
+                { "D", "Floral" }
+            };
 
             if (!letraAFamiliaNombre.TryGetValue(letraDominante, out var nombreFamilia))
                 return null;
 
-
-
             var familia = await _context.OlfactoryFamilies
-                .FirstOrDefaultAsync(f => f.Nombre == nombreFamilia );
+                .FirstOrDefaultAsync(f => f.Nombre == nombreFamilia);
 
             if (familia == null)
                 return null;
-            Console.WriteLine(familia.Image1 != null ? "Imagen encontrada" : "Imagen es null");
-            Console.WriteLine(ConvertToBase64(familia.Image1)?.Substring(0, 100));
+
             return new
             {
                 letraDominante,
                 Nombre = familia.Nombre,
                 Descripcion = familia.Description,
-                Imagen = ConvertToBase64(familia.Image1)
+                Imagen = familia.Image1 
             };
         }
-
-        private string? ConvertToBase64(byte[]? imagen)
-        {
-            return imagen != null ? Convert.ToBase64String(imagen) : null;
-        }
-
     }
 }
