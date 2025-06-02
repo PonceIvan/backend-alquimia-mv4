@@ -19,6 +19,18 @@ namespace backendAlquimia.Controllers
             _formulaService = formulaService;
         }
 
+        [HttpGet("create")]
+        public IActionResult Create()
+        {
+            return Ok("Bienvenido a crear tu perfume");
+        }
+
+        [HttpGet("start")]
+        public IActionResult Start()
+        {
+            return Ok("Vas a crear tu perfume ahora. Arrastra las notas al frasco");
+        }
+
         [HttpGet("base-notes")]
         public async Task<ActionResult<IEnumerable<Note>>> GetBaseNotes()
         {
