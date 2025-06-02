@@ -168,7 +168,7 @@ public partial class AlquimiaDbContext : IdentityDbContext<User, Role, int>
 
         modelBuilder.Entity<FormulaNote>(entity =>
         {
-            entity.Property(e => e.FormulaNotaId).ValueGeneratedNever();
+            entity.Property(e => e.FormulaNotaId).ValueGeneratedOnAdd();
 
             entity.HasOne(d => d.NotaId1Navigation).WithMany(p => p.FormulaNoteNotaId1Navigations)
                 .OnDelete(DeleteBehavior.ClientSetNull)

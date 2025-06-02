@@ -6,7 +6,6 @@
         public double Alcohol { get; set; }
         public double Water { get; set; }
 
-
         public FormulaConcentration CalculateConcentrationBasedOnIntensity(int intensidadId)
         {
             return intensidadId switch
