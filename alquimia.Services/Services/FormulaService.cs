@@ -27,8 +27,10 @@ namespace backendAlquimia.alquimia.Services.Services
                 .Select
                 (x => new IntensityDTO
                 {
+                    Id = x.Id,
                     Name = x.Nombre,
-                    Description = x.Description
+                    Description = x.Description,
+                    Category = x.Category
                 }).ToListAsync();
         }
 
@@ -121,8 +123,10 @@ namespace backendAlquimia.alquimia.Services.Services
             {
                 Intensity = new IntensityDTO
                 {
+                    Id = found.IntensidadId,
                     Name = found.Intensidad.Nombre,
-                    Description = found.Intensidad.Description
+                    Description = found.Intensidad.Description,
+                    Category = found.Intensidad.Category
                 },
                 IdCreador = found.CreadorId,
                 ConcentracionAlcohol = found.ConcentracionAlcohol,
