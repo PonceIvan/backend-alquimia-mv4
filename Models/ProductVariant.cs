@@ -1,11 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 
-namespace alquimia.Data.Data.Entities;
+namespace backendAlquimia.Models;
 
 [Table("ProductVariant")]
 public partial class ProductVariant
@@ -28,9 +27,10 @@ public partial class ProductVariant
 
     public bool? IsHypoallergenic { get; set; }
 
+    [StringLength(255)]
+    public string? Url { get; set; }
 
     [ForeignKey("ProductId")]
     [InverseProperty("ProductVariants")]
-    [JsonIgnore]
     public virtual Product Product { get; set; } = null!;
 }
