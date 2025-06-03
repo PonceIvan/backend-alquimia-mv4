@@ -100,29 +100,15 @@ namespace backendAlquimia.Controllers
         [HttpGet("get-formula/{id}")]
         public async Task<IActionResult> GetFormulaById(int id)
         {
-            try
-            {
-                var formula = await _formulaService.GetFormulaByIdAsync(id);
-                if (formula == null)
-                    return NotFound();
+            var formula = await _formulaService.GetFormulaByIdAsync(id);
+            return Ok(formula);
 
-                return Ok(formula);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500, "Internal server error");
-            }
         }
 
         [HttpGet("note-info/{id}")]
         public async Task<IActionResult> GetNoteInfo(int id)
         {
             var note = await _notaService.GetNoteInfoAsync(id);
-            if (note == null)
-            {
-                return NotFound();
-            }
             return Ok(note);
         }
 
