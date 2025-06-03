@@ -117,7 +117,10 @@ namespace backendAlquimia.alquimia.Services.Services
                 .IncludeFormulaNotesWithDetails()
                 .FirstOrDefaultAsync(f => f.Id == id);
 
-            if (found == null) return null;
+            if (found == null)
+            {
+                throw new KeyNotFoundException();
+            }
 
             return new GETFormulaDTO
             {

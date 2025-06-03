@@ -173,7 +173,7 @@ namespace backendAlquimia.alquimia.Services.Services
 
             if (found == null)
             {
-                return null;
+                throw new KeyNotFoundException();
             }
 
             return NoteToDTO(found);
