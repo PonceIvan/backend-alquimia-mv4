@@ -5,6 +5,7 @@ using alquimia.Services.Services.Interfaces;
 using backendAlquimia.alquimia.Services;
 using backendAlquimia.alquimia.Services.Interfaces;
 using backendAlquimia.alquimia.Services.Services;
+using backendAlquimia.Middlewares;
 using backendAlquimia.Seed;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -16,7 +17,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 🔗 Base de datos
 var connectionString = Environment.GetEnvironmentVariable("ALQUIMIA_DB_CONNECTION")
                       ?? builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -26,7 +26,6 @@ builder.Services.AddDbContext<AlquimiaDbContext>(options =>
     options.EnableSensitiveDataLogging(); // 👈 para debug
 });
 
-// 🧠 Servicios de dominio
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
@@ -35,6 +34,7 @@ builder.Services.AddScoped<IFormulaService, FormulaService>();
 builder.Services.AddScoped<IQuizService, QuizService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
+builder.Services.AddScoped<IOlfactoryFamilyService, OlfactoryFamilyService>();
 
 builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 {
@@ -155,6 +155,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 
 // 🏁 Build y Middleware
 var app = builder.Build();
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 using (var scope = app.Services.CreateScope())
 {

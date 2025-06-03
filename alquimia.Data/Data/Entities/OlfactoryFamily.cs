@@ -14,7 +14,7 @@ public partial class OlfactoryFamily
     [StringLength(100)]
     public string Description { get; set; } = null!;
 
-    public byte[]? Image1 { get; set; }
+    public string? Image1 { get; set; }
 
     [InverseProperty("Familia1")]
     public virtual ICollection<FamilyCompatibility> FamilyCompatibilityFamilia1s { get; set; } = new List<FamilyCompatibility>();
