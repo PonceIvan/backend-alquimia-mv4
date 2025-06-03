@@ -1,10 +1,10 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+﻿using alquimia.Data.Data.Entities;
+using backendAlquimia.alquimia.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using backendAlquimia.alquimia.Services.Interfaces;
-using alquimia.Data.Data.Entities;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace backendAlquimia.alquimia.Services
 {
@@ -21,9 +21,9 @@ namespace backendAlquimia.alquimia.Services
         {
             var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Name, user.UserName),
-            new Claim(ClaimTypes.Email, user.Email),
+            new Claim("name-identifier", user.Id.ToString()),
+            new Claim("user-name", user.UserName),
+            new Claim("email", user.Email),
             new Claim("name", user.Name ?? string.Empty),
         };
 
