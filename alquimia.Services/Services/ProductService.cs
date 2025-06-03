@@ -160,19 +160,26 @@ namespace backendAlquimia.alquimia.Services
             };
         }
 
-        public async Task<PriceRangeDTO> GetPriceRangeFromProductAsync(int tipoProductoId)
+        public async Task<PriceRangeDTO> GetPriceRangeFromProductAsync(int noteId)
         {
-            var variants = await _context.ProductVariants
-                .Where(v => v.Product.TipoProductoId == tipoProductoId)
-                .ToListAsync();
+            var note = await _context.Notes.FindAsync(noteId);
 
-            if (!variants.Any())
+            var query = _context.ProductVariants
+                .Where(v =>
+                    v.Product.Name.ToLower().Contains(note.Name.ToLower()) ||
+                    v.Product.Description.ToLower().Contains(note.Name.ToLower()) ||
+                    v.Product.Name.ToLower().Contains(note.Description.ToLower()) ||
+                    v.Product.Description.ToLower().Contains(note.Description.ToLower())
+                );
+
+            var prices = await query.Select(v => v.Price).ToListAsync();
+            if (!prices.Any())
                 return new PriceRangeDTO { MinPrice = 0, MaxPrice = 0 };
 
             return new PriceRangeDTO
             {
-                MinPrice = variants.Min(v => v.Price),
-                MaxPrice = variants.Max(v => v.Price)
+                MinPrice = await query.MinAsync(v => (decimal?)v.Price) ?? 0,
+                MaxPrice = await query.MaxAsync(v => (decimal?)v.Price) ?? 0
             };
         }
 

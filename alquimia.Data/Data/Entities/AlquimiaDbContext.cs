@@ -96,7 +96,7 @@ public partial class AlquimiaDbContext : IdentityDbContext<User, Role, int>
 
         modelBuilder.Entity<ProductVariant>(entity =>
         {
-            entity.ToTable("ProductVariants");
+            entity.ToTable("ProductVariant");
         });
 
         modelBuilder.Entity<User>(entity =>

@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
@@ -25,9 +22,9 @@ public partial class ProductVariant
     public decimal Price { get; set; }
 
     public int Stock { get; set; }
-
     public bool? IsHypoallergenic { get; set; }
-
+    public bool? IsVegan { get; set; }
+    public bool? IsParabenFree { get; set; }
 
     [ForeignKey("ProductId")]
     [InverseProperty("ProductVariants")]
