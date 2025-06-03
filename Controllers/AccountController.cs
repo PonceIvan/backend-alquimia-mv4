@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using alquimia.Data.Data.Entities;
 using Humanizer;
+using alquimia.Services.Services.Models;
 using User = alquimia.Data.Data.Entities.User;
 
 namespace backendAlquimia.Controllers
@@ -160,7 +161,7 @@ namespace backendAlquimia.Controllers
             return Redirect("http://localhost:3000/Login/RedirectGoogle");
         }
         [HttpPost("registrar-proveedor")]
-        public async Task<IActionResult> RegistrarProveedor([FromBody] RegisterDTO dto)
+        public async Task<IActionResult> RegistrarProveedor([FromBody] RegisterProviderDTO dto)
         {
             _logger.LogInformation("Intentando registrar proveedor con email: {Email}", dto.Email);
 
@@ -175,9 +176,16 @@ namespace backendAlquimia.Controllers
             {
                 UserName = GenerarUserNameSeguro(dto.Email),
                 Email = dto.Email,
-                SecurityStamp = Guid.NewGuid().ToString(),
                 Name = dto.Name?.Trim(),
-                EsProveedor = true // 👈 IMPORTANTE
+                EsProveedor = true,
+                Empresa = dto.Empresa,
+                Cuil = dto.Cuil,
+                Rubro = dto.Rubro,
+                OtroProducto = string.Join(",", dto.OtroProducto),
+                //TarjetaNombre = dto.TarjetaNombre,
+                TarjetaNumero = dto.TarjetaNumero,
+                TarjetaVencimiento = dto.TarjetaVencimiento,
+                TarjetaCVC = dto.TarjetaCVC
             };
 
             var result = await _userManager.CreateAsync(nuevoUsuario, dto.Password);

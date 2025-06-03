@@ -91,7 +91,6 @@ public partial class AlquimiaDbContext : IdentityDbContext<User, Role, int>
     {
         base.OnModelCreating(modelBuilder); // ✅ SIEMPRE antes de todo
 
-        base.OnModelCreating(modelBuilder);
 
 
 
