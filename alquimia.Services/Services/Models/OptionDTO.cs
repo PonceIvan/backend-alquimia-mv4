@@ -10,6 +10,6 @@ namespace alquimia.Services.Services.Models
     {
         public string Letra { get; set; }
         public string Texto { get; set; }
-        public string? ImagenBase64 { get; set; }
+        public string? ImagenUrl{ get; set; }
     }
 }

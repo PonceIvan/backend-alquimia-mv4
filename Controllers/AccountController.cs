@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using alquimia.Data.Data.Entities;
 using Humanizer;
 using alquimia.Services.Services.Models;
+using User = alquimia.Data.Data.Entities.User;
 
 namespace backendAlquimia.Controllers
 {

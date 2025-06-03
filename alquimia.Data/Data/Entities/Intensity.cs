@@ -13,6 +13,9 @@ public partial class Intensity
     [StringLength(100)]
     public string Description { get; set; }
 
+    [StringLength(50)]
+    public string Category { get; set; }
+
     [InverseProperty("Intensidad")]
     public virtual ICollection<Formula> Formulas { get; set; } = new List<Formula>();
 }

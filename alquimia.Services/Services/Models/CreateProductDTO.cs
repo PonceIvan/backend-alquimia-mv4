@@ -1,19 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using backendAlquimia.alquimia.Services.Services.Models;
+using System.ComponentModel.DataAnnotations;
 
 public class CreateProductoDTO
 {
     [Required]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     [Required]
-    public string Description { get; set; }
-
-    public decimal Price { get; set; }
+    public string Description { get; set; } = null!;
+    [Required]
+    public string TipoProductoDescription { get; set; } = null!;
 
     [Required]
-    [Range(0, int.MaxValue)]
-    public int Stock { get; set; }
+    public List<CreateProductVariantDTO> Variants { get; set; } = new();
 
-    [Required]
-    public string TipoProductoDescription { get; set; } // "Esencias", "Envases", etc.
+
 }

@@ -1,4 +1,5 @@
 ﻿using backendAlquimia.alquimia.Services.Models;
+using backendAlquimia.alquimia.Services.Services.Models;
 using backendAlquimia.Models;
 
 namespace backendAlquimia.alquimia.Services.Interfaces
@@ -12,5 +13,12 @@ namespace backendAlquimia.alquimia.Services.Interfaces
         Task<ProductDTO> ActualizarProductoAsync(int idProducto, UpdateProductoDTO dto, int idProveedor);
         Task<HomeProviderDataDTO> GetHomeDataAsync(int idProveedor);
         Task<PriceRangeDTO> GetPriceRangeFromProductAsync(int noteId);
+
+
+
+        Task AddVariantsToProductAsync(int productId, CreateProductVariantDTO dto);
+        Task ActualizarVarianteAsync(int variantId, UpdateProductVariantDTO dto);
+        Task<bool> EliminarVarianteAsync(int variantId);
+        Task<bool> UpdateVariantAsync(int variantId, ProductVariantDTO dto);
     }
 }

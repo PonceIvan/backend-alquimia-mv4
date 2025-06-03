@@ -7,6 +7,9 @@ using backendAlquimia.Models;
 using Microsoft.EntityFrameworkCore;
 using PdfSharpCore.Drawing;
 using PdfSharpCore.Pdf;
+using Formula = alquimia.Data.Data.Entities.Formula;
+using FormulaNote = alquimia.Data.Data.Entities.FormulaNote;
+using Note = alquimia.Data.Data.Entities.Note;
 
 namespace backendAlquimia.alquimia.Services.Services
 {
@@ -24,8 +27,10 @@ namespace backendAlquimia.alquimia.Services.Services
                 .Select
                 (x => new IntensityDTO
                 {
+                    Id = x.Id,
                     Name = x.Nombre,
-                    Description = x.Description
+                    Description = x.Description,
+                    Category = x.Category
                 }).ToListAsync();
         }
 
@@ -118,8 +123,10 @@ namespace backendAlquimia.alquimia.Services.Services
             {
                 Intensity = new IntensityDTO
                 {
+                    Id = found.IntensidadId,
                     Name = found.Intensidad.Nombre,
-                    Description = found.Intensidad.Description
+                    Description = found.Intensidad.Description,
+                    Category = found.Intensidad.Category
                 },
                 IdCreador = found.CreadorId,
                 ConcentracionAlcohol = found.ConcentracionAlcohol,
@@ -135,11 +142,11 @@ namespace backendAlquimia.alquimia.Services.Services
         {
             return new GETNoteDTO
             {
-                Name = note.Nombre,
-                Description = note.Descripcion,
-                Family = note.FamiliaOlfativa.Nombre,
-                Sector = note.PiramideOlfativa.Sector,
-                Duration = note.PiramideOlfativa.Duracion
+                Name = note.Name,
+                Description = note.Description,
+                Family = note.OlfactoryFamily.Nombre,
+                Sector = note.OlfactoryPyramid.Sector,
+                Duration = note.OlfactoryPyramid.Duracion
             };
         }
         private GETFormulaNoteDTO MapFormulaNoteToDTO(FormulaNote note)
