@@ -25,6 +25,8 @@ namespace backendAlquimia.alquimia.Services
             new Claim(ClaimTypes.Name, user.UserName),
             new Claim(ClaimTypes.Email, user.Email),
             new Claim("name", user.Name ?? string.Empty),
+            new Claim("email", user.Email ?? string.Empty),
+
         };
 
             foreach (var role in roles)
