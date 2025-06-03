@@ -22,21 +22,21 @@ namespace backendAlquimia.alquimia.Services.Services
         public async Task<List<NotesGroupedByFamilyDTO>> GetHeartNotesGroupedByFamilyAsync()
         {
             return await _context.Notes
-                .Include(n => n.PiramideOlfativa)
-                .Include(n => n.FamiliaOlfativa)
-                .Where(n => n.PiramideOlfativa.Sector == Heart)
-                .GroupBy(n => n.FamiliaOlfativa.Nombre)
+                .Include(n => n.OlfactoryPyramid)
+                .Include(n => n.OlfactoryFamily)
+                .Where(n => n.OlfactoryPyramid.Sector == Heart)
+                .GroupBy(n => n.OlfactoryFamily.Nombre)
                 .Select(grupo => new NotesGroupedByFamilyDTO
                 {
                     Family = grupo.Key,
                     Notes = grupo.Select(n => new NoteDTO
                     {
                         Id = n.Id,
-                        Name = n.Nombre,
-                        Family = n.FamiliaOlfativa.Nombre,
-                        Sector = n.PiramideOlfativa.Sector,
-                        Description = n.Descripcion,
-                        Duration = n.PiramideOlfativa.Duracion
+                        Name = n.Name,
+                        Family = n.OlfactoryFamily.Nombre,
+                        Sector = n.OlfactoryPyramid.Sector,
+                        Description = n.Description,
+                        Duration = n.OlfactoryPyramid.Duracion
                     }).ToList()
                 })
                 .ToListAsync();
@@ -45,21 +45,21 @@ namespace backendAlquimia.alquimia.Services.Services
         public async Task<List<NotesGroupedByFamilyDTO>> GetTopNotesGroupedByFamilyAsync()
         {
             return await _context.Notes
-                .Include(n => n.PiramideOlfativa)
-                .Include(n => n.FamiliaOlfativa)
-                .Where(n => n.PiramideOlfativa.Sector == Top)
-                .GroupBy(n => n.FamiliaOlfativa.Nombre)
+                .Include(n => n.OlfactoryPyramid)
+                .Include(n => n.OlfactoryFamily)
+                .Where(n => n.OlfactoryPyramid.Sector == Top)
+                .GroupBy(n => n.OlfactoryFamily.Nombre)
                 .Select(grupo => new NotesGroupedByFamilyDTO
                 {
                     Family = grupo.Key,
                     Notes = grupo.Select(n => new NoteDTO
                     {
                         Id = n.Id,
-                        Name = n.Nombre,
-                        Family = n.FamiliaOlfativa.Nombre,
-                        Sector = n.PiramideOlfativa.Sector,
-                        Description = n.Descripcion,
-                        Duration = n.PiramideOlfativa.Duracion
+                        Name = n.Name,
+                        Family = n.OlfactoryFamily.Nombre,
+                        Sector = n.OlfactoryPyramid.Sector,
+                        Description = n.Description,
+                        Duration = n.OlfactoryPyramid.Duracion
                     }).ToList()
                 }).ToListAsync();
         }
@@ -67,21 +67,21 @@ namespace backendAlquimia.alquimia.Services.Services
         public async Task<List<NotesGroupedByFamilyDTO>> GetBaseNotesGroupedByFamilyAsync()
         {
             return await _context.Notes
-                .Include(n => n.PiramideOlfativa)
-                .Include(n => n.FamiliaOlfativa)
-                .Where(n => n.PiramideOlfativa.Sector == Base)
-                .GroupBy(n => n.FamiliaOlfativa.Nombre)
+                .Include(n => n.OlfactoryPyramid)
+                .Include(n => n.OlfactoryFamily)
+                .Where(n => n.OlfactoryPyramid.Sector == Base)
+                .GroupBy(n => n.OlfactoryFamily.Nombre)
                 .Select(grupo => new NotesGroupedByFamilyDTO
                 {
                     Family = grupo.Key,
                     Notes = grupo.Select(n => new NoteDTO
                     {
                         Id = n.Id,
-                        Name = n.Nombre,
-                        Family = n.FamiliaOlfativa.Nombre,
-                        Sector = n.PiramideOlfativa.Sector,
-                        Description = n.Descripcion,
-                        Duration = n.PiramideOlfativa.Duracion
+                        Name = n.Name,
+                        Family = n.OlfactoryFamily.Nombre,
+                        Sector = n.OlfactoryPyramid.Sector,
+                        Description = n.Description,
+                        Duration = n.OlfactoryPyramid.Duracion
                     }).ToList()
                 }).ToListAsync();
         }
@@ -89,15 +89,15 @@ namespace backendAlquimia.alquimia.Services.Services
         public async Task<List<NotesGroupedByFamilyDTO>> GetCompatibleNotesAsync(List<int> seleccionadasIds, string sector)
         {
             var seleccionadas = await _context.Notes
-                .Where(n => seleccionadasIds.Contains(n.Id) && n.PiramideOlfativa.Sector == sector)
-                .Include(n => n.FamiliaOlfativa)
-                .Include(n => n.PiramideOlfativa)
+                .Where(n => seleccionadasIds.Contains(n.Id) && n.OlfactoryPyramid.Sector == sector)
+                .Include(n => n.OlfactoryFamily)
+                .Include(n => n.OlfactoryPyramid)
                 .ToListAsync();
 
             var todasLasNotasDelSector = await _context.Notes
-                .Where(n => n.PiramideOlfativa.Sector == sector)
-                .Include(n => n.FamiliaOlfativa)
-                .Include(n => n.PiramideOlfativa)
+                .Where(n => n.OlfactoryPyramid.Sector == sector)
+                .Include(n => n.OlfactoryFamily)
+                .Include(n => n.OlfactoryPyramid)
                 .ToListAsync();
 
             var incompatibilidades = await _context.IncompatibleNotes.ToListAsync();
@@ -123,8 +123,8 @@ namespace backendAlquimia.alquimia.Services.Services
                         break;
                     }
 
-                    int f1 = Math.Min(seleccionada.FamiliaOlfativaId, candidata.FamiliaOlfativaId);
-                    int f2 = Math.Max(seleccionada.FamiliaOlfativaId, candidata.FamiliaOlfativaId);
+                    int f1 = Math.Min(seleccionada.OlfactoryFamilyId, candidata.OlfactoryFamilyId);
+                    int f2 = Math.Max(seleccionada.OlfactoryFamilyId, candidata.OlfactoryFamilyId);
 
                     var compat = compatibilidades.FirstOrDefault(c =>
                         c.FamiliaMenor == f1 && c.FamiliaMayor == f2);
@@ -145,18 +145,18 @@ namespace backendAlquimia.alquimia.Services.Services
             // Ordenamos antes de agrupar
             var resultado = compatiblesConCompatibilidad
                 .OrderByDescending(c => c.MinCompatibilidad)
-                .GroupBy(c => c.Nota.FamiliaOlfativa.Nombre)
+                .GroupBy(c => c.Nota.OlfactoryFamily.Nombre)
                 .Select(g => new NotesGroupedByFamilyDTO
                 {
                     Family = g.Key,
                     Notes = g.Select(c => new NoteDTO
                     {
                         Id = c.Nota.Id,
-                        Name = c.Nota.Nombre,
-                        Description = c.Nota.Descripcion,
-                        Family = c.Nota.FamiliaOlfativa.Nombre,
-                        Sector = c.Nota.PiramideOlfativa.Sector,
-                        Duration = c.Nota.PiramideOlfativa.Duracion
+                        Name = c.Nota.Name,
+                        Description = c.Nota.Description,
+                        Family = c.Nota.OlfactoryFamily.Nombre,
+                        Sector = c.Nota.OlfactoryPyramid.Sector,
+                        Duration = c.Nota.OlfactoryPyramid.Duracion
                     }).ToList()
                 })
                 .ToList();
@@ -167,8 +167,8 @@ namespace backendAlquimia.alquimia.Services.Services
         public async Task<NoteDTO> GetNoteInfoAsync(int id)
         {
             var found = await _context.Notes
-                .Include(n => n.PiramideOlfativa)
-                .Include(n => n.FamiliaOlfativa)
+                .Include(n => n.OlfactoryPyramid)
+                .Include(n => n.OlfactoryFamily)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (found == null)
@@ -184,11 +184,11 @@ namespace backendAlquimia.alquimia.Services.Services
             return new NoteDTO
             {
                 Id = found.Id,
-                Name = found.Nombre,
-                Family = found.FamiliaOlfativa.Nombre,
-                Sector = found.PiramideOlfativa.Sector,
-                Description = found.Descripcion,
-                Duration = found.PiramideOlfativa.Duracion
+                Name = found.Name,
+                Family = found.OlfactoryFamily.Nombre,
+                Sector = found.OlfactoryPyramid.Sector,
+                Description = found.Description,
+                Duration = found.OlfactoryPyramid.Duracion
             };
         }
     }
