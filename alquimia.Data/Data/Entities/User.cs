@@ -21,7 +21,14 @@ public class User : IdentityUser<int>
     //public string? CUIL { get; set; }
     //public string? Ubicacion { get; set; }
     //public string? CodigoPostal { get; set; }
-
+    public string? Empresa { get; set; }
+    public string? Cuil { get; set; }
+    public string? Rubro { get; set; }
+    //public string? TarjetaNombre { get; set; }
+    public string? TarjetaNumero { get; set; }
+    public string? TarjetaVencimiento { get; set; }
+    public string? TarjetaCVC { get; set; }
+    public string? OtroProducto { get; set; }
     [ForeignKey("IdEstado")]
     public virtual Status? IdEstadoNavigation { get; set; }
 
