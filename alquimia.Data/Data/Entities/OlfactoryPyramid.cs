@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Data.Data.Entities;
 
@@ -16,6 +13,6 @@ public partial class OlfactoryPyramid
 
     public TimeOnly Duracion { get; set; }
 
-    [InverseProperty("PiramideOlfativa")]
+    [InverseProperty("OlfactoryPyramid")]
     public virtual ICollection<Note> Notes { get; set; } = new List<Note>();
 }
