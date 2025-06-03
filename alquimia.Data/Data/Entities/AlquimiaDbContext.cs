@@ -76,7 +76,7 @@ public partial class AlquimiaDbContext : IdentityDbContext<User, Role, int>
     {
         optionsBuilder.UseSqlServer(
             "Server=tcp:alquimiadb.database.windows.net,1433;" +
-            "Initial Catalog=AlquimiaBDDestable;" +
+            "Initial Catalog=alquimiaDB1;" +
             "Persist Security Info=False;" +
             "User ID=alquimia;" +
             "Password=NahuelRapeti10!;" +
@@ -93,8 +93,8 @@ public partial class AlquimiaDbContext : IdentityDbContext<User, Role, int>
 
         base.OnModelCreating(modelBuilder);
 
-        
-        
+
+
         modelBuilder.Entity<ProductVariant>(entity =>
         {
             entity.ToTable("ProductVariants");
@@ -230,11 +230,11 @@ public partial class AlquimiaDbContext : IdentityDbContext<User, Role, int>
         {
             entity.HasKey(e => e.Id).HasName("PK_Notas");
 
-            entity.HasOne(d => d.FamiliaOlfativa).WithMany(p => p.Notes)
+            entity.HasOne(d => d.OlfactoryFamily).WithMany(p => p.Notes)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_notasFamiliaOlfativa");
 
-            entity.HasOne(d => d.PiramideOlfativa).WithMany(p => p.Notes)
+            entity.HasOne(d => d.OlfactoryPyramid).WithMany(p => p.Notes)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_notasPiramideOlfativa");
         });

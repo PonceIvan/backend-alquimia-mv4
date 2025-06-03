@@ -142,11 +142,11 @@ namespace backendAlquimia.alquimia.Services.Services
         {
             return new GETNoteDTO
             {
-                Name = note.Nombre,
-                Description = note.Descripcion,
-                Family = note.FamiliaOlfativa.Nombre,
-                Sector = note.PiramideOlfativa.Sector,
-                Duration = note.PiramideOlfativa.Duracion
+                Name = note.Name,
+                Description = note.Description,
+                Family = note.OlfactoryFamily.Nombre,
+                Sector = note.OlfactoryPyramid.Sector,
+                Duration = note.OlfactoryPyramid.Duracion
             };
         }
         private GETFormulaNoteDTO MapFormulaNoteToDTO(FormulaNote note)
