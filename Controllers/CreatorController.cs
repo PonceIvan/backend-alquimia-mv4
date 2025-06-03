@@ -1,9 +1,8 @@
 ﻿//using backendAlquimia.alquimia.Data;
-using alquimia.Data.Data.Entities;
 using alquimia.Services.Services;
+using alquimia.Services.Services.Interfaces;
 using alquimia.Services.Services.Models;
 using backendAlquimia.alquimia.Services.Interfaces;
-using backendAlquimia.alquimia.Services.Services;
 using backendAlquimia.Models;
 using Microsoft.AspNetCore.Mvc;
 using Note = alquimia.Data.Data.Entities.Note;
@@ -17,11 +16,13 @@ namespace backendAlquimia.Controllers
     {
         private readonly INoteService _notaService;
         private readonly IFormulaService _formulaService;
+        private readonly IOlfactoryFamilyService _olfactoryFamilyService;
 
-        public CreatorController(INoteService notaService, IFormulaService formulaService)
+        public CreatorController(INoteService notaService, IFormulaService formulaService, IOlfactoryFamilyService olfactoryFamilyService)
         {
             _notaService = notaService;
             _formulaService = formulaService;
+            _olfactoryFamilyService = olfactoryFamilyService;
         }
 
         [HttpGet("create")]
@@ -123,6 +124,13 @@ namespace backendAlquimia.Controllers
                 return NotFound();
             }
             return Ok(note);
+        }
+
+        [HttpGet("family-info/{id}")]
+        public async Task<IActionResult> GetOlfactoryFamilyInfo(int id)
+        {
+            var family = await _olfactoryFamilyService.GetOlfactoryFamilyInfoAsync(id);
+            return Ok(family);
         }
     }
 }
