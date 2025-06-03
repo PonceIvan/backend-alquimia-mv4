@@ -1,15 +1,11 @@
 ﻿using alquimia.Services.Services.Models;
-using backendAlquimia.alquimia.Services.Services.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace alquimia.Services.Services.Interfaces
 {
     public interface IQuizService
     {
-        QuizResponseDTO GetQuizResult(List<int> selectedOptions);
+        Task<List<QuestionDTO>> GetQuestionsAsync();
+        Task SaveAnswersAsync(List<AnswerDTO> respuestas);
+        Task<object?> GetResultAsync(List<AnswerDTO> respuestas);
     }
 }

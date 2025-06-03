@@ -1,10 +1,6 @@
-﻿using alquimia.Data.Data.Entities;
-using alquimia.Services.Services.Interfaces;
+﻿using alquimia.Services.Services.Interfaces;
 using alquimia.Services.Services.Models;
-using backendAlquimia.alquimia.Services.Services.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 
 namespace backendAlquimia.Controllers
 {
@@ -18,14 +14,30 @@ namespace backendAlquimia.Controllers
         {
             _quizService = quizService;
         }
+        [HttpGet("test")]
+        public IActionResult Test() => Ok("Ruta activa");
+
+        [HttpGet("preguntas")]
+        public async Task<IActionResult> ObtenerPreguntas()
+        {
+            var preguntas = await _quizService.GetQuestionsAsync();
+            return Ok(preguntas);
+        }
+
+        [HttpPost("responder")]
+        public async Task<IActionResult> GuardarRespuestas([FromBody] List<AnswerDTO> respuestas)
+        {
+            await _quizService.SaveAnswersAsync(respuestas);
+            return Ok(new { mensaje = "Respuestas registradas correctamente." });
+        }
 
         [HttpPost("resultado")]
-        public ActionResult<List<QuizResultDTO>> ObtenerResultado([FromBody] List<int> respuestas)
+        public async Task<IActionResult> ObtenerResultado([FromBody] List<AnswerDTO> respuestas)
         {
-            if (respuestas == null || respuestas.Count != 10)
-                return BadRequest("Se requieren exactamente 10 respuestas");
+            var resultado = await _quizService.GetResultAsync(respuestas);
+            if (resultado == null)
+                return NotFound("No se pudo calcular el resultado.");
 
-            var resultado = _quizService.GetQuizResult(respuestas);
             return Ok(resultado);
         }
     }

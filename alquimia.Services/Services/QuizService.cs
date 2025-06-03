@@ -1,110 +1,82 @@
 ﻿using alquimia.Data.Data.Entities;
 using alquimia.Services.Services.Interfaces;
 using alquimia.Services.Services.Models;
-using backendAlquimia.alquimia.Services.Services.Models;
-using backendAlquimia.alquimia.Services.Services.QuizLogic;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace alquimia.Services.Services
 {
-   
-        public class QuizService : IQuizService
-        {
-        public QuizResponseDTO GetQuizResult(List<int> selectedOptions)
-        {
-            var familyScores = new Dictionary<string, int>();
+    public class QuizService : IQuizService
+    {
+        private readonly AlquimiaDbContext _context;
 
-            for (int i = 0; i < 9; i++) // Solo las primeras 9 preguntas definen familia
+        public QuizService(AlquimiaDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<List<QuestionDTO>> GetQuestionsAsync()
+        {
+            var preguntas = await _context.Questions
+                .Include(q => q.IdOpcionesNavigation)
+                .ToListAsync();
+
+            return preguntas.Select(q => new QuestionDTO
             {
-                int questionId = i + 1;
-                int optionIndex = selectedOptions[i];
-
-                var mapping = FamilyMappingData.Mappings.FirstOrDefault(
-                    m => m.QuestionId == questionId && m.OptionIndex == optionIndex);
-
-                if (mapping != null)
+                Id = q.Id,
+                Pregunta = q.Pregunta,
+                Opciones = new List<OptionDTO>
                 {
-                    foreach (var fam in mapping.Families)
-                        familyScores[fam] = familyScores.GetValueOrDefault(fam, 0) + 1;
+                    new OptionDTO { Letra = "A", Texto = q.IdOpcionesNavigation?.Option1 ?? "", ImagenUrl = q.IdOpcionesNavigation?.Image1 },
+                    new OptionDTO { Letra = "B", Texto = q.IdOpcionesNavigation?.Option2 ?? "",ImagenUrl  = q.IdOpcionesNavigation?.Image2 },
+                    new OptionDTO { Letra = "C", Texto = q.IdOpcionesNavigation?.Option3 ?? "", ImagenUrl = q.IdOpcionesNavigation?.Image3 },
+                    new OptionDTO { Letra = "D", Texto = q.IdOpcionesNavigation?.Option4 ?? "", ImagenUrl  = q.IdOpcionesNavigation?.Image4 },
                 }
+            }).ToList();
+        }
+
+        public Task SaveAnswersAsync(List<AnswerDTO> respuestas)
+        {
+            // No persiste por ahora
+            return Task.CompletedTask;
+        }
+
+        public async Task<object?> GetResultAsync(List<AnswerDTO> respuestas)
+        {
+            var conteo = new Dictionary<string, int> { { "A", 0 }, { "B", 0 }, { "C", 0 }, { "D", 0 } };
+
+            foreach (var r in respuestas)
+            {
+                var letra = r.SelectedOption.ToUpper();
+                if (conteo.ContainsKey(letra))
+                    conteo[letra]++;
             }
 
-            var topFamilies = familyScores.OrderByDescending(f => f.Value).Take(2).Select(f => f.Key).ToList();
+            var letraDominante = conteo.OrderByDescending(k => k.Value).First().Key;
 
-            var families = topFamilies.Select(f => new QuizResultDTO
+            var letraAFamiliaNombre = new Dictionary<string, string>
             {
-                Family = f,
-                CompatibleNotes = GetCompatibleNotes(f),
-                Formula = GetExampleFormula(f)
-            }).ToList();
-
-            string concentration = selectedOptions[9] switch
-            {
-                1 => "Body Splash",
-                2 => "Eau de Toilette",
-                3 => "Eau de Parfum",
-                _ => "Desconocido"
+                { "A", "Fresca" },
+                { "B", "Amaderada" },
+                { "C", "Oriental" },
+                { "D", "Floral" }
             };
 
-            return new QuizResponseDTO
-            {
-                ConcentrationType = concentration,
-                Families = families
-            };
-        }
+            if (!letraAFamiliaNombre.TryGetValue(letraDominante, out var nombreFamilia))
+                return null;
 
-        private List<string> GetCompatibleNotes(string family)
-        {
-            return family switch
+            var familia = await _context.OlfactoryFamilies
+                .FirstOrDefaultAsync(f => f.Nombre == nombreFamilia);
+
+            if (familia == null)
+                return null;
+
+            return new
             {
-                "Floral" => new() { "Rosa", "Jazmín", "Ylang-Ylang", "Iris" },
-                "Cítrico" => new() { "Bergamota", "Limón", "Mandarina", "Naranja" },
-                "Amaderado" => new() { "Cedro", "Sándalo", "Vetiver", "Pachulí" },
-                "Ámbar" => new() { "Ámbar Gris", "Canela", "Benjuí", "Haba tonka" },
-                "Gourmand" => new() { "Caramelo", "Chocolate", "Vainilla", "Frambuesa" },
-                "Terroso" => new() { "Pachulí", "Vetiver", "Musgo", "Haba tonka" },
-                "Empolvado" => new() { "Talco", "Heliotropo", "Iris" },
-                "Mentolado" => new() { "Menta Piperita", "Menta Verde", "Menta Poleo", "Eucalipto" },
-                "Marino" => new() { "Algas", "Calone", "Ozono" },
-                "Herbal" => new() { "Albahaca", "Tomillo", "Romero", "Salvia" },
-                "Ahumado" => new() { "Cuero", "Tabaco", "Clavo" },
-                "Almizclado" => new() { "Musk Blanco", "Ambrette" },
-                "Aldehídico" => new() { "Aldehído C-12", "Aldehído C-14", "Aldehído C-16" },
-                "Frutal" => new() { "Melocotón", "Manzana Verde", "Frambuesa", "Naranja" },
-                "Fresca" => new() { "Lavanda", "Bergamota", "Menta Verde", "Ozono" },
-                "Alcanforado" => new() { "Alcanfor", "Eucalipto", "Romero" },
-                _ => new() { "Nota genérica" }
+                letraDominante,
+                Nombre = familia.Nombre,
+                Descripcion = familia.Description,
+                Imagen = familia.Image1
             };
         }
-
-
-        private ExampleFormulaDTO GetExampleFormula(string family)
-        {
-            return family switch
-            {
-                "Floral" => new() { TopNote = "Bergamota", HeartNote = "Jazmín", BaseNote = "Ylang-Ylang" },
-                "Cítrico" => new() { TopNote = "Limón", HeartNote = "Mandarina", BaseNote = "Vetiver" },
-                "Amaderado" => new() { TopNote = "Pachulí", HeartNote = "Cedro", BaseNote = "Sándalo" },
-                "Ámbar" => new() { TopNote = "Canela", HeartNote = "Haba tonka", BaseNote = "Ámbar Gris" },
-                "Gourmand" => new() { TopNote = "Caramelo", HeartNote = "Chocolate", BaseNote = "Vainilla" },
-                "Terroso" => new() { TopNote = "Vetiver", HeartNote = "Musgo", BaseNote = "Pachulí" },
-                "Empolvado" => new() { TopNote = "Heliotropo", HeartNote = "Iris", BaseNote = "Talco" },
-                "Mentolado" => new() { TopNote = "Menta Verde", HeartNote = "Menta Piperita", BaseNote = "Eucalipto" },
-                "Marino" => new() { TopNote = "Calone", HeartNote = "Ozono", BaseNote = "Algas" },
-                "Herbal" => new() { TopNote = "Romero", HeartNote = "Albahaca", BaseNote = "Salvia" },
-                "Ahumado" => new() { TopNote = "Cuero", HeartNote = "Tabaco", BaseNote = "Clavo" },
-                "Almizclado" => new() { TopNote = "Ambrette", HeartNote = "Musk Blanco", BaseNote = "Vetiver" },
-                "Aldehídico" => new() { TopNote = "Aldehído C-12", HeartNote = "Aldehído C-14", BaseNote = "Aldehído C-16" },
-                "Frutal" => new() { TopNote = "Manzana Verde", HeartNote = "Melocotón", BaseNote = "Frambuesa" },
-                "Fresca" => new() { TopNote = "Lavanda", HeartNote = "Ozono", BaseNote = "Menta Verde" },
-                "Alcanforado" => new() { TopNote = "Alcanfor", HeartNote = "Romero", BaseNote = "Eucalipto" },
-                _ => new() { TopNote = "Nota X", HeartNote = "Nota Y", BaseNote = "Nota Z" }
-            };
-        }
-
     }
-    }
+}
