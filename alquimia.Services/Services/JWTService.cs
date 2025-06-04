@@ -21,7 +21,7 @@ namespace backendAlquimia.alquimia.Services
         {
             var claims = new List<Claim>
         {
-            new Claim("name-identifier", user.Id.ToString()),
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim("user-name", user.UserName),
             new Claim("email", user.Email),
             new Claim("name", user.Name ?? string.Empty),
