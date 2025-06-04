@@ -12,10 +12,12 @@ namespace backendAlquimia.alquimia.Services
     public class ProductService : IProductService
     {
         private readonly AlquimiaDbContext _context;
+        private readonly IFormulaService _formulaService;
 
-        public ProductService(AlquimiaDbContext context)
+        public ProductService(AlquimiaDbContext context, IFormulaService formulaService)
         {
             _context = context;
+            _formulaService = formulaService;
         }
 
         public async Task<List<ProductDTO>> ObtenerProductosPorProveedorAsync(int idProveedor)
@@ -29,11 +31,18 @@ namespace backendAlquimia.alquimia.Services
                     Id = p.Id,
                     Name = p.Name,
                     Description = p.Description,
-                    Price = p.ProductVariants.Min(v => v.Price),
-                    Stock = p.ProductVariants.Sum(v => v.Stock),
-                    TipoProducto = p.TipoProducto.Description
-                })
-                .ToListAsync();
+                    ProductType = p.TipoProducto.Description,
+                    SupplierName = p.IdProveedorNavigation.Name,
+                    Variants = p.ProductVariants.Select(v => new ProductVariantDTO
+                    {
+                        Id = v.Id,
+                        Volume = v.Volume,
+                        Unit = v.Unit,
+                        Price = v.Price,
+                        Stock = v.Stock,
+                        IsHypoallergenic = v.IsHypoallergenic ?? false
+                    }).ToList()
+                }).ToListAsync();
         }
 
         public async Task<ProductDTO> ObtenerProductoPorIdAsync(int idProducto, int idProveedor)
@@ -51,7 +60,7 @@ namespace backendAlquimia.alquimia.Services
                 Id = producto.Id,
                 Name = producto.Name,
                 Description = producto.Description,
-                TipoProducto = producto.TipoProducto.Description,
+                ProductType = producto.TipoProducto.Description,
                 Variants = producto.ProductVariants.Select(v => new ProductVariantDTO
                 {
                     Id = v.Id,
@@ -147,7 +156,6 @@ namespace backendAlquimia.alquimia.Services
             await _context.SaveChangesAsync();
             return await ObtenerProductoPorIdAsync(idProducto, idProveedor);
         }
-
         public async Task<HomeProviderDataDTO> GetHomeDataAsync(int idProveedor)
         {
             var productos = await ObtenerProductosPorProveedorAsync(idProveedor);
@@ -155,7 +163,7 @@ namespace backendAlquimia.alquimia.Services
             return new HomeProviderDataDTO
             {
                 TotalProductos = productos.Count,
-                StockTotal = productos.Sum(p => p.Stock),
+                StockTotal = productos.SelectMany(p => p.Variants).Sum(v => v.Stock),
                 UltimosProductos = productos.OrderByDescending(p => p.Id).Take(5).ToList()
             };
         }
@@ -229,8 +237,6 @@ namespace backendAlquimia.alquimia.Services
             await _context.SaveChangesAsync();
         }
 
-
-
         public async Task<bool> UpdateVariantAsync(int variantId, ProductVariantDTO dto)
         {
             var variante = await _context.ProductVariants.FindAsync(variantId);
@@ -246,9 +252,6 @@ namespace backendAlquimia.alquimia.Services
             return true;
         }
 
-
-
-
         public async Task<bool> EliminarVarianteAsync(int variantId)
         {
             var variante = await _context.ProductVariants.FindAsync(variantId);
@@ -261,7 +264,83 @@ namespace backendAlquimia.alquimia.Services
             return true;
         }
 
+        public async Task<List<ProductDTO>> GetProductsByFormulaAsync(int formulaId)
+        {
+            var formula = await _context.Formulas
+        .Include(f => f.FormulaSalidaNavigation)
+            .ThenInclude(fn => fn.NotaId1Navigation)
+        .Include(f => f.FormulaSalidaNavigation.NotaId2Navigation)
+        .Include(f => f.FormulaSalidaNavigation.NotaId3Navigation)
+        .Include(f => f.FormulaSalidaNavigation.NotaId4Navigation)
+        .Include(f => f.FormulaCorazonNavigation)
+            .ThenInclude(fn => fn.NotaId1Navigation)
+        .Include(f => f.FormulaCorazonNavigation.NotaId2Navigation)
+        .Include(f => f.FormulaCorazonNavigation.NotaId3Navigation)
+        .Include(f => f.FormulaCorazonNavigation.NotaId4Navigation)
+        .Include(f => f.FormulaFondoNavigation)
+            .ThenInclude(fn => fn.NotaId1Navigation)
+        .Include(f => f.FormulaFondoNavigation.NotaId2Navigation)
+        .Include(f => f.FormulaFondoNavigation.NotaId3Navigation)
+        .Include(f => f.FormulaFondoNavigation.NotaId4Navigation)
+        .FirstOrDefaultAsync(f => f.Id == formulaId);
 
+            if (formula == null)
+                throw new KeyNotFoundException();
+
+            var noteNames = new List<string?>
+            {
+                formula.FormulaSalidaNavigation.NotaId1Navigation?.Name,
+                formula.FormulaSalidaNavigation.NotaId2Navigation?.Name,
+                formula.FormulaSalidaNavigation.NotaId3Navigation?.Name,
+                formula.FormulaSalidaNavigation.NotaId4Navigation?.Name,
+
+                formula.FormulaCorazonNavigation.NotaId1Navigation?.Name,
+                formula.FormulaCorazonNavigation.NotaId2Navigation?.Name,
+                formula.FormulaCorazonNavigation.NotaId3Navigation?.Name,
+                formula.FormulaCorazonNavigation.NotaId4Navigation?.Name,
+
+                formula.FormulaFondoNavigation.NotaId1Navigation?.Name,
+                formula.FormulaFondoNavigation.NotaId2Navigation?.Name,
+                formula.FormulaFondoNavigation.NotaId3Navigation?.Name,
+                formula.FormulaFondoNavigation.NotaId4Navigation?.Name,
+            }
+            .Where(n => !string.IsNullOrWhiteSpace(n))
+            .Distinct()
+            .ToList();
+
+            noteNames = noteNames.Select(n => n!.ToLower()).ToList();
+
+            var productos = await _context.Products
+                .Include(p => p.TipoProducto)
+                .Include(p => p.IdProveedorNavigation)
+                .Include(p => p.ProductVariants)
+                .Where(p =>
+                    noteNames.Any(n =>
+                        p.Name.ToLower().Contains(n!.ToLower()) || p.Description.ToLower().Contains(n!.ToLower())
+                    )
+                )
+                .ToListAsync();
+
+            return productos.Select(p => new ProductDTO
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Description = p.Description,
+                ProductType = p.TipoProducto.Description,
+                SupplierName = p.IdProveedorNavigation?.Name,
+                Variants = p.ProductVariants.Select(v => new ProductVariantDTO
+                {
+                    Id = v.Id,
+                    Volume = v.Volume,
+                    Unit = v.Unit,
+                    Price = v.Price,
+                    Stock = v.Stock,
+                    IsHypoallergenic = v.IsHypoallergenic,
+                    IsVegan = v.IsVegan,
+                    IsParabenFree = v.IsParabenFree
+                }).ToList()
+            }).ToList();
+        }
     }
 
 }

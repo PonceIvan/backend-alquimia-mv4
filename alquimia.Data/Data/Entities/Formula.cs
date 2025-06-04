@@ -42,4 +42,9 @@ public partial class Formula
 
     [InverseProperty("IdFormulasNavigation")]
     public virtual ICollection<User> Users { get; set; } = new List<User>();
+
+    public override string ToString()
+    {
+        return $"Id: {Id}, ConAlco: {ConcentracionAlcohol}, ConAgua: {ConcentracionAgua}, ConEsen: {ConcentracionEsencia}";
+    }
 }

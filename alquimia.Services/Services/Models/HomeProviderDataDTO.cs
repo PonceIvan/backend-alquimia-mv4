@@ -1,5 +1,4 @@
-﻿using backendAlquimia.Models;
-
+﻿using backendAlquimia.alquimia.Services.Services.Models;
 
 namespace backendAlquimia.alquimia.Services
 {
