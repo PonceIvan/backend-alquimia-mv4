@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace backendAlquimia.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Proveedor")]
     [Route("provider")]
     [ApiController]
     public class ProviderController : ControllerBase

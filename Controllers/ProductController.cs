@@ -1,4 +1,5 @@
-﻿using backendAlquimia.alquimia.Services.Interfaces;
+﻿using alquimia.Services.Services.Models;
+using backendAlquimia.alquimia.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 namespace backendAlquimia.Controllers
 {
@@ -17,24 +18,15 @@ namespace backendAlquimia.Controllers
         [HttpGet("price-range/{noteId}")]
         public async Task<IActionResult> GetPriceRange(int noteId)
         {
-            try
-            {
-                var priceRange = await _productService.GetPriceRangeFromProductAsync(noteId);
-                return Ok(priceRange);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "Unexpected error", detail = ex.Message });
-            }
+            var priceRange = await _productService.GetPriceRangeFromProductAsync(noteId);
+            return Ok(priceRange);
         }
 
+        [HttpPost("get-products-by-formula")]
+        public async Task<IActionResult> GetProductsByFormula([FromBody] SearchByFormulaDTO dto)
+        {
+            var products = await _productService.GetProductsByFormulaAsync(dto.FormulaId);
+            return Ok(products);
+        }
     }
 }

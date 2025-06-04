@@ -13,12 +13,10 @@ namespace backendAlquimia.alquimia.Services.Interfaces
         Task<ProductDTO> ActualizarProductoAsync(int idProducto, UpdateProductoDTO dto, int idProveedor);
         Task<HomeProviderDataDTO> GetHomeDataAsync(int idProveedor);
         Task<PriceRangeDTO> GetPriceRangeFromProductAsync(int noteId);
-
-
-
         Task AddVariantsToProductAsync(int productId, CreateProductVariantDTO dto);
         Task ActualizarVarianteAsync(int variantId, UpdateProductVariantDTO dto);
         Task<bool> EliminarVarianteAsync(int variantId);
         Task<bool> UpdateVariantAsync(int variantId, ProductVariantDTO dto);
+        Task<List<ProductDTO>> GetProductsByFormulaAsync(int formulaId);
     }
 }
