@@ -9,7 +9,7 @@ public class CreateProductoDTO
     [Required]
     public string Description { get; set; } = null!;
     [Required]
-    public string TipoProductoDescription { get; set; } = null!;
+    public string ProductType { get; set; } = null!;
 
     [Required]
     public List<CreateProductVariantDTO> Variants { get; set; } = new();
