@@ -47,13 +47,13 @@ namespace backendAlquimia.Controllers
 
         /// /////////////////////////////////////////////////////////////////////
 
-        [HttpGet("productos")]
-        public async Task<IActionResult> GetProductos()
-        {
-            var idProveedor = ObtenerIdProveedor();
-            var productos = await _productService.ObtenerProductosPorProveedorAsync(idProveedor);
-            return Ok(productos);
-        }
+        //[HttpGet("productos")]
+        //public async Task<IActionResult> GetProductos()
+        //{
+        //    var idProveedor = ObtenerIdProveedor();
+        //    var productos = await _productService.ObtenerProductosPorProveedorAsync(idProveedor);
+        //    return Ok(productos);
+        //}
 
 
         /// /////////////////////////////////////////////////////////////////////
@@ -76,20 +76,8 @@ namespace backendAlquimia.Controllers
         public async Task<IActionResult> CrearProducto(int idProveedor, [FromBody] CreateProductoDTO dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-
-            try
-            {
-                var productoCreado = await _productService.CrearProductoAsync(dto, idProveedor);
-                return Ok(productoCreado);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return BadRequest(new { mensaje = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { mensaje = "Error interno: " + ex.Message });
-            }
+            var productoCreado = await _productService.CrearProductoAsync(dto, idProveedor);
+            return Ok(productoCreado);
         }
         /// /////////////////////////////////////////////////////////////////////
 
@@ -98,10 +86,6 @@ namespace backendAlquimia.Controllers
         {
             var idProveedor = ObtenerIdProveedor();
             var producto = await _productService.ObtenerProductoPorIdAsync(idProducto, idProveedor);
-
-            if (producto == null)
-                return NotFound(new { mensaje = "Producto no encontrado" });
-
             return Ok(producto);
         }
         /// /////////////////////////////////////////////////////////////////////

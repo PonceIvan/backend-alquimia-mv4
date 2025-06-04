@@ -32,7 +32,7 @@ namespace backendAlquimia.alquimia.Services
                     Name = p.Name,
                     Description = p.Description,
                     ProductType = p.TipoProducto.Description,
-                    SupplierName = p.IdProveedorNavigation.Name,
+                    //SupplierName = p.IdProveedorNavigation.Name,
                     Variants = p.ProductVariants.Select(v => new ProductVariantDTO
                     {
                         Id = v.Id,
@@ -40,7 +40,9 @@ namespace backendAlquimia.alquimia.Services
                         Unit = v.Unit,
                         Price = v.Price,
                         Stock = v.Stock,
-                        IsHypoallergenic = v.IsHypoallergenic ?? false
+                        IsHypoallergenic = v.IsHypoallergenic,
+                        IsVegan = v.IsVegan,
+                        IsParabenFree = v.IsParabenFree
                     }).ToList()
                 }).ToListAsync();
         }
@@ -53,7 +55,7 @@ namespace backendAlquimia.alquimia.Services
                 .FirstOrDefaultAsync(p => p.Id == idProducto && p.IdProveedor == idProveedor);
 
             if (producto == null)
-                throw new KeyNotFoundException("Producto no encontrado");
+                throw new KeyNotFoundException();
 
             return new ProductDTO
             {
@@ -68,55 +70,44 @@ namespace backendAlquimia.alquimia.Services
                     Unit = v.Unit,
                     Price = v.Price,
                     Stock = v.Stock,
-                    IsHypoallergenic = v.IsHypoallergenic ?? false
+                    IsHypoallergenic = v.IsHypoallergenic,
+                    IsVegan = v.IsVegan,
+                    IsParabenFree = v.IsParabenFree
                 }).ToList()
             };
         }
 
         public async Task<ProductDTO> CrearProductoAsync(CreateProductoDTO dto, int idProveedor)
         {
-            try
+            var tipoProducto = await _context.ProductTypes
+                .FirstOrDefaultAsync(t => t.Description == dto.ProductType);
+
+            if (tipoProducto == null)
+                throw new KeyNotFoundException();
+
+            var producto = new Product
             {
-                var tipoProducto = await _context.ProductTypes
-                    .FirstOrDefaultAsync(t => t.Description == dto.TipoProductoDescription);
-
-                if (tipoProducto == null)
-                    throw new KeyNotFoundException("Tipo de producto no válido");
-
-                var producto = new Product
+                Name = dto.Name,
+                Description = dto.Description,
+                TipoProductoId = tipoProducto.Id,
+                IdProveedor = idProveedor,
+                ProductVariants = dto.Variants?.Select(v => new ProductVariant
                 {
-                    Name = dto.Name,
-                    Description = dto.Description,
-                    TipoProductoId = tipoProducto.Id,
-                    IdProveedor = idProveedor,
-                    ProductVariants = dto.Variants?.Select(v => new ProductVariant
-                    {
-                        Volume = v.Volume,
-                        Unit = v.Unit,
-                        Price = v.Price,
-                        Stock = v.Stock,
-                        IsHypoallergenic = v.IsHypoallergenic
-                    }).ToList() ?? new List<ProductVariant>()
-                };
+                    Volume = v.Volume,
+                    Unit = v.Unit,
+                    Price = v.Price,
+                    Stock = v.Stock,
+                    IsHypoallergenic = v.IsHypoallergenic,
+                    IsVegan = v.IsVegan,
+                    IsParabenFree = v.IsParabenFree
+                }).ToList() ?? new List<ProductVariant>()
+            };
 
-                _context.Products.Add(producto);
+            _context.Products.Add(producto);
 
-                await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
-                return await ObtenerProductoPorIdAsync(producto.Id, idProveedor);
-            }
-            catch (DbUpdateException ex)
-            {
-                // Log de la excepción con inner exception
-                var innerMessage = ex.InnerException?.Message ?? ex.Message;
-                Console.WriteLine($"[Error al guardar producto] {innerMessage}");
-                throw new Exception($"Error al guardar producto: {innerMessage}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[Error general] {ex.Message}");
-                throw;
-            }
+            return await ObtenerProductoPorIdAsync(producto.Id, idProveedor);
         }
 
         public async Task<bool> EliminarProductoAsync(int idProducto, int idProveedor)
@@ -164,7 +155,7 @@ namespace backendAlquimia.alquimia.Services
             {
                 TotalProductos = productos.Count,
                 StockTotal = productos.SelectMany(p => p.Variants).Sum(v => v.Stock),
-                UltimosProductos = productos.OrderByDescending(p => p.Id).Take(5).ToList()
+                UltimosProductos = productos.OrderByDescending(p => p.Id).ToList()
             };
         }
 
