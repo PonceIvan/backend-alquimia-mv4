@@ -284,8 +284,6 @@ namespace backendAlquimia.alquimia.Services
         .Include(f => f.FormulaFondoNavigation.NotaId4Navigation)
         .FirstOrDefaultAsync(f => f.Id == formulaId);
 
-            Console.WriteLine("formula encontrada:" + formula.ToString());
-
             if (formula == null)
                 throw new KeyNotFoundException();
 
@@ -322,11 +320,6 @@ namespace backendAlquimia.alquimia.Services
                     )
                 )
                 .ToListAsync();
-            if (productos == null)
-            {
-                Console.WriteLine("productos is null");
-                throw new KeyNotFoundException();
-            }
 
             return productos.Select(p => new ProductDTO
             {
