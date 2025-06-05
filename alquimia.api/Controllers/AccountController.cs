@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-//using backendAlquimia.alquimia.Data;
 using alquimia.Services.Models;
 using alquimia.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -11,7 +10,7 @@ using User = alquimia.Data.Entities.User;
 namespace alquimia.Api.Controllers
 {
     [ApiController]
-    [Route("cuenta")]
+    [Route("/account")]
     public class AccountController : Controller
     {
         private readonly UserManager<User> _userManager;
@@ -27,7 +26,7 @@ namespace alquimia.Api.Controllers
             _jwtService = jwtService;
         }
 
-        [HttpPost("registrar-json")]
+        [HttpPost("register")]
         public async Task<IActionResult> RegistrarJson([FromBody] RegisterDTO dto)
         {
             _logger.LogInformation("Intentando registrar usuario con email: {Email}", dto.Email);
@@ -77,7 +76,7 @@ namespace alquimia.Api.Controllers
             return Ok(new { mensaje = "Usuario registrado correctamente.", token });
         }
 
-        [HttpPost("login-json")]
+        [HttpPost("login")]
         public async Task<IActionResult> LoginJson([FromBody] LoginDTO dto)
         {
             _logger.LogInformation("Intentando login para el email: {Email}", dto.Email);
@@ -159,7 +158,7 @@ namespace alquimia.Api.Controllers
             _logger.LogInformation("Google login info recibida para: {Email}", info.Principal.FindFirstValue(ClaimTypes.Email));
             return Redirect("http://localhost:3000/Login/RedirectGoogle");
         }
-        [HttpPost("registrar-proveedor")]
+        [HttpPost("register-provider")]
         public async Task<IActionResult> RegistrarProveedor([FromBody] RegisterProviderDTO dto)
         {
             _logger.LogInformation("Intentando registrar proveedor con email: {Email}", dto.Email);

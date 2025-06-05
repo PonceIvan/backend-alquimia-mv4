@@ -70,7 +70,7 @@ namespace alquimia.Api.Controllers
         [HttpPost("envase-pdf")]
         public IActionResult DescargarPdf([FromBody] DesignDTO dto)
         {
-            var pdfBytes = DesignLabelService.CrearPdfDesdeDesign(dto);
+            var pdfBytes = DesignLabelService.CreatePdfDesign(dto);
             return File(pdfBytes, "application/pdf", "myDesign.pdf");
         }
 
