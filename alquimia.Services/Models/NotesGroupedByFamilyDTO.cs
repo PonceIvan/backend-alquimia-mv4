@@ -1,0 +1,11 @@
+﻿using alquimia.Services.Models;
+
+namespace alquimia.Services.Models
+{
+    public class NotesGroupedByFamilyDTO
+{
+    public string Family { get; set; }
+    
+        public List<NoteDTO> Notes { get; set; }
+}
+}

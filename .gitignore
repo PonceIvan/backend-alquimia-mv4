@@ -13,13 +13,17 @@ Tests/obj/*
 Tests/bin/*
 */obj/*
 */bin/*
-
+alquimia.Api/obj/*
+alquimia.Api/obj
+alquimia.Api/bin/*
+alquimia.Api/bin
+alquimia.Api/appsettings.json
 alquimia.Data/bin/*
 alquimia.Data/obj/*
 alquimia.Services/bin/*
 alquimia.Services/bin/*
 
-Tests/obj/*
-Tests/bin/*
+alquimia.Tests/obj/*
+alquimia.Tests/bin/*
 /.idea/workspace.xml
 .idea/
