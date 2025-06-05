@@ -23,7 +23,6 @@ namespace alquimia.Services
         {
             new Claim("name-identifier", user.Id.ToString()),
             new Claim("user-name", user.UserName),
-            new Claim("email", user.Email),
             new Claim("name", user.Name ?? string.Empty),
             new Claim("email", user.Email ?? string.Empty),
 
