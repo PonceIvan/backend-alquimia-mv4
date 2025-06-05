@@ -1,9 +1,8 @@
-﻿using alquimia.Services.Interfaces;
-using alquimia.Services.Models;
+﻿using alquimia.Services;
 using alquimia.Services.Interfaces;
+using alquimia.Services.Models;
 using Microsoft.AspNetCore.Mvc;
 using Note = alquimia.Data.Entities.Note;
-using alquimia.Services;
 
 namespace alquimia.Api.Controllers
 {
@@ -30,13 +29,13 @@ namespace alquimia.Api.Controllers
         [HttpGet("create")]
         public IActionResult Create()
         {
-            return Ok("Bienvenido a crear tu perfume");
+            return Ok("Ruta activa");
         }
 
         [HttpGet("start")]
         public IActionResult Start()
         {
-            return Ok("Vas a crear tu perfume ahora. Arrastra las notas al frasco");
+            return Ok("Ruta activa");
         }
 
         [HttpGet("base-notes")]
@@ -88,23 +87,15 @@ namespace alquimia.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            try
-            {
-                var formulaId = await _formulaService.SaveAsync(dto);
-                return Ok(new { formulaId });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { error = "Error al guardar la fórmula", details = ex.Message });
-            }
+            var formulaId = await _formulaService.SaveAsync(dto);
+            return Ok(new { formulaId });
         }
 
         [HttpGet("get-formula/{id}")]
         public async Task<IActionResult> GetFormulaById(int id)
         {
-            var formula = await _formulaService.GetFormulaByIdAsync(id);
+            var formula = await _formulaService.GetFormulaByIdToDTOAsync(id);
             return Ok(formula);
-
         }
 
         [HttpGet("note-info/{id}")]
@@ -136,6 +127,14 @@ namespace alquimia.Api.Controllers
             {
                 return StatusCode(500, new { error = "Error al guardar el diseño", details = ex.Message });
             }
+        }
+
+        [HttpPatch("formula/{id}/titulo")]
+        public async Task<IActionResult> UpdateTitle(int id, [FromBody] TitleDTO dto)
+        {
+            var found = await _formulaService.GetFormulaAsync(id);
+            await _formulaService.UpdateTitleAsync(found, dto.Title);
+            return NoContent();
         }
     }
 }

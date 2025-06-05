@@ -1,6 +1,4 @@
-﻿using alquimia.Services.Models;
-
-namespace alquimia.Services.Models
+﻿namespace alquimia.Services.Models
 {
     public class GETFormulaDTO
     {
@@ -12,5 +10,6 @@ namespace alquimia.Services.Models
         public double ConcentracionAlcohol { get; set; }
         public double ConcentracionAgua { get; set; }
         public double ConcentracionEsencia { get; set; }
+        public string Title { get; set; }
     }
 }

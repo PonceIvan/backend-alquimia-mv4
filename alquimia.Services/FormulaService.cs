@@ -1,14 +1,14 @@
 ﻿using alquimia.Data.Entities;
 using alquimia.Services.Extensions;
-using alquimia.Services.Models;
+using alquimia.Services.Helpers;
 using alquimia.Services.Interfaces;
+using alquimia.Services.Models;
 using Microsoft.EntityFrameworkCore;
 using PdfSharpCore.Drawing;
 using PdfSharpCore.Pdf;
 using Formula = alquimia.Data.Entities.Formula;
 using FormulaNote = alquimia.Data.Entities.FormulaNote;
 using Note = alquimia.Data.Entities.Note;
-using alquimia.Services.Helpers;
 
 namespace alquimia.Services
 {
@@ -110,16 +110,9 @@ namespace alquimia.Services
                 throw;
             }
         }
-        public async Task<GETFormulaDTO> GetFormulaByIdAsync(int id)
+        public async Task<GETFormulaDTO> GetFormulaByIdToDTOAsync(int id)
         {
-            var found = await _context.Formulas
-                .IncludeFormulaNotesWithDetails()
-                .FirstOrDefaultAsync(f => f.Id == id);
-
-            if (found == null)
-            {
-                throw new KeyNotFoundException();
-            }
+            Formula? found = await GetFormulaAsync(id);
 
             return new GETFormulaDTO
             {
@@ -136,8 +129,21 @@ namespace alquimia.Services
                 ConcentracionEsencia = found.ConcentracionEsencia,
                 NotasSalidaIds = MapFormulaNoteToDTO(found.FormulaSalidaNavigation),
                 NotasCorazonIds = MapFormulaNoteToDTO(found.FormulaCorazonNavigation),
-                NotasFondoIds = MapFormulaNoteToDTO(found.FormulaFondoNavigation)
+                NotasFondoIds = MapFormulaNoteToDTO(found.FormulaFondoNavigation),
+                Title = found.Title
             };
+        }
+
+        public async Task<Formula?> GetFormulaAsync(int id)
+        {
+            Formula? found = await _context.Formulas
+                            .IncludeFormulaNotesWithDetails()
+                            .FirstOrDefaultAsync(f => f.Id == id);
+            if (found == null)
+            {
+                throw new KeyNotFoundException();
+            }
+            return found;
         }
 
         private GETNoteDTO MapNoteToDTO(Note note)
@@ -190,6 +196,12 @@ namespace alquimia.Services
             doc.Save(stream, false);
             return stream.ToArray();
             throw new NotImplementedException();
+        }
+
+        public async Task UpdateTitleAsync(Formula? formula, string title)
+        {
+            formula.Title = title;
+            await _context.SaveChangesAsync();
         }
     }
 }
