@@ -1,0 +1,6 @@
+@alquimia.Api_HostAddress = http://localhost:5280
+
+GET {{alquimia.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
