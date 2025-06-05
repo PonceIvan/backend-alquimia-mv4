@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\m1ca3\\source\\repos\\alquiamia\\alquimia.Services\\alquimia.Services.csproj": {}
+    "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\nuevo\\alquimia.Services\\alquimia.Services.csproj": {}
   },
   "projects": {
-    "C:\\Users\\m1ca3\\source\\repos\\alquiamia\\alquimia.Services\\alquimia.Services.csproj": {
+    "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\nuevo\\alquimia.Services\\alquimia.Services.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\m1ca3\\source\\repos\\alquiamia\\alquimia.Services\\alquimia.Services.csproj",
+        "projectUniqueName": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\nuevo\\alquimia.Services\\alquimia.Services.csproj",
         "projectName": "alquimia.Services",
-        "projectPath": "C:\\Users\\m1ca3\\source\\repos\\alquiamia\\alquimia.Services\\alquimia.Services.csproj",
+        "projectPath": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\nuevo\\alquimia.Services\\alquimia.Services.csproj",
         "packagesPath": "C:\\Users\\m1ca3\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\m1ca3\\source\\repos\\alquiamia\\alquimia.Services\\obj\\",
+        "outputPath": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\nuevo\\alquimia.Services\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

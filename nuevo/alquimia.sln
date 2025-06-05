@@ -1,11 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35931.197 d17.13
+VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "alquimia.Api", "alquimia.api\alquimia.Api.csproj", "{19B282AD-923E-4BE4-A3CB-A004C605AD75}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1E323F3A-24B6-4593-AEFE-6A4F309972AA} = {1E323F3A-24B6-4593-AEFE-6A4F309972AA}
+		{D754A327-E802-443F-8424-872192690361} = {D754A327-E802-443F-8424-872192690361}
+		{FFBC5A3E-C544-4E0C-B5CF-22442EB56AA1} = {FFBC5A3E-C544-4E0C-B5CF-22442EB56AA1}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "alquimia.Services", "alquimia.Services\alquimia.Services.csproj", "{D754A327-E802-443F-8424-872192690361}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1E323F3A-24B6-4593-AEFE-6A4F309972AA} = {1E323F3A-24B6-4593-AEFE-6A4F309972AA}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "alquimia.Data", "alquimia.Data\alquimia.Data.csproj", "{1E323F3A-24B6-4593-AEFE-6A4F309972AA}"
 EndProject

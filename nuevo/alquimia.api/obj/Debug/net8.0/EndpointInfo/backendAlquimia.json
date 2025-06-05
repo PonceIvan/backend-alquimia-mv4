@@ -1,0 +1,2621 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Alquimia API",
+    "version": "v1"
+  },
+  "paths": {
+    "/cuenta/registrar-json": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/cuenta/login-json": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/cuenta/login-google": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/cuenta/signin-google": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/cuenta/registrar-proveedor": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterProviderDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterProviderDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterProviderDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/cuenta/auth/status": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/admin/home": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/admin/listProviders": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/admin/getProvider/{id}": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/admin/approveProvider/{id}": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/admin/deactivateProvider/{id}": {
+      "put": {
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/creator/create": {
+      "get": {
+        "tags": [
+          "Creator"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/creator/start": {
+      "get": {
+        "tags": [
+          "Creator"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/creator/base-notes": {
+      "get": {
+        "tags": [
+          "Creator"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Note"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Note"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Note"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/creator/heart-notes": {
+      "get": {
+        "tags": [
+          "Creator"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Note"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Note"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Note"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/creator/top-notes": {
+      "get": {
+        "tags": [
+          "Creator"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Note"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Note"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Note"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/creator/compatibilities": {
+      "post": {
+        "tags": [
+          "Creator"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SelectedNotesDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SelectedNotesDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SelectedNotesDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/creator/envase-pdf": {
+      "post": {
+        "tags": [
+          "Creator"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DesignDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DesignDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DesignDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/creator/intensities": {
+      "get": {
+        "tags": [
+          "Creator"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IntensityDTO"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IntensityDTO"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IntensityDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/creator/save-formula": {
+      "post": {
+        "tags": [
+          "Creator"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/POSTFormulaDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/POSTFormulaDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/POSTFormulaDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/creator/get-formula/{id}": {
+      "get": {
+        "tags": [
+          "Creator"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/creator/note-info/{id}": {
+      "get": {
+        "tags": [
+          "Creator"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/creator/family-info/{id}": {
+      "get": {
+        "tags": [
+          "Creator"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/home": {
+      "get": {
+        "tags": [
+          "Home"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/home/usuario": {
+      "get": {
+        "tags": [
+          "Home"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/product/price-range/{noteId}": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "parameters": [
+          {
+            "name": "noteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/product/get-products-by-formula": {
+      "post": {
+        "tags": [
+          "Product"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchByFormulaDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchByFormulaDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchByFormulaDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/profile/data": {
+      "get": {
+        "tags": [
+          "Profile"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Profile"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserProfileDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserProfileDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserProfileDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/profile/formulas": {
+      "get": {
+        "tags": [
+          "Profile"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/profile/products": {
+      "get": {
+        "tags": [
+          "Profile"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/profile/wishlist": {
+      "get": {
+        "tags": [
+          "Profile"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/provider/home": {
+      "get": {
+        "tags": [
+          "Provider"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/provider/tipos-producto": {
+      "get": {
+        "tags": [
+          "Provider"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/provider/create/{idProveedor}": {
+      "post": {
+        "tags": [
+          "Provider"
+        ],
+        "parameters": [
+          {
+            "name": "idProveedor",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductoDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductoDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductoDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/provider/productos/{idProducto}": {
+      "get": {
+        "tags": [
+          "Provider"
+        ],
+        "parameters": [
+          {
+            "name": "idProducto",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Provider"
+        ],
+        "parameters": [
+          {
+            "name": "idProducto",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Provider"
+        ],
+        "parameters": [
+          {
+            "name": "idProducto",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProductoDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProductoDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProductoDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/provider/{productId}/variants": {
+      "post": {
+        "tags": [
+          "Provider"
+        ],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductVariantDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductVariantDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductVariantDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/provider/variants/{variantId}": {
+      "put": {
+        "tags": [
+          "Provider"
+        ],
+        "parameters": [
+          {
+            "name": "variantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProductVariantDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProductVariantDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProductVariantDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Provider"
+        ],
+        "parameters": [
+          {
+            "name": "variantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/quiz/test": {
+      "get": {
+        "tags": [
+          "Quiz"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/quiz/preguntas": {
+      "get": {
+        "tags": [
+          "Quiz"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/quiz/responder": {
+      "post": {
+        "tags": [
+          "Quiz"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/AnswerDTO"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/AnswerDTO"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/AnswerDTO"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/quiz/resultado": {
+      "post": {
+        "tags": [
+          "Quiz"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/AnswerDTO"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/AnswerDTO"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/AnswerDTO"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AnswerDTO": {
+        "type": "object",
+        "properties": {
+          "QuestionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "SelectedOption": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateProductVariantDTO": {
+        "type": "object",
+        "properties": {
+          "Volume": {
+            "type": "number",
+            "format": "double"
+          },
+          "Unit": {
+            "type": "string",
+            "nullable": true
+          },
+          "Price": {
+            "type": "number",
+            "format": "double"
+          },
+          "Stock": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "IsHypoallergenic": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "IsVegan": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "IsParabenFree": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateProductoDTO": {
+        "required": [
+          "Description",
+          "Name",
+          "ProductType",
+          "Variants"
+        ],
+        "type": "object",
+        "properties": {
+          "Name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "Description": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "ProductType": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "Variants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateProductVariantDTO"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "Design": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "TipoProductoId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "IdProducto": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "Text": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "Volume": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "Image": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "Shape": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "LabelColor": {
+            "maxLength": 10,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "Typography": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "TextColor": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "FinalEntities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinalEntity"
+            },
+            "nullable": true
+          },
+          "IdProductoNavigation": {
+            "$ref": "#/components/schemas/Product"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DesignDTO": {
+        "type": "object",
+        "properties": {
+          "Text": {
+            "type": "string",
+            "nullable": true
+          },
+          "Volume": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "Image": {
+            "type": "string",
+            "nullable": true
+          },
+          "Shape": {
+            "type": "string",
+            "nullable": true
+          },
+          "LabelColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "Typography": {
+            "type": "string",
+            "nullable": true
+          },
+          "TextColor": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "FamilyCompatibility": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Familia1Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Familia2Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "GradoDeCompatibilidad": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "FamiliaMenor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "FamiliaMayor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Familia1": {
+            "$ref": "#/components/schemas/OlfactoryFamily"
+          },
+          "Familia2": {
+            "$ref": "#/components/schemas/OlfactoryFamily"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FinalEntity": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "IdUsuario": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "ProductosId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "DesignId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "Design": {
+            "$ref": "#/components/schemas/Design"
+          },
+          "IdUsuarioNavigation": {
+            "$ref": "#/components/schemas/User"
+          },
+          "Productos": {
+            "$ref": "#/components/schemas/Product"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Formula": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "FormulaCorazon": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "FormulaSalida": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "FormulaFondo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "IntensidadId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ConcentracionAlcohol": {
+            "type": "number",
+            "format": "double"
+          },
+          "ConcentracionAgua": {
+            "type": "number",
+            "format": "double"
+          },
+          "ConcentracionEsencia": {
+            "type": "number",
+            "format": "double"
+          },
+          "CreadorId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "FormulaCorazonNavigation": {
+            "$ref": "#/components/schemas/FormulaNote"
+          },
+          "FormulaFondoNavigation": {
+            "$ref": "#/components/schemas/FormulaNote"
+          },
+          "FormulaSalidaNavigation": {
+            "$ref": "#/components/schemas/FormulaNote"
+          },
+          "Intensidad": {
+            "$ref": "#/components/schemas/Intensity"
+          },
+          "Users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "FormulaNote": {
+        "type": "object",
+        "properties": {
+          "FormulaNotaId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "NotaId1": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "NotaId2": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "NotaId3": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "NotaId4": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "FormulaFormulaCorazonNavigations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Formula"
+            },
+            "nullable": true
+          },
+          "FormulaFormulaFondoNavigations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Formula"
+            },
+            "nullable": true
+          },
+          "FormulaFormulaSalidaNavigations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Formula"
+            },
+            "nullable": true
+          },
+          "NotaId1Navigation": {
+            "$ref": "#/components/schemas/Note"
+          },
+          "NotaId2Navigation": {
+            "$ref": "#/components/schemas/Note"
+          },
+          "NotaId3Navigation": {
+            "$ref": "#/components/schemas/Note"
+          },
+          "NotaId4Navigation": {
+            "$ref": "#/components/schemas/Note"
+          }
+        },
+        "additionalProperties": false
+      },
+      "IncompatibleNote": {
+        "type": "object",
+        "properties": {
+          "NotaId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "NotaIncompatibleId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "NotaMenor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "NotaMayor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Nota": {
+            "$ref": "#/components/schemas/Note"
+          },
+          "NotaIncompatible": {
+            "$ref": "#/components/schemas/Note"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Intensity": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Nombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "Category": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "Formulas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Formula"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "IntensityDTO": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Category": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LoginDTO": {
+        "type": "object",
+        "properties": {
+          "Email": {
+            "type": "string",
+            "nullable": true
+          },
+          "Password": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Note": {
+        "required": [
+          "Description",
+          "Name",
+          "OlfactoryFamilyId",
+          "OlfactoryPyramidId"
+        ],
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Name": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "OlfactoryFamilyId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Description": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "OlfactoryPyramidId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "OlfactoryFamily": {
+            "$ref": "#/components/schemas/OlfactoryFamily"
+          },
+          "OlfactoryPyramid": {
+            "$ref": "#/components/schemas/OlfactoryPyramid"
+          },
+          "FormulaNoteNotaId1Navigations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FormulaNote"
+            },
+            "nullable": true
+          },
+          "FormulaNoteNotaId2Navigations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FormulaNote"
+            },
+            "nullable": true
+          },
+          "FormulaNoteNotaId3Navigations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FormulaNote"
+            },
+            "nullable": true
+          },
+          "FormulaNoteNotaId4Navigations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FormulaNote"
+            },
+            "nullable": true
+          },
+          "IncompatibleNoteNota": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IncompatibleNote"
+            },
+            "nullable": true
+          },
+          "IncompatibleNoteNotaIncompatibles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IncompatibleNote"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OlfactoryFamily": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Nombre": {
+            "maxLength": 80,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "Image1": {
+            "type": "string",
+            "nullable": true
+          },
+          "FamilyCompatibilityFamilia1s": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FamilyCompatibility"
+            },
+            "nullable": true
+          },
+          "FamilyCompatibilityFamilia2s": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FamilyCompatibility"
+            },
+            "nullable": true
+          },
+          "Notes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Note"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OlfactoryPyramid": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Sector": {
+            "type": "string",
+            "nullable": true
+          },
+          "Duracion": {
+            "type": "string",
+            "format": "time"
+          },
+          "Notes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Note"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Option": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Option1": {
+            "maxLength": 256,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "Option2": {
+            "maxLength": 256,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "Option3": {
+            "maxLength": 256,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "Option4": {
+            "maxLength": 256,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "Image1": {
+            "type": "string",
+            "nullable": true
+          },
+          "Image2": {
+            "type": "string",
+            "nullable": true
+          },
+          "Image3": {
+            "type": "string",
+            "nullable": true
+          },
+          "Image4": {
+            "type": "string",
+            "nullable": true
+          },
+          "Questions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Question"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Order": {
+        "type": "object",
+        "properties": {
+          "UsuarioId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "EstadoId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "Estado": {
+            "$ref": "#/components/schemas/Status"
+          },
+          "OrderProducts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderProduct"
+            },
+            "nullable": true
+          },
+          "Usuario": {
+            "$ref": "#/components/schemas/User"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OrderProduct": {
+        "type": "object",
+        "properties": {
+          "PedidoProductoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "IdPedido": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "ProductosId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "IdPedidoNavigation": {
+            "$ref": "#/components/schemas/Order"
+          },
+          "Productos": {
+            "$ref": "#/components/schemas/Product"
+          }
+        },
+        "additionalProperties": false
+      },
+      "POSTFormulaDTO": {
+        "required": [
+          "BaseNotes",
+          "CreatorId",
+          "HeartNotes",
+          "IntensityId",
+          "TopNotes"
+        ],
+        "type": "object",
+        "properties": {
+          "IntensityId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "CreatorId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "TopNotes": {
+            "$ref": "#/components/schemas/POSTFormulaNoteDTO"
+          },
+          "HeartNotes": {
+            "$ref": "#/components/schemas/POSTFormulaNoteDTO"
+          },
+          "BaseNotes": {
+            "$ref": "#/components/schemas/POSTFormulaNoteDTO"
+          }
+        },
+        "additionalProperties": false
+      },
+      "POSTFormulaNoteDTO": {
+        "type": "object",
+        "properties": {
+          "Note1": {
+            "$ref": "#/components/schemas/POSTNoteIdDTO"
+          },
+          "Note2": {
+            "$ref": "#/components/schemas/POSTNoteIdDTO"
+          },
+          "Note3": {
+            "$ref": "#/components/schemas/POSTNoteIdDTO"
+          },
+          "Note4": {
+            "$ref": "#/components/schemas/POSTNoteIdDTO"
+          }
+        },
+        "additionalProperties": false
+      },
+      "POSTNoteIdDTO": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "TipoProductoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Name": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "maxLength": 256,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "IdProveedor": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "Designs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Design"
+            },
+            "nullable": true
+          },
+          "FinalEntities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinalEntity"
+            },
+            "nullable": true
+          },
+          "IdProveedorNavigation": {
+            "$ref": "#/components/schemas/User"
+          },
+          "OrderProducts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderProduct"
+            },
+            "nullable": true
+          },
+          "ProductVariants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductVariant"
+            },
+            "nullable": true
+          },
+          "UserProductReviews": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserProductReview"
+            },
+            "nullable": true
+          },
+          "UserProducts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserProduct"
+            },
+            "nullable": true
+          },
+          "TipoProducto": {
+            "$ref": "#/components/schemas/ProductType"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductType": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Products": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Product"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductVariant": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ProductId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Volume": {
+            "type": "number",
+            "format": "double"
+          },
+          "Unit": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "Price": {
+            "type": "number",
+            "format": "double"
+          },
+          "Stock": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "IsHypoallergenic": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "IsVegan": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "IsParabenFree": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Question": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Pregunta": {
+            "maxLength": 256,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "IdOpciones": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "IdOpcionesNavigation": {
+            "$ref": "#/components/schemas/Option"
+          },
+          "Quizzes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Quiz"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Quiz": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "IdPregunta": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "IdPreguntaNavigation": {
+            "$ref": "#/components/schemas/Question"
+          },
+          "Users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RegisterDTO": {
+        "required": [
+          "Email",
+          "Name",
+          "Password",
+          "Rol"
+        ],
+        "type": "object",
+        "properties": {
+          "Email": {
+            "minLength": 1,
+            "type": "string",
+            "format": "email"
+          },
+          "Password": {
+            "minLength": 8,
+            "type": "string"
+          },
+          "Name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "Rol": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RegisterProviderDTO": {
+        "required": [
+          "Email",
+          "Name",
+          "Password"
+        ],
+        "type": "object",
+        "properties": {
+          "Email": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "Password": {
+            "minLength": 8,
+            "type": "string"
+          },
+          "Name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "Empresa": {
+            "type": "string",
+            "nullable": true
+          },
+          "Cuil": {
+            "type": "string",
+            "nullable": true
+          },
+          "Rubro": {
+            "type": "string",
+            "nullable": true
+          },
+          "OtroProducto": {
+            "type": "string",
+            "nullable": true
+          },
+          "TarjetaNumero": {
+            "type": "string",
+            "nullable": true
+          },
+          "TarjetaVencimiento": {
+            "type": "string",
+            "nullable": true
+          },
+          "TarjetaCVC": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SearchByFormulaDTO": {
+        "type": "object",
+        "properties": {
+          "FormulaId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SelectedNotesDTO": {
+        "type": "object",
+        "properties": {
+          "ListaDeIdsSeleccionadas": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "Sector": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Status": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Description": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "Orders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "nullable": true
+          },
+          "Subscriptions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Subscription"
+            },
+            "nullable": true
+          },
+          "Users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Subscription": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Monto": {
+            "type": "number",
+            "format": "double"
+          },
+          "IdEstado": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "IdEstadoNavigation": {
+            "$ref": "#/components/schemas/Status"
+          },
+          "Users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateProductVariantDTO": {
+        "type": "object",
+        "properties": {
+          "Volume": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "Unit": {
+            "type": "string",
+            "nullable": true
+          },
+          "Price": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "Stock": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "IsHypoallergenic": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateProductoDTO": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "maxLength": 30,
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "maxLength": 50,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "User": {
+        "required": [
+          "Name"
+        ],
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "UserName": {
+            "type": "string",
+            "nullable": true
+          },
+          "NormalizedUserName": {
+            "type": "string",
+            "nullable": true
+          },
+          "Email": {
+            "type": "string",
+            "nullable": true
+          },
+          "NormalizedEmail": {
+            "type": "string",
+            "nullable": true
+          },
+          "EmailConfirmed": {
+            "type": "boolean"
+          },
+          "PasswordHash": {
+            "type": "string",
+            "nullable": true
+          },
+          "SecurityStamp": {
+            "type": "string",
+            "nullable": true
+          },
+          "ConcurrencyStamp": {
+            "type": "string",
+            "nullable": true
+          },
+          "PhoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "PhoneNumberConfirmed": {
+            "type": "boolean"
+          },
+          "TwoFactorEnabled": {
+            "type": "boolean"
+          },
+          "LockoutEnd": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LockoutEnabled": {
+            "type": "boolean"
+          },
+          "AccessFailedCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "IdEstado": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "IdFormulas": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "IdQuiz": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "IdSuscripcion": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "EsProveedor": {
+            "type": "boolean"
+          },
+          "Empresa": {
+            "type": "string",
+            "nullable": true
+          },
+          "Cuil": {
+            "type": "string",
+            "nullable": true
+          },
+          "Rubro": {
+            "type": "string",
+            "nullable": true
+          },
+          "TarjetaNumero": {
+            "type": "string",
+            "nullable": true
+          },
+          "TarjetaVencimiento": {
+            "type": "string",
+            "nullable": true
+          },
+          "TarjetaCVC": {
+            "type": "string",
+            "nullable": true
+          },
+          "OtroProducto": {
+            "type": "string",
+            "nullable": true
+          },
+          "IdEstadoNavigation": {
+            "$ref": "#/components/schemas/Status"
+          },
+          "IdFormulasNavigation": {
+            "$ref": "#/components/schemas/Formula"
+          },
+          "IdQuizNavigation": {
+            "$ref": "#/components/schemas/Quiz"
+          },
+          "IdSuscripcionNavigation": {
+            "$ref": "#/components/schemas/Subscription"
+          },
+          "FinalEntities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinalEntity"
+            },
+            "nullable": true
+          },
+          "Orders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "nullable": true
+          },
+          "Products": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Product"
+            },
+            "nullable": true
+          },
+          "UserProductReviews": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserProductReview"
+            },
+            "nullable": true
+          },
+          "UserProducts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserProduct"
+            },
+            "nullable": true
+          },
+          "UserProviderReviewIdProveedorNavigations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserProviderReview"
+            },
+            "nullable": true
+          },
+          "UserProviderReviewIdUsuarioNavigations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserProviderReview"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserProduct": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ProductoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "UsuarioId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Producto": {
+            "$ref": "#/components/schemas/Product"
+          },
+          "Usuario": {
+            "$ref": "#/components/schemas/User"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserProductReview": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "IdUsuario": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "IdProducto": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "FechaPublicacion": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "IdProductoNavigation": {
+            "$ref": "#/components/schemas/Product"
+          },
+          "IdUsuarioNavigation": {
+            "$ref": "#/components/schemas/User"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserProfileDto": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Email": {
+            "type": "string",
+            "nullable": true
+          },
+          "EsProveedor": {
+            "type": "boolean"
+          },
+          "CUIL": {
+            "type": "string",
+            "nullable": true
+          },
+          "Ubicacion": {
+            "type": "string",
+            "nullable": true
+          },
+          "CodigoPostal": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserProviderReview": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "IdUsuario": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "IdProveedor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "FechaPublicacion": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "IdProveedorNavigation": {
+            "$ref": "#/components/schemas/User"
+          },
+          "IdUsuarioNavigation": {
+            "$ref": "#/components/schemas/User"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "apiKey",
+        "description": "JWT Authorization header usando el esquema Bearer.  \r\n                        Ingresá el token así: Bearer {tu token}.",
+        "name": "Authorization",
+        "in": "header"
+      }
+    }
+  },
+  "security": [
+    {
+      "Bearer": [ ]
+    }
+  ]
+}

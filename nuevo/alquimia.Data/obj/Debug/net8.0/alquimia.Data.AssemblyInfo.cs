@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("alquimia.Data")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d125015465b56ba073149c189a9f3feded0de126")]
 [assembly: System.Reflection.AssemblyProductAttribute("alquimia.Data")]
 [assembly: System.Reflection.AssemblyTitleAttribute("alquimia.Data")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

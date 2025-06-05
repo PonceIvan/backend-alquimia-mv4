@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\m1ca3\\source\\repos\\alquiamia\\alquimia.Tests\\alquimia.Tests.csproj",
+      "projectUniqueName": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\nuevo\\alquimia.Tests\\alquimia.Tests.csproj",
       "projectName": "alquimia.Tests",
-      "projectPath": "C:\\Users\\m1ca3\\source\\repos\\alquiamia\\alquimia.Tests\\alquimia.Tests.csproj",
+      "projectPath": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\nuevo\\alquimia.Tests\\alquimia.Tests.csproj",
       "packagesPath": "C:\\Users\\m1ca3\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\m1ca3\\source\\repos\\alquiamia\\alquimia.Tests\\obj\\",
+      "outputPath": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\nuevo\\alquimia.Tests\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

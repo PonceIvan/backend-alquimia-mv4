@@ -11,12 +11,12 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("alquimia.api")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("alquimia.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
-[assembly: System.Reflection.AssemblyProductAttribute("alquimia.api")]
-[assembly: System.Reflection.AssemblyTitleAttribute("alquimia.api")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d125015465b56ba073149c189a9f3feded0de126")]
+[assembly: System.Reflection.AssemblyProductAttribute("alquimia.Api")]
+[assembly: System.Reflection.AssemblyTitleAttribute("alquimia.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 
 // Generado por la clase WriteCodeFragment de MSBuild.

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "O4Ag5rPtieI=",
+  "dgSpecHash": "vMckR8hI1h8=",
   "success": true,
-  "projectFilePath": "C:\\Users\\m1ca3\\source\\repos\\alquiamia\\alquimia.api\\alquimia.Api.csproj",
+  "projectFilePath": "C:\\Users\\m1ca3\\Desktop\\backend-alquimia\\backend-alquimia\\nuevo\\alquimia.api\\alquimia.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\m1ca3\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
     "C:\\Users\\m1ca3\\.nuget\\packages\\microsoft.openapi\\1.6.14\\microsoft.openapi.1.6.14.nupkg.sha512",
