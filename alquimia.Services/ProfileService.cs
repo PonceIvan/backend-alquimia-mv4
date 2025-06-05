@@ -72,7 +72,6 @@ namespace alquimia.Services
             if (user == null)
                 return new List<Product>();
 
-            // Productos comprados: podrían estar en Orders o en alguna relación más específica
             return user.Products.ToList();
         }
 

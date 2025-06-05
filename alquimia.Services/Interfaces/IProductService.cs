@@ -3,17 +3,17 @@ namespace alquimia.Services.Interfaces
 {
     public interface IProductService
     {
-        Task<List<ProductDTO>> ObtenerProductosPorProveedorAsync(int idProveedor);
-        Task<ProductDTO> ObtenerProductoPorIdAsync(int idProducto, int idProveedor);
-        Task<ProductDTO> CrearProductoAsync(CreateProductoDTO dto, int idProveedor);
-        Task<bool> EliminarProductoAsync(int idProducto, int idProveedor);
-        Task<ProductDTO> ActualizarProductoAsync(int idProducto, UpdateProductoDTO dto, int idProveedor);
+        Task<List<ProductDTO>> GetProductsByProviderAsync(int idProveedor);
+        Task<ProductDTO> GetProductByIdAsync(int idProducto, int idProveedor);
+        Task<ProductDTO> CreateProductAsync(CreateProductoDTO dto, int idProveedor);
+        Task<bool> DeleteProductAsync(int idProducto, int idProveedor);
+        Task<ProductDTO> UpdateProductAsync(int idProducto, UpdateProductoDTO dto, int idProveedor);
         Task<HomeProviderDataDTO> GetHomeDataAsync(int idProveedor);
         Task<PriceRangeDTO> GetPriceRangeFromProductAsync(int noteId);
         Task AddVariantsToProductAsync(int productId, CreateProductVariantDTO dto);
-        Task ActualizarVarianteAsync(int variantId, UpdateProductVariantDTO dto);
-        Task<bool> EliminarVarianteAsync(int variantId);
-        Task<bool> UpdateVariantAsync(int variantId, ProductVariantDTO dto);
+        Task UpdateVariantAsync(int variantId, UpdateProductVariantDTO dto);
+        Task<bool> DeleteVariantAsync(int variantId);
+        Task<bool> IsUpdatedVariantAsync(int variantId, ProductVariantDTO dto);
         Task<List<ProductDTO>> GetProductsByFormulaAsync(int formulaId);
     }
 }

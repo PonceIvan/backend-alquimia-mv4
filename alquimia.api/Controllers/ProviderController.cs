@@ -50,7 +50,7 @@ namespace alquimia.Api.Controllers
         public async Task<IActionResult> GetProducts()
         {
             var idProveedor = GetIdProvider();
-            var productos = await _productService.ObtenerProductosPorProveedorAsync(idProveedor);
+            var productos = await _productService.GetProductsByProviderAsync(idProveedor);
             return Ok(productos);
         }
 
@@ -78,7 +78,7 @@ namespace alquimia.Api.Controllers
 
             try
             {
-                var productoCreado = await _productService.CrearProductoAsync(dto, idProveedor);
+                var productoCreado = await _productService.CreateProductAsync(dto, idProveedor);
                 return Ok(productoCreado);
             }
             catch (KeyNotFoundException ex)
@@ -96,7 +96,7 @@ namespace alquimia.Api.Controllers
         public async Task<IActionResult> GetProduct(int idProducto)
         {
             var idProveedor = GetIdProvider();
-            var producto = await _productService.ObtenerProductoPorIdAsync(idProducto, idProveedor);
+            var producto = await _productService.GetProductByIdAsync(idProducto, idProveedor);
 
             if (producto == null)
                 return NotFound(new { mensaje = "Producto no encontrado" });
@@ -110,7 +110,7 @@ namespace alquimia.Api.Controllers
             try
             {
                 var idProveedor = GetIdProvider();
-                var resultado = await _productService.EliminarProductoAsync(idProducto, idProveedor);
+                var resultado = await _productService.DeleteProductAsync(idProducto, idProveedor);
 
                 if (!resultado)
                     return NotFound(new { mensaje = "Producto no encontrado o no pertenece al proveedor" });
@@ -150,7 +150,7 @@ namespace alquimia.Api.Controllers
         [HttpPut("variants/{variantId}")]
         public async Task<IActionResult> UpdateVariant(int variantId, [FromBody] UpdateProductVariantDTO dto)
         {
-            await _productService.ActualizarVarianteAsync(variantId, dto);
+            await _productService.UpdateVariantAsync(variantId, dto);
             return NoContent();
         }
 
@@ -159,7 +159,7 @@ namespace alquimia.Api.Controllers
         [HttpDelete("variants/{variantId}")]
         public async Task<IActionResult> DeleteVariant(int variantId)
         {
-            var eliminado = await _productService.EliminarVarianteAsync(variantId);
+            var eliminado = await _productService.DeleteVariantAsync(variantId);
             if (!eliminado)
                 return NotFound();
 
@@ -179,7 +179,7 @@ namespace alquimia.Api.Controllers
             try
             {
                 var idProveedor = GetIdProvider();
-                var producto = await _productService.ActualizarProductoAsync(idProducto, dto, idProveedor);
+                var producto = await _productService.UpdateProductAsync(idProducto, dto, idProveedor);
                 return Ok(producto);
             }
             catch (KeyNotFoundException ex)
