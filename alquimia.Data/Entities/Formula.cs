@@ -24,6 +24,9 @@ public partial class Formula
 
     public int CreadorId { get; set; }
 
+    [StringLength(20)]
+    public string? Title { get; set; }
+
     [ForeignKey("FormulaCorazon")]
     [InverseProperty("FormulaFormulaCorazonNavigations")]
     public virtual FormulaNote FormulaCorazonNavigation { get; set; } = null!;
