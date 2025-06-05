@@ -18,6 +18,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "alquimia.Data", "alquimia.Data\alquimia.Data.csproj", "{1E323F3A-24B6-4593-AEFE-6A4F309972AA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "alquimia.Tests", "alquimia.Tests\alquimia.Tests.csproj", "{FFBC5A3E-C544-4E0C-B5CF-22442EB56AA1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1E323F3A-24B6-4593-AEFE-6A4F309972AA} = {1E323F3A-24B6-4593-AEFE-6A4F309972AA}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
