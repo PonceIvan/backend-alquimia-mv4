@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using alquimia.Data.Entities;
+﻿using alquimia.Data.Entities;
 using alquimia.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +7,7 @@ using Xunit;
 
 namespace alquimia.Tests.TestServices
 {
-    internal class AdminServiceTest
+    public class AdminServiceTest
     {
         [Fact]
         public async Task GetPendingAndApprovedProvidersAsync_ShouldReturnCorrectProviders()
