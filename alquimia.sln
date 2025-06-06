@@ -8,6 +8,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "alquimia.Data", "alquimia.Data\alquimia.Data.csproj", "{A83F04A0-4130-42D6-8809-5AE9A92E760E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "alquimia.Tests", "alquimia.Tests\alquimia.Tests.csproj", "{9605E973-5FAF-48DE-9435-7B37E6933C95}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F5897788-52EB-4047-B51E-E4860031EAC8} = {F5897788-52EB-4047-B51E-E4860031EAC8}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "alquimia.Api", "alquimia.Api\alquimia.Api.csproj", "{F5897788-52EB-4047-B51E-E4860031EAC8}"
 EndProject
@@ -72,5 +75,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {907DC0BD-ECDA-467C-924D-0936AFB55E3A}
 	EndGlobalSection
 EndGlobal
