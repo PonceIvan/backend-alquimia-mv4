@@ -1,7 +1,8 @@
-﻿using System.Net;
+﻿using alquimia.Services.Models;
+using System.Net;
 using System.Text.Json;
 
-namespace alquimia.Api.Middlewares  
+namespace alquimia.Api.Middlewares
 {
     public class ErrorHandlingMiddleware
     {
@@ -29,47 +30,47 @@ namespace alquimia.Api.Middlewares
 
         private static Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            int statusCode;
-            string mensaje;
+            int status;
+            string error;
 
             switch (exception)
             {
                 case ArgumentNullException:
-                    statusCode = (int)HttpStatusCode.BadRequest; // 400
-                    mensaje = "Faltan datos requeridos en la solicitud.";
+                    status = (int)HttpStatusCode.BadRequest; // 400
+                    error = "Faltan datos requeridos en la solicitud.";
                     break;
 
                 case ArgumentException:
-                    statusCode = (int)HttpStatusCode.BadRequest; // 400
-                    mensaje = "Parámetros inválidos en la solicitud.";
+                    status = (int)HttpStatusCode.BadRequest; // 400
+                    error = "Parámetros inválidos en la solicitud.";
                     break;
 
                 case UnauthorizedAccessException:
-                    statusCode = (int)HttpStatusCode.Unauthorized; // 401
-                    mensaje = "Acceso no autorizado.";
+                    status = (int)HttpStatusCode.Unauthorized; // 401
+                    error = "Acceso no autorizado.";
                     break;
 
                 case KeyNotFoundException:
                 case NullReferenceException:
-                    statusCode = (int)HttpStatusCode.NotFound; // 404
-                    mensaje = "El recurso solicitado no fue encontrado.";
+                    status = (int)HttpStatusCode.NotFound; // 404
+                    error = "El recurso solicitado no fue encontrado.";
                     break;
 
                 default:
-                    statusCode = (int)HttpStatusCode.InternalServerError; // 500
-                    mensaje = "Error interno del servidor.";
+                    status = (int)HttpStatusCode.InternalServerError; // 500
+                    error = "Error interno del servidor.";
                     break;
             }
 
-            var response = new
+            var response = new ErrorResponseDTO
             {
-                status = statusCode,
-                error = mensaje
+                Status = status,
+                Error = error
             };
 
             var json = JsonSerializer.Serialize(response);
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = statusCode;
+            context.Response.StatusCode = status;
             return context.Response.WriteAsync(json);
         }
     }
