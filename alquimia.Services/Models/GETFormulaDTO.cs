@@ -2,6 +2,7 @@
 {
     public class GETFormulaDTO
     {
+        public int Id { get; set; }
         public GETFormulaNoteDTO NotasSalidaIds { get; set; }
         public GETFormulaNoteDTO NotasCorazonIds { get; set; }
         public GETFormulaNoteDTO NotasFondoIds { get; set; }
