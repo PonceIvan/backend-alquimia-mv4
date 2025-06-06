@@ -38,5 +38,16 @@ namespace alquimia.Tests.TestControllers
             var okResult = Assert.IsType<OkObjectResult>(result);
             Assert.Equal(expectedMessage, okResult.Value);
         }
+
+        [Fact]
+        public void Start_RetursnOkWithExpectedMessage()
+        {
+            var result = _controller.Start();
+            string expectedMessage = "Ruta activa";
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            Assert.Equal(expectedMessage, okResult.Value);
+        }
+
+
     }
 }
