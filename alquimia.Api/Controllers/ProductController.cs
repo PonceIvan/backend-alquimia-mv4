@@ -1,5 +1,5 @@
-﻿using alquimia.Services.Models;
-using alquimia.Services.Interfaces;
+﻿using alquimia.Services.Interfaces;
+using alquimia.Services.Models;
 using Microsoft.AspNetCore.Mvc;
 namespace alquimia.Api.Controllers
 {
@@ -26,6 +26,13 @@ namespace alquimia.Api.Controllers
         public async Task<IActionResult> GetProductsByFormula([FromBody] SearchByFormulaDTO dto)
         {
             var products = await _productService.GetProductsByFormulaAsync(dto.FormulaId);
+            return Ok(products);
+        }
+
+        [HttpGet("all")]
+        public async Task<IActionResult> GetProductsByFormula()
+        {
+            var products = await _productService.GetAllAsync();
             return Ok(products);
         }
     }
