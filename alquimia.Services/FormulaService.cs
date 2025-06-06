@@ -116,6 +116,7 @@ namespace alquimia.Services
 
             return new GETFormulaDTO
             {
+                Id = found.Id,
                 Intensity = new IntensityDTO
                 {
                     Id = found.IntensidadId,
