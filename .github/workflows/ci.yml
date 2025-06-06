@@ -2,9 +2,13 @@ name: integracion_continua
 
 on:
   push:
-    branches: ["main"]
+    branches: 
+    - main
+    - rama-develop-pre-presentacion
   pull_request:
-    branches: ["main"]
+    branches:
+    - main
+    - rama-develop-pre-presentacion
 
 jobs:
   build-and-test:
@@ -26,7 +30,7 @@ jobs:
         run: dotnet build --no-restore --configuration Release #run: dotnet build ./src/MiProyecto/MiProyecto.csproj --no-restore Esto si el .sln no está en la raíz del proyecto
 
       - name: 🧪 Ejecutar tests
-        run: dotnet test Tests/Tests.csproj --no-build --verbosity normal
+        run: dotnet test alquimia.Tests/alquimia.Tests.csproj --no-build --verbosity normal
 
       - name: ✅ Fin del proceso
         run: echo "✔️ Workflow completado correctamente."
