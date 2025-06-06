@@ -2,9 +2,9 @@ name: integracion_continua
 
 on:
   push:
-    branches: ["main"]
+    branches: ["rama-develop-pre-presentacion"]
   pull_request:
-    branches: ["main"]
+    branches: ["rama-develop-pre-presentacion"]
 
 jobs:
   build-and-test:
