@@ -34,7 +34,7 @@ jobs:
 
       - name: 🧪 Ejecutar tests
         run: |
-          dotnet test alquimia.Tests/alquimia.Tests.csproj --configuration Debug --verbosity normal
+          dotnet test alquimia.Tests/alquimia.Tests.csproj --configuration Release --verbosity normal
 
       - name: ✅ Fin del proceso
         run: echo "✔️ Workflow completado correctamente."
