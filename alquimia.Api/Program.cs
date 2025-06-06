@@ -1,8 +1,9 @@
 ﻿
-using alquimia.Data.Entities;
-using alquimia.Services.Interfaces;
 using alquimia.Api.Middlewares;
 using alquimia.Api.Seed;
+using alquimia.Data.Entities;
+using alquimia.Services;
+using alquimia.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -10,7 +11,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using alquimia.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,7 +32,7 @@ builder.Services.AddScoped<IQuizService, QuizService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddScoped<IOlfactoryFamilyService, OlfactoryFamilyService>();
-builder.Services.AddScoped<DesignLabelService>();
+builder.Services.AddScoped<IDesignLabelService, DesignLabelService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
 
 builder.Services.AddControllersWithViews().AddJsonOptions(options =>
