@@ -1,12 +1,12 @@
 on:
   push:
-    branches: 
-    - main
-    - rama-develop-pre-presentacion
+    branches:
+      - main
+      - rama-develop-pre-presentacion
   pull_request:
     branches:
-    - main
-    - rama-develop-pre-presentacion
+      - main
+      - rama-develop-pre-presentacion
 
 jobs:
   build-and-test:
@@ -19,7 +19,7 @@ jobs:
       - name: 🧰 Instalar .NET Core SDK
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.0.x' # Cambiá por la versión que uses (ej. '8.0.x' o '6.0.x')
+          dotnet-version: "8.0.x" # Cambiá por la versión que uses (ej. '8.0.x' o '6.0.x')
 
       - name: 🧪 Restaurar dependencias
         run: dotnet restore
@@ -28,7 +28,8 @@ jobs:
         run: dotnet build --no-restore --configuration Release #run: dotnet build ./src/MiProyecto/MiProyecto.csproj --no-restore Esto si el .sln no está en la raíz del proyecto
 
       - name: 🧪 Ejecutar tests
-        run: dotnet test alquimia.Tests/alquimia.Tests.csproj --no-build --verbosity normal
+        run: |
+          dotnet test alquimia.Tests/alquimia.Tests.csproj --configuration Debug --verbosity normal
 
       - name: ✅ Fin del proceso
         run: echo "✔️ Workflow completado correctamente."
