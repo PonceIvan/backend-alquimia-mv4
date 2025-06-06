@@ -11,14 +11,4 @@
     <Folder Include="TestServices\" />
   </ItemGroup>
 
-  <ItemGroup>
-    
-    <PackageReference Include="xunit" Version="2.9.3" />
-    <PackageReference Include="xunit.abstractions" Version="2.0.3" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-
 </Project>
