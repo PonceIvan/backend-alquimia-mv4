@@ -2,8 +2,6 @@
 using alquimia.Services.Interfaces;
 using alquimia.Services.Models;
 using Microsoft.EntityFrameworkCore;
-using Product = alquimia.Data.Entities.Product;
-using ProductVariant = alquimia.Data.Entities.ProductVariant;
 
 namespace alquimia.Services
 {
@@ -30,7 +28,11 @@ namespace alquimia.Services
                     Name = p.Name,
                     Description = p.Description,
                     ProductType = p.TipoProducto.Description,
-                    SupplierName = p.IdProveedorNavigation.Name,
+                    Provider = new ProviderDTO
+                    {
+                        Id = p.IdProveedorNavigation.Id,
+                        Nombre = p.IdProveedorNavigation.Name,
+                    },
                     Variants = p.ProductVariants.Select(v => new ProductVariantDTO
                     {
                         Id = v.Id,
@@ -325,7 +327,49 @@ namespace alquimia.Services
                 Name = p.Name,
                 Description = p.Description,
                 ProductType = p.TipoProducto.Description,
-                SupplierName = p.IdProveedorNavigation?.Name,
+                Provider = new ProviderDTO
+                {
+                    Id = p.IdProveedorNavigation.Id,
+                    Nombre = p.IdProveedorNavigation.Name,
+                },
+                Variants = p.ProductVariants.Select(v => new ProductVariantDTO
+                {
+                    Id = v.Id,
+                    Volume = v.Volume,
+                    Unit = v.Unit,
+                    Price = v.Price,
+                    Stock = v.Stock,
+                    IsHypoallergenic = v.IsHypoallergenic,
+                    IsVegan = v.IsVegan,
+                    IsParabenFree = v.IsParabenFree
+                }).ToList()
+            }).ToList();
+        }
+
+        public async Task<List<ProductDTO>> GetAllAsync()
+        {
+            var productos = await _context.Products
+                .Include(p => p.TipoProducto)
+                .Include(p => p.IdProveedorNavigation)
+                .Include(p => p.ProductVariants)
+                .ToListAsync();
+
+            if (productos == null)
+            {
+                throw new KeyNotFoundException();
+            }
+
+            return productos.Select(p => new ProductDTO
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Description = p.Description,
+                ProductType = p.TipoProducto.Description,
+                Provider = new ProviderDTO
+                {
+                    Id = p.IdProveedorNavigation.Id,
+                    Nombre = p.IdProveedorNavigation.Name,
+                },
                 Variants = p.ProductVariants.Select(v => new ProductVariantDTO
                 {
                     Id = v.Id,
