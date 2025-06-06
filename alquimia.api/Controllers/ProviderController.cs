@@ -28,7 +28,7 @@ namespace alquimia.Api.Controllers
             _context = context;
         }
 
-        private int ObtenerIdProveedor()
+        private int GetIdProvider()
         {
             var userIdClaim = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
             return int.Parse(userIdClaim.Value);
@@ -39,26 +39,26 @@ namespace alquimia.Api.Controllers
         [HttpGet("home")]
         public async Task<IActionResult> GetHomeData()
         {
-            var idProveedor = ObtenerIdProveedor();
+            var idProveedor = GetIdProvider();
             var data = await _productService.GetHomeDataAsync(idProveedor);
             return Ok(data);
         }
 
         /// /////////////////////////////////////////////////////////////////////
 
-        [HttpGet("productos")]
-        public async Task<IActionResult> GetProductos()
+        [HttpGet("products")]
+        public async Task<IActionResult> GetProducts()
         {
-            var idProveedor = ObtenerIdProveedor();
-            var productos = await _productService.ObtenerProductosPorProveedorAsync(idProveedor);
+            var idProveedor = GetIdProvider();
+            var productos = await _productService.GetProductsByProviderAsync(idProveedor);
             return Ok(productos);
         }
 
 
         /// /////////////////////////////////////////////////////////////////////
 
-        [HttpGet("tipos-producto")]
-        public async Task<IActionResult> GetTiposProducto()
+        [HttpGet("product-types")]
+        public async Task<IActionResult> GetProductTypes()
         {
             var tipos = await _context.ProductTypes
                 .Select(t => new
@@ -72,13 +72,13 @@ namespace alquimia.Api.Controllers
         /// /////////////////////////////////////////////////////////////////////
 
         [HttpPost("create/{idProveedor:int}")]
-        public async Task<IActionResult> CrearProducto(int idProveedor, [FromBody] CreateProductoDTO dto)
+        public async Task<IActionResult> CreateProduct(int idProveedor, [FromBody] CreateProductoDTO dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             try
             {
-                var productoCreado = await _productService.CrearProductoAsync(dto, idProveedor);
+                var productoCreado = await _productService.CreateProductAsync(dto, idProveedor);
                 return Ok(productoCreado);
             }
             catch (KeyNotFoundException ex)
@@ -92,11 +92,11 @@ namespace alquimia.Api.Controllers
         }
         /// /////////////////////////////////////////////////////////////////////
 
-        [HttpGet("productos/{idProducto}")]
-        public async Task<IActionResult> GetProducto(int idProducto)
+        [HttpGet("products/{idProducto}")]
+        public async Task<IActionResult> GetProduct(int idProducto)
         {
-            var idProveedor = ObtenerIdProveedor();
-            var producto = await _productService.ObtenerProductoPorIdAsync(idProducto, idProveedor);
+            var idProveedor = GetIdProvider();
+            var producto = await _productService.GetProductByIdAsync(idProducto, idProveedor);
 
             if (producto == null)
                 return NotFound(new { mensaje = "Producto no encontrado" });
@@ -104,13 +104,13 @@ namespace alquimia.Api.Controllers
             return Ok(producto);
         }
         /// /////////////////////////////////////////////////////////////////////
-        [HttpDelete("productos/{idProducto}")]
-        public async Task<IActionResult> EliminarProducto(int idProducto)
+        [HttpDelete("products/{idProducto}")]
+        public async Task<IActionResult> DeleteProduct(int idProducto)
         {
             try
             {
-                var idProveedor = ObtenerIdProveedor();
-                var resultado = await _productService.EliminarProductoAsync(idProducto, idProveedor);
+                var idProveedor = GetIdProvider();
+                var resultado = await _productService.DeleteProductAsync(idProducto, idProveedor);
 
                 if (!resultado)
                     return NotFound(new { mensaje = "Producto no encontrado o no pertenece al proveedor" });
@@ -148,18 +148,18 @@ namespace alquimia.Api.Controllers
         //ACTUALIZAR VARIANTE!!!!
 
         [HttpPut("variants/{variantId}")]
-        public async Task<IActionResult> ActualizarVariante(int variantId, [FromBody] UpdateProductVariantDTO dto)
+        public async Task<IActionResult> UpdateVariant(int variantId, [FromBody] UpdateProductVariantDTO dto)
         {
-            await _productService.ActualizarVarianteAsync(variantId, dto);
+            await _productService.UpdateVariantAsync(variantId, dto);
             return NoContent();
         }
 
         /// /////////////////////////////////////////////////////////////////////
 
         [HttpDelete("variants/{variantId}")]
-        public async Task<IActionResult> EliminarVariante(int variantId)
+        public async Task<IActionResult> DeleteVariant(int variantId)
         {
-            var eliminado = await _productService.EliminarVarianteAsync(variantId);
+            var eliminado = await _productService.DeleteVariantAsync(variantId);
             if (!eliminado)
                 return NotFound();
 
@@ -170,16 +170,16 @@ namespace alquimia.Api.Controllers
         /// /////////////////////////////////////////////////////////////////////
 
 
-        [HttpPut("productos/{idProducto}")]
-        public async Task<IActionResult> ActualizarProducto(int idProducto, [FromBody] UpdateProductoDTO dto)
+        [HttpPut("products/{idProducto}")]
+        public async Task<IActionResult> UpdateProduct(int idProducto, [FromBody] UpdateProductoDTO dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             try
             {
-                var idProveedor = ObtenerIdProveedor();
-                var producto = await _productService.ActualizarProductoAsync(idProducto, dto, idProveedor);
+                var idProveedor = GetIdProvider();
+                var producto = await _productService.UpdateProductAsync(idProducto, dto, idProveedor);
                 return Ok(producto);
             }
             catch (KeyNotFoundException ex)

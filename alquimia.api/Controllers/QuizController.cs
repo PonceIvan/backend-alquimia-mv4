@@ -17,21 +17,21 @@ namespace alquimia.Api.Controllers
         [HttpGet("test")]
         public IActionResult Test() => Ok("Ruta activa");
 
-        [HttpGet("preguntas")]
+        [HttpGet("questions")]
         public async Task<IActionResult> ObtenerPreguntas()
         {
             var preguntas = await _quizService.GetQuestionsAsync();
             return Ok(preguntas);
         }
 
-        [HttpPost("responder")]
+        [HttpPost("respond")]
         public async Task<IActionResult> GuardarRespuestas([FromBody] List<AnswerDTO> respuestas)
         {
             await _quizService.SaveAnswersAsync(respuestas);
             return Ok(new { mensaje = "Respuestas registradas correctamente." });
         }
 
-        [HttpPost("resultado")]
+        [HttpPost("result")]
         public async Task<IActionResult> ObtenerResultado([FromBody] List<AnswerDTO> respuestas)
         {
             var resultado = await _quizService.GetResultAsync(respuestas);
