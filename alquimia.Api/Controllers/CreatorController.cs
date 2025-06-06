@@ -15,11 +15,11 @@ namespace alquimia.Api.Controllers
         private readonly INoteService _notaService;
         private readonly IFormulaService _formulaService;
         private readonly IOlfactoryFamilyService _olfactoryFamilyService;
-        private readonly DesignLabelService _designLabelService;
+        private readonly IDesignLabelService _designLabelService;
 
 
         public CreatorController(INoteService notaService, IFormulaService formulaService, IOlfactoryFamilyService olfactoryFamilyService,
-            DesignLabelService designLabelService)
+            IDesignLabelService designLabelService)
         {
             _notaService = notaService;
             _formulaService = formulaService;
