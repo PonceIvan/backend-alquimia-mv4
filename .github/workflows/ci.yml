@@ -21,11 +21,13 @@ jobs:
         with:
           dotnet-version: "8.0.x" # Cambiá por la versión que uses (ej. '8.0.x' o '6.0.x')
 
+      - name: 🔄 Limpiar solución
+        run: dotnet clean
+
       - name: 🧹 Limpiar y restaurar dependencias
         run: |
           dotnet nuget locals all --clear
           dotnet restore --force-evaluate
-
 
       - name: 🛠️ Compilar la solución
         run: dotnet build --no-restore --configuration Release #run: dotnet build ./src/MiProyecto/MiProyecto.csproj --no-restore Esto si el .sln no está en la raíz del proyecto
