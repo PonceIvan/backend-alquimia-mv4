@@ -20,13 +20,11 @@ namespace alquimia.Services
         public string GenerateToken(User user, IList<string> roles)
         {
             var claims = new List<Claim>
-        {
-            new Claim("name-identifier", user.Id.ToString()),
-            new Claim("user-name", user.UserName),
-            new Claim("name", user.Name ?? string.Empty),
-            new Claim("email", user.Email ?? string.Empty),
-
-        };
+{
+new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), // este es el que falta
+new Claim(ClaimTypes.Email, user.Email ?? string.Empty),
+new Claim("name", user.Name ?? string.Empty)
+};
 
             foreach (var role in roles)
             {
