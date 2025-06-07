@@ -21,8 +21,8 @@ namespace alquimia.Api.Controllers
         }
 
         //[Authorize]
-        [HttpGet("usuario")]
-        public IActionResult ObtenerUsuarioInfo()
+        [HttpGet("user")]
+        public IActionResult GetUserInfo()
         {
             var identity = HttpContext.User.Identity;
 

@@ -1,27 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using alquimia.Data.Entities;
+using alquimia.Services.Interfaces;
 using alquimia.Services.Models;
-using System.Drawing.Imaging;
 using PdfSharpCore.Drawing;
 using PdfSharpCore.Pdf;
-using static System.Net.Mime.MediaTypeNames;
-using alquimia.Data.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Services
 {
-    public class DesignLabelService
+    public class DesignLabelService : IDesignLabelService
     {
         private readonly AlquimiaDbContext _context;
 
-        public DesignLabelService(AlquimiaDbContext context )
+        public DesignLabelService(AlquimiaDbContext context)
         {
             _context = context;
         }
-        public static byte[] CrearPdfDesdeDesign(DesignDTO dto)
+        public static byte[] CreatePdfDesign(DesignDTO dto)
         {
             var doc = new PdfDocument();
             var page = doc.AddPage();
@@ -47,9 +40,7 @@ namespace alquimia.Services
             {
                 try
                 {
-                    /*Asegurarse de que la cadena dto.Image sea una imagen codificada en base64 sin prefijos como data:image/png;base64,. Si los tiene, quitá ese prefijo antes de hacer el Convert.FromBase64String.
 
-XImage.FromStream en PdfSharpCore usa un Func<Stream> para mejorar el control de recursos, por eso el cambio es obligatorio.*/
                     byte[] imageBytes = Convert.FromBase64String(dto.Image);
                     using (var ms = new MemoryStream(imageBytes))
                     {

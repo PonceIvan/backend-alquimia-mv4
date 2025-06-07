@@ -1,12 +1,13 @@
 ﻿using alquimia.Services;
 using alquimia.Services.Interfaces;
 using alquimia.Services.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Note = alquimia.Data.Entities.Note;
 
 namespace alquimia.Api.Controllers
 {
-    //[Authorize]
+    [Authorize(Roles = "Creador")]
     [Route("creator")]
     [ApiController]
     public class CreatorController : ControllerBase
@@ -14,11 +15,11 @@ namespace alquimia.Api.Controllers
         private readonly INoteService _notaService;
         private readonly IFormulaService _formulaService;
         private readonly IOlfactoryFamilyService _olfactoryFamilyService;
-        private readonly DesignLabelService _designLabelService;
+        private readonly IDesignLabelService _designLabelService;
 
 
         public CreatorController(INoteService notaService, IFormulaService formulaService, IOlfactoryFamilyService olfactoryFamilyService,
-            DesignLabelService designLabelService)
+            IDesignLabelService designLabelService)
         {
             _notaService = notaService;
             _formulaService = formulaService;
@@ -69,7 +70,7 @@ namespace alquimia.Api.Controllers
         [HttpPost("envase-pdf")]
         public IActionResult DescargarPdf([FromBody] DesignDTO dto)
         {
-            var pdfBytes = DesignLabelService.CrearPdfDesdeDesign(dto);
+            var pdfBytes = DesignLabelService.CreatePdfDesign(dto);
             return File(pdfBytes, "application/pdf", "myDesign.pdf");
         }
 

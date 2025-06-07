@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-//using backendAlquimia.alquimia.Data;
 using alquimia.Services.Models;
 using alquimia.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -11,24 +10,27 @@ using User = alquimia.Data.Entities.User;
 namespace alquimia.Api.Controllers
 {
     [ApiController]
-    [Route("cuenta")]
+    [Route("/account")]
     public class AccountController : Controller
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<AccountController> _logger;
         private readonly IJwtService _jwtService;
+        private readonly IEmailService _emailService;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ILogger<AccountController> logger, IJwtService jwtService)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, 
+            ILogger<AccountController> logger, IJwtService jwtService,IEmailService emailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _jwtService = jwtService;
+            _emailService = emailService;
         }
 
-        [HttpPost("registrar-json")]
-        public async Task<IActionResult> RegistrarJson([FromBody] RegisterDTO dto)
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterDTO dto)
         {
             _logger.LogInformation("Intentando registrar usuario con email: {Email}", dto.Email);
             if (!ModelState.IsValid)
@@ -40,7 +42,7 @@ namespace alquimia.Api.Controllers
 
             var nuevoUsuario = new User
             {
-                UserName = GenerarUserNameSeguro(dto.Email),
+                UserName = GenerateUserNameSeguro(dto.Email),
                 Email = dto.Email,
                 SecurityStamp = Guid.NewGuid().ToString(), // Obligatorio
                 Name = dto.Name?.Trim()
@@ -77,8 +79,8 @@ namespace alquimia.Api.Controllers
             return Ok(new { mensaje = "Usuario registrado correctamente.", token });
         }
 
-        [HttpPost("login-json")]
-        public async Task<IActionResult> LoginJson([FromBody] LoginDTO dto)
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDTO dto)
         {
             _logger.LogInformation("Intentando login para el email: {Email}", dto.Email);
 
@@ -144,7 +146,7 @@ namespace alquimia.Api.Controllers
             var newUser = new User
             {
                 Email = email,
-                UserName = GenerarUserNameSeguro(email),
+                UserName = GenerateUserNameSeguro(email),
                 Name = name,
                 SecurityStamp = Guid.NewGuid().ToString() // ✅ agregado
             };
@@ -159,8 +161,8 @@ namespace alquimia.Api.Controllers
             _logger.LogInformation("Google login info recibida para: {Email}", info.Principal.FindFirstValue(ClaimTypes.Email));
             return Redirect("http://localhost:3000/Login/RedirectGoogle");
         }
-        [HttpPost("registrar-proveedor")]
-        public async Task<IActionResult> RegistrarProveedor([FromBody] RegisterProviderDTO dto)
+        [HttpPost("register-provider")]
+        public async Task<IActionResult> RegisterProvider([FromBody] RegisterProviderDTO dto)
         {
             _logger.LogInformation("Intentando registrar proveedor con email: {Email}", dto.Email);
 
@@ -173,7 +175,7 @@ namespace alquimia.Api.Controllers
 
             var nuevoUsuario = new User
             {
-                UserName = GenerarUserNameSeguro(dto.Email),
+                UserName = GenerateUserNameSeguro(dto.Email),
                 Email = dto.Email,
                 Name = dto.Name?.Trim(),
                 EsProveedor = true,
@@ -216,12 +218,21 @@ namespace alquimia.Api.Controllers
 
             await _signInManager.SignInAsync(usuarioPersistido, isPersistent: false);
             _logger.LogInformation("Proveedor registrado exitosamente como Creador: {Email}", dto.Email);
+            var mensajeBienvenida = $@"
+                <h1>¡Bienvenido a Alquimia, {dto.Name}!</h1>
+                <p>Gracias por registrarte como proveedor.</p>
+                <p>Tu cuenta ha sido creada exitosamente, pero antes de poder cargar tus productos, debe ser aprobada por nuestro equipo.</p>
+                <p>Te avisaremos por correo una vez que tu cuenta esté habilitada.</p>
+                <br/>
+                <p>Gracias por tu paciencia.</p>
+                <p><strong>Equipo de Alquimia</strong></p>";
 
+            await _emailService.SendEmailAsync(dto.Email, "Bienvenido a Alquimia - Cuenta en revisión", mensajeBienvenida);
             return Ok(new { mensaje = "Proveedor registrado correctamente como creador en espera de aprobación.", token });
         }
 
         [HttpGet("auth/status")]
-        public IActionResult Estado()
+        public IActionResult State()
         {
             var usuario = User.Identity;
             return Ok(new
@@ -232,7 +243,7 @@ namespace alquimia.Api.Controllers
         }
 
 
-        private string GenerarUserNameSeguro(string email)
+        private string GenerateUserNameSeguro(string email)
         {
             if (string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
                 return Guid.NewGuid().ToString("N").Substring(0, 8);

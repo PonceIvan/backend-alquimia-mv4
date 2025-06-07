@@ -116,6 +116,7 @@ namespace alquimia.Services
 
             return new GETFormulaDTO
             {
+                Id = found.Id,
                 Intensity = new IntensityDTO
                 {
                     Id = found.IntensidadId,
@@ -168,7 +169,7 @@ namespace alquimia.Services
             };
         }
 
-        public static byte[] CrearPdf(GETFormulaDTO dto)
+        public static byte[] CreatePdf(GETFormulaDTO dto)
         {
             var doc = new PdfDocument();
             var page = doc.AddPage();

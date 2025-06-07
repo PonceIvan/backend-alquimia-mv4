@@ -16,13 +16,6 @@ namespace alquimia.Api.Controllers
             _adminService = adminService;
         }
 
-        [HttpGet("home")]
-        public async Task<IActionResult> GetAllProviders()
-        {
-            var proveedores = await _adminService.GetPendingAndApprovedProvidersAsync();
-            return Ok(proveedores);
-        }
-
         [HttpGet("listProviders")]
         public async Task<IActionResult> GetOnlyProviders()
         {

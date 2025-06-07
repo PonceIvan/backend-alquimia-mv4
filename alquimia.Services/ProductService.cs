@@ -2,8 +2,6 @@
 using alquimia.Services.Interfaces;
 using alquimia.Services.Models;
 using Microsoft.EntityFrameworkCore;
-using Product = alquimia.Data.Entities.Product;
-using ProductVariant = alquimia.Data.Entities.ProductVariant;
 
 namespace alquimia.Services
 {
@@ -18,7 +16,7 @@ namespace alquimia.Services
             _formulaService = formulaService;
         }
 
-        public async Task<List<ProductDTO>> ObtenerProductosPorProveedorAsync(int idProveedor)
+        public async Task<List<ProductDTO>> GetProductsByProviderAsync(int idProveedor)
         {
             return await _context.Products
                 .Include(p => p.ProductVariants)
@@ -30,7 +28,11 @@ namespace alquimia.Services
                     Name = p.Name,
                     Description = p.Description,
                     ProductType = p.TipoProducto.Description,
-                    SupplierName = p.IdProveedorNavigation.Name,
+                    Provider = new ProviderDTO
+                    {
+                        Id = p.IdProveedorNavigation.Id,
+                        Nombre = p.IdProveedorNavigation.Name,
+                    },
                     Variants = p.ProductVariants.Select(v => new ProductVariantDTO
                     {
                         Id = v.Id,
@@ -43,7 +45,7 @@ namespace alquimia.Services
                 }).ToListAsync();
         }
 
-        public async Task<ProductDTO> ObtenerProductoPorIdAsync(int idProducto, int idProveedor)
+        public async Task<ProductDTO> GetProductByIdAsync(int idProducto, int idProveedor)
         {
             var producto = await _context.Products
                 .Include(p => p.ProductVariants)
@@ -71,7 +73,7 @@ namespace alquimia.Services
             };
         }
 
-        public async Task<ProductDTO> CrearProductoAsync(CreateProductoDTO dto, int idProveedor)
+        public async Task<ProductDTO> CreateProductAsync(CreateProductoDTO dto, int idProveedor)
         {
             try
             {
@@ -101,7 +103,7 @@ namespace alquimia.Services
 
                 await _context.SaveChangesAsync();
 
-                return await ObtenerProductoPorIdAsync(producto.Id, idProveedor);
+                return await GetProductByIdAsync(producto.Id, idProveedor);
             }
             catch (DbUpdateException ex)
             {
@@ -117,7 +119,7 @@ namespace alquimia.Services
             }
         }
 
-        public async Task<bool> EliminarProductoAsync(int idProducto, int idProveedor)
+        public async Task<bool> DeleteProductAsync(int idProducto, int idProveedor)
         {
             var producto = await _context.Products
                 .Include(p => p.ProductVariants)
@@ -136,7 +138,7 @@ namespace alquimia.Services
             return true;
         }
 
-        public async Task<ProductDTO> ActualizarProductoAsync(int idProducto, UpdateProductoDTO dto, int idProveedor)
+        public async Task<ProductDTO> UpdateProductAsync(int idProducto, UpdateProductoDTO dto, int idProveedor)
         {
             var producto = await _context.Products
                 .Include(p => p.ProductVariants)
@@ -152,11 +154,11 @@ namespace alquimia.Services
                 producto.Description = dto.Description;
 
             await _context.SaveChangesAsync();
-            return await ObtenerProductoPorIdAsync(idProducto, idProveedor);
+            return await GetProductByIdAsync(idProducto, idProveedor);
         }
         public async Task<HomeProviderDataDTO> GetHomeDataAsync(int idProveedor)
         {
-            var productos = await ObtenerProductosPorProveedorAsync(idProveedor);
+            var productos = await GetProductsByProviderAsync(idProveedor);
 
             return new HomeProviderDataDTO
             {
@@ -211,7 +213,7 @@ namespace alquimia.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task ActualizarVarianteAsync(int variantId, UpdateProductVariantDTO dto)
+        public async Task UpdateVariantAsync(int variantId, UpdateProductVariantDTO dto)
         {
             var variante = await _context.ProductVariants.FindAsync(variantId);
             if (variante == null)
@@ -235,7 +237,7 @@ namespace alquimia.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> UpdateVariantAsync(int variantId, ProductVariantDTO dto)
+        public async Task<bool> IsUpdatedVariantAsync(int variantId, ProductVariantDTO dto)
         {
             var variante = await _context.ProductVariants.FindAsync(variantId);
             if (variante == null) return false;
@@ -250,7 +252,7 @@ namespace alquimia.Services
             return true;
         }
 
-        public async Task<bool> EliminarVarianteAsync(int variantId)
+        public async Task<bool> DeleteVariantAsync(int variantId)
         {
             var variante = await _context.ProductVariants.FindAsync(variantId);
             if (variante == null)
@@ -325,7 +327,49 @@ namespace alquimia.Services
                 Name = p.Name,
                 Description = p.Description,
                 ProductType = p.TipoProducto.Description,
-                SupplierName = p.IdProveedorNavigation?.Name,
+                Provider = new ProviderDTO
+                {
+                    Id = p.IdProveedorNavigation.Id,
+                    Nombre = p.IdProveedorNavigation.Name,
+                },
+                Variants = p.ProductVariants.Select(v => new ProductVariantDTO
+                {
+                    Id = v.Id,
+                    Volume = v.Volume,
+                    Unit = v.Unit,
+                    Price = v.Price,
+                    Stock = v.Stock,
+                    IsHypoallergenic = v.IsHypoallergenic,
+                    IsVegan = v.IsVegan,
+                    IsParabenFree = v.IsParabenFree
+                }).ToList()
+            }).ToList();
+        }
+
+        public async Task<List<ProductDTO>> GetAllAsync()
+        {
+            var productos = await _context.Products
+                .Include(p => p.TipoProducto)
+                .Include(p => p.IdProveedorNavigation)
+                .Include(p => p.ProductVariants)
+                .ToListAsync();
+
+            if (productos == null)
+            {
+                throw new KeyNotFoundException();
+            }
+
+            return productos.Select(p => new ProductDTO
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Description = p.Description,
+                ProductType = p.TipoProducto.Description,
+                Provider = new ProviderDTO
+                {
+                    Id = p.IdProveedorNavigation.Id,
+                    Nombre = p.IdProveedorNavigation.Name,
+                },
                 Variants = p.ProductVariants.Select(v => new ProductVariantDTO
                 {
                     Id = v.Id,
