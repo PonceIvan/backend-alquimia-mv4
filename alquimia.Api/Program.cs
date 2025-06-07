@@ -14,8 +14,10 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = Environment.GetEnvironmentVariable("ALQUIMIA_DB_CONNECTION")
-                      ?? builder.Configuration.GetConnectionString("DefaultConnection");
+//var connectionString = Environment.GetEnvironmentVariable("ALQUIMIA_DB_CONNECTION")
+//                      ?? builder.Configuration.GetConnectionString("DefaultConnection");
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<AlquimiaDbContext>(options =>
 {
