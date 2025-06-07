@@ -66,11 +66,11 @@ namespace alquimia.Tests.TestControllers
         }
 
         [Fact]
-        public async Task GetTopNotes_ReturnsOKWithAListOfBaseNotes()
+        public async Task GetTopNotes_ReturnsOKWithAListOfTopNotes()
         {
-            _mockNoteService.Setup(s => s.GetBaseNotesGroupedByFamilyAsync()).ReturnsAsync(MockGroupedNotesDataDTO.GetTopNotesGrouped());
+            _mockNoteService.Setup(s => s.GetTopNotesGroupedByFamilyAsync()).ReturnsAsync(MockGroupedNotesDataDTO.GetTopNotesGrouped());
 
-            var result = await _controller.GetBaseNotes();
+            var result = await _controller.GetTopNotes();
 
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
             var data = Assert.IsType<List<NotesGroupedByFamilyDTO>>(okResult.Value);
@@ -78,6 +78,21 @@ namespace alquimia.Tests.TestControllers
             Assert.Equal(2, data.Count);
             Assert.Contains(data, g => g.Family == "Cítrico");
             Assert.Contains(data, g => g.Family == "Alcanforado");
+        }
+
+        [Fact]
+        public async Task GetHeartNotes_ReturnsOKWithAListOfHeartNotes()
+        {
+            _mockNoteService.Setup(s => s.GetHeartNotesGroupedByFamilyAsync()).ReturnsAsync(MockGroupedNotesDataDTO.GetHeartNotesGrouped());
+
+            var result = await _controller.GetHeartNotes();
+
+            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var data = Assert.IsType<List<NotesGroupedByFamilyDTO>>(okResult.Value);
+
+            Assert.Equal(2, data.Count);
+            Assert.Contains(data, g => g.Family == "Frutal");
+            Assert.Contains(data, g => g.Family == "Especiado");
         }
 
     }

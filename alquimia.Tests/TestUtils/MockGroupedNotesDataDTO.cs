@@ -81,5 +81,44 @@ namespace alquimia.Tests.TestUtils
                 },
             };
         }
+
+        public static List<NotesGroupedByFamilyDTO> GetHeartNotesGrouped()
+        {
+            return new List<NotesGroupedByFamilyDTO>
+            {
+                new NotesGroupedByFamilyDTO
+                {
+                    Family = "Frutal",
+                    Notes = new List<NoteDTO>
+                    {
+                        new NoteDTO
+                        {
+                            Id = 36,
+                            Name = "Frambuesa",
+                            Family = "Frutal",
+                            Sector = "Corazón",
+                            Description = "Afrutado jugoso",
+                            Duration = new TimeOnly(1, 0)
+                        }
+                    }
+                },
+                new NotesGroupedByFamilyDTO
+                {
+                    Family = "Especiado",
+                    Notes = new List<NoteDTO>
+                    {
+                        new NoteDTO
+                        {
+                            Id = 29,
+                            Name = "Clavo",
+                            Family = "Especiado",
+                            Sector = "Corazón",
+                            Description = "Amaderado intenso",
+                            Duration = new TimeOnly(1, 0)
+                        }
+                    }
+                },
+            };
+        }
     }
 }
