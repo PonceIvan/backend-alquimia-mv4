@@ -48,6 +48,11 @@ namespace alquimia.Tests.TestControllers
             Assert.Equal(expectedMessage, okResult.Value);
         }
 
+        [Fact]
+        public void GetBaseNotes_ReturnsOKWithAListOfBaseNotes()
+        {
+
+        }
 
     }
 }

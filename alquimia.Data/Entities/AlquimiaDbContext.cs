@@ -1,6 +1,3 @@
-using alquimia.Data.Entities;
-using System.Collections.Generic;
-using System.Reflection.Emit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -77,7 +74,9 @@ namespace alquimia.Data.Entities
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 
         {
-            optionsBuilder.UseSqlServer(
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer(
                 "Server=tcp:alquimiadb.database.windows.net,1433;" +
                 "Initial Catalog=alquimiaDB1;" +
                 "Persist Security Info=False;" +
@@ -87,6 +86,7 @@ namespace alquimia.Data.Entities
                 "Encrypt=True;" +
             "TrustServerCertificate=False;" +
                 "Connection Timeout=30");
+            }
         }
 
 
