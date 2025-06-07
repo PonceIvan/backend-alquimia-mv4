@@ -47,7 +47,16 @@ namespace alquimia.Services
 
             foreach (var answer in answers.Where(a => a.QuestionId != 10))
             {
-                var mapping = FamilyMappingData.Mappings.FirstOrDefault(m => m.QuestionId == answer.QuestionId && m.OptionIndex.ToString() == answer.SelectedOption);
+                int selectedIndex = answer.SelectedOption switch
+                {
+                    "A" => 1,
+                    "B" => 2,
+                    "C" => 3,
+                    "D" => 4,
+                    _ => int.TryParse(answer.SelectedOption, out int val) ? val : -1
+                };
+
+                var mapping = FamilyMappingData.Mappings.FirstOrDefault(m => m.QuestionId == answer.QuestionId && m.OptionIndex == selectedIndex);
                 if (mapping != null)
                 {
                     foreach (var subFam in mapping.Families)
@@ -85,12 +94,16 @@ namespace alquimia.Services
                         CompatibleNotes = family.Notes.Select(n => n.Name).ToList()
                     });
                 }
+                else
+                {
+                    Console.WriteLine($"[DEBUG] No se encontró la familia '{subFamily}' en la base de datos");
+                }
             }
 
-            var usedNoteIds = new HashSet<int>();
-            string? top = await GetNoteWithFallback(1, topMatchedSubFamilies, fallbackSubFamilies, usedNoteIds);
-            string? heart = await GetNoteWithFallback(2, topMatchedSubFamilies, fallbackSubFamilies, usedNoteIds);
-            string? baseNote = await GetNoteWithFallback(3, topMatchedSubFamilies, fallbackSubFamilies, usedNoteIds);
+            var usedNotes = new HashSet<string>();
+            string? top = await GetNoteWithFallback(1, topMatchedSubFamilies, fallbackSubFamilies, usedNotes);
+            string? heart = await GetNoteWithFallback(2, topMatchedSubFamilies, fallbackSubFamilies, usedNotes);
+            string? baseNote = await GetNoteWithFallback(3, topMatchedSubFamilies, fallbackSubFamilies, usedNotes);
 
             result.Formulas.Add(new ExampleFormulaDTO
             {
@@ -111,47 +124,32 @@ namespace alquimia.Services
             return result;
         }
 
-        private async Task<string?> GetNoteWithFallback(int pyramidLevel, List<string> topFamilies, List<string> fallbackFamilies, HashSet<int> usedNoteIds)
+        private async Task<string?> GetNoteWithFallback(int pyramidLevel, List<string> topFamilies, List<string> fallbackFamilies, HashSet<string> usedNotes)
         {
             foreach (var fam in topFamilies.Concat(fallbackFamilies))
             {
                 var family = await _context.OlfactoryFamilies.Include(f => f.Notes).FirstOrDefaultAsync(f => f.Nombre.ToLower() == fam.ToLower());
-                if (family == null) continue;
 
-                foreach (var note in family.Notes)
+                if (family == null)
                 {
-                    if (note.OlfactoryPyramidId != pyramidLevel || usedNoteIds.Contains(note.Id))
-                        continue;
+                    Console.WriteLine($"[DEBUG] No se encontró la familia '{fam}' para el nivel {pyramidLevel}");
+                    continue;
+                }
 
-                    var isIncompatible = false;
-                    foreach (var usedId in usedNoteIds)
-                    {
-                        var incompatibles = await GetIncompatibleNoteIdsAsync(usedId);
-                        if (incompatibles.Contains(note.Id))
-                        {
-                            isIncompatible = true;
-                            break;
-                        }
-                    }
+                var note = family.Notes
+                    .Where(n => n.OlfactoryPyramidId == pyramidLevel && !usedNotes.Contains(n.Name))
+                    .Select(n => n.Name)
+                    .FirstOrDefault();
 
-                    if (!isIncompatible)
-                    {
-                        usedNoteIds.Add(note.Id);
-                        return note.Name;
-                    }
+                if (note != null)
+                {
+                    usedNotes.Add(note);
+                    return note;
                 }
             }
 
+            Console.WriteLine($"[DEBUG] No se encontró ninguna nota compatible en el nivel {pyramidLevel}");
             return null;
         }
-
-        private async Task<List<int>> GetIncompatibleNoteIdsAsync(int noteId)
-        {
-            return await _context.IncompatibleNotes
-                .Where(i => i.NotaId == noteId)
-                .Select(i => i.NotaIncompatibleId)
-                .ToListAsync();
-        }
     }
-
 }
