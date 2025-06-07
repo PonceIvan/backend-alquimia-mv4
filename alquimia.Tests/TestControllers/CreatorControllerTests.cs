@@ -65,5 +65,20 @@ namespace alquimia.Tests.TestControllers
             Assert.Contains(data, g => g.Family == "Amaderado");
         }
 
+        [Fact]
+        public async Task GetTopNotes_ReturnsOKWithAListOfBaseNotes()
+        {
+            _mockNoteService.Setup(s => s.GetBaseNotesGroupedByFamilyAsync()).ReturnsAsync(MockGroupedNotesDataDTO.GetTopNotesGrouped());
+
+            var result = await _controller.GetBaseNotes();
+
+            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var data = Assert.IsType<List<NotesGroupedByFamilyDTO>>(okResult.Value);
+
+            Assert.Equal(2, data.Count);
+            Assert.Contains(data, g => g.Family == "Cítrico");
+            Assert.Contains(data, g => g.Family == "Alcanforado");
+        }
+
     }
 }

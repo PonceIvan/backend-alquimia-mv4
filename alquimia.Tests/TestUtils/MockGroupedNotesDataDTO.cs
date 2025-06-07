@@ -42,5 +42,44 @@ namespace alquimia.Tests.TestUtils
                 },
             };
         }
+
+        public static List<NotesGroupedByFamilyDTO> GetTopNotesGrouped()
+        {
+            return new List<NotesGroupedByFamilyDTO>
+            {
+                new NotesGroupedByFamilyDTO
+                {
+                    Family = "Cítrico",
+                    Notes = new List<NoteDTO>
+                    {
+                        new NoteDTO
+                        {
+                            Id = 23,
+                            Name = "Naranja",
+                            Family = "Cítrico",
+                            Sector = "Salida",
+                            Description = "Aroma dulce y cítrico",
+                            Duration = new TimeOnly(0, 15)
+                        }
+                    }
+                },
+                new NotesGroupedByFamilyDTO
+                {
+                    Family = "Alcanforado",
+                    Notes = new List<NoteDTO>
+                    {
+                        new NoteDTO
+                        {
+                            Id = 7,
+                            Name = "Eucalipto",
+                            Family = "Alcanforado",
+                            Sector = "Salida",
+                            Description = "Fresco herbáceo",
+                            Duration = new TimeOnly(0, 15)
+                        }
+                    }
+                },
+            };
+        }
     }
 }
