@@ -370,19 +370,43 @@ namespace alquimia.Services
                     Id = p.IdProveedorNavigation.Id,
                     Nombre = p.IdProveedorNavigation.Name,
                 },
-                Variants = p.ProductVariants.Select(v => new ProductVariantDTO
-                {
-                    Id = v.Id,
-                    Volume = v.Volume,
-                    Unit = v.Unit,
-                    Price = v.Price,
-                    Stock = v.Stock,
-                    IsHypoallergenic = v.IsHypoallergenic,
-                    IsVegan = v.IsVegan,
-                    IsParabenFree = v.IsParabenFree
-                }).ToList()
+                Variants = p.ProductVariants
+                    .Where(v => v.Price > 0) 
+                    .Select(v => new ProductVariantDTO
+                    {
+                        Id = v.Id,
+                        Volume = v.Volume,
+                        Unit = v.Unit,
+                        Price = v.Price,
+                        Stock = v.Stock,
+                        IsHypoallergenic = v.IsHypoallergenic,
+                        IsVegan = v.IsVegan,
+                        IsParabenFree = v.IsParabenFree
+                    }).ToList(),
+
+                // ✅ Primer precio válido PARA QUE NO ROMPA FRONT ESTO DE LOS VARIANTS
+                Price = p.ProductVariants
+                    .Where(v => v.Price > 0)
+                    .OrderBy(v => v.Price)
+                    .Select(v => v.Price)
+                    .FirstOrDefault(),
+
+                Volume = p.ProductVariants
+    .Where(v => v.Price > 0)
+    .OrderBy(v => v.Price)
+    .Select(v => (int?)v.Volume)
+    .FirstOrDefault(),
+
+                Unit = p.ProductVariants
+    .Where(v => v.Price > 0)
+    .OrderBy(v => v.Price)
+    .Select(v => v.Unit)
+    .FirstOrDefault()
+
+
             }).ToList();
         }
-    }
 
+
+    }
 }
