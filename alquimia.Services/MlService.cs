@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace alquimia.Services
 {
-    internal class MlService
+    public class MlService
     {
+
     }
 }
