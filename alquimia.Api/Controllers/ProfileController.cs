@@ -12,7 +12,7 @@ namespace alquimia.Api.Controllers
     {
         private readonly IProfileService _profileService;        
 
-        public ProfileController(IProfileService profileService, IFormulaService formulaService, IProductService productService)
+        public ProfileController(IProfileService profileService)
         {
             _profileService = profileService;
             
