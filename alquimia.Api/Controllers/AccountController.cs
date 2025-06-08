@@ -270,6 +270,7 @@ namespace alquimia.Api.Controllers
             var roles = await _userManager.GetRolesAsync(user);
             return Ok(new
             {
+                nombre = user.Name,
                 email = user.Email,
                 rol = roles.FirstOrDefault()
             });
