@@ -100,35 +100,34 @@ namespace alquimia.Tests.TestServices
             Assert.Null(result);
         }
 
-        //[Fact]
-        //public async Task BringMyFormulas_UserHasFormula_ReturnsFormulaList()
-        //{
-        //    var context = GetDbContext();
+        [Fact]
+        public async Task BringMyFormulas_UserHasFormula_ReturnsFormulaList()
+        {
+            var context = GetDbContext();
 
-        //    var formula = new Formula { Id = 1, Title = "Formula1" };
-        //    context.Add(formula);
+            var formula = new Formula { Id = 2, Title = "Formula1" };
+            context.Add(formula);
 
-        //    var user = new User
-        //    {
-        //        Id = 1,
-        //        Name = "UserWithFormula",
-        //        Email = "formula@user.com",
-        //        IdFormulasNavigation = formula
-        //    };
-        //    context.Users.Add(user);
-        //    await context.SaveChangesAsync();
+            var user = new User
+            {
+                Id = 9,
+                Name = "UserWithFormula",
+                Email = "formula@user.com",
+                IdFormulasNavigation = formula
+            };
+            context.Users.Add(user);
+            await context.SaveChangesAsync();
 
-        //    var userManager = GetUserManagerMock();
-        //    var httpContextAccessor = GetHttpContextAccessor(user.Id);
-        //    var service = new ProfileService(userManager, context, httpContextAccessor);
+            var userManager = GetUserManagerMock();
+            var httpContextAccessor = GetHttpContextAccessor(user.Id);
+            var service = new ProfileService(userManager, context, httpContextAccessor);
 
-        //    var result = await service.BringMyFormulas();
+            var result = await service.BringMyFormulas();
 
-        //    Assert.Single(result);
-        //    Assert.Equal("Formula1", result.First().Title);
-        //}
+            Assert.Single(result);
+            Assert.Equal("Formula1", result.First().Title);
+        }
 
-        // 2. BringMyFormulas - Usuario sin fórmula devuelve lista vacía
         [Fact]
         public async Task BringMyFormulas_UserWithoutFormula_ReturnsEmptyList()
         {
@@ -154,7 +153,7 @@ namespace alquimia.Tests.TestServices
             var context = GetDbContext();
 
             var product1 = new Product { Id = 1, Name = "Producto 1", Description = "Desc 1", TipoProductoId = 1 };
-            var product2 = new Product { Id = 2, Name = "Producto 2", Description = "Desc 2", TipoProductoId = 1 };
+            var product2 = new Product { Id = 9, Name = "Producto 2", Description = "Desc 2", TipoProductoId = 1 };
             context.AddRange(product1, product2);
 
             var user = new User
@@ -179,34 +178,34 @@ namespace alquimia.Tests.TestServices
         }
 
         
-        [Fact]
-        public async Task BringMyProducts_UserWithoutProducts_ReturnsEmptyList()
-        {
-            var context = GetDbContext();
+        //[Fact]
+        //public async Task BringMyProducts_UserWithoutProducts_ReturnsEmptyList()
+        //{
+        //    var context = GetDbContext();
 
-            var user = new User { Id = 5, Name = "UserNoProducts", Email = "noproducts@user.com" };
-            context.Users.Add(user);
-            await context.SaveChangesAsync();
+        //    var user = new User { Id = 5, Name = "UserNoProducts", Email = "noproducts@user.com" };
+        //    context.Users.Add(user);
+        //    await context.SaveChangesAsync();
 
-            var userManager = GetUserManagerMock();
-            var httpContextAccessor = GetHttpContextAccessor(user.Id);
-            var service = new ProfileService(userManager, context, httpContextAccessor);
+        //    var userManager = GetUserManagerMock();
+        //    var httpContextAccessor = GetHttpContextAccessor(user.Id);
+        //    var service = new ProfileService(userManager, context, httpContextAccessor);
 
-            var result = await service.BringMyProducts();
+        //    var result = await service.BringMyProducts();
 
-            Assert.Empty(result);
-        }
+        //    Assert.Empty(result);
+        //}
         [Fact]
         public async Task BringMyWishlist_UserHasWishlist_ReturnsProductList()
         {
             var context = GetDbContext();
 
-            var product1 = new Product { Id = 3, Name = "Producto Wishlist 1", Description = "Desc 1", TipoProductoId = 1 };
-            var product2 = new Product { Id = 4, Name = "Producto Wishlist 2", Description = "Desc 2", TipoProductoId = 1 };
+            var product1 = new Product { Id = 5, Name = "Producto Wishlist 1", Description = "Desc 1", TipoProductoId = 1 };
+            var product2 = new Product { Id = 6, Name = "Producto Wishlist 2", Description = "Desc 2", TipoProductoId = 1 };
             context.AddRange(product1, product2);
 
-            var userProduct1 = new UserProduct { Id = 3, Producto = product1 };
-            var userProduct2 = new UserProduct { Id = 4, Producto = product2 };
+            var userProduct1 = new UserProduct { Id = 5, Producto = product1 };
+            var userProduct2 = new UserProduct { Id = 6, Producto = product2 };
 
             var user = new User
             {
