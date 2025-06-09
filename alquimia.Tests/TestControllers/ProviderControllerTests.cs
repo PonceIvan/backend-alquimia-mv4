@@ -26,9 +26,9 @@ namespace alquimia.Tests.TestControllers
             _mockProductService = new Mock<IProductService>();
             _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
 
-            // Mock de la HttpContext y ClaimsIdentity para simular el proveedor
+            
             var claims = new List<Claim> {
-            new Claim(ClaimTypes.NameIdentifier, "1") // Suponemos que el proveedor tiene Id = 1
+            new Claim(ClaimTypes.NameIdentifier, "1") 
         };
             var identity = new ClaimsIdentity(claims);
             var principal = new ClaimsPrincipal(identity);
@@ -38,7 +38,7 @@ namespace alquimia.Tests.TestControllers
             _controller = new ProviderController(
                 _mockProductService.Object,
                 _mockHttpContextAccessor.Object,
-                null // Null para simplificar
+                null 
             );
         }
 

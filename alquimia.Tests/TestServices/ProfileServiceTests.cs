@@ -89,7 +89,7 @@ namespace alquimia.Tests.TestServices
 
             var userManager = GetUserManagerMock();
 
-            var httpContextAccessor = GetHttpContextAccessor(999); // UserId que no existe
+            var httpContextAccessor = GetHttpContextAccessor(999); 
 
             var service = new ProfileService(userManager, context, httpContextAccessor);
 

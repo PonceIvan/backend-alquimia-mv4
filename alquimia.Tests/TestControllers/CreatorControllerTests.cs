@@ -101,7 +101,7 @@ namespace alquimia.Tests.TestControllers
             // Arrange
             var dto = new SelectedNotesDTO
             {
-                ListaDeIdsSeleccionadas = new List<int>(),  // Lista vacía
+                ListaDeIdsSeleccionadas = new List<int>(),  
                 Sector = "Fondo"
             };
 
@@ -114,7 +114,7 @@ namespace alquimia.Tests.TestControllers
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var data = Assert.IsType<List<NotesGroupedByFamilyDTO>>(okResult.Value);
-            Assert.Empty(data);  // Debe devolver una lista vacía
+            Assert.Empty(data);  
         }
 
         [Fact]
@@ -158,7 +158,7 @@ namespace alquimia.Tests.TestControllers
             // Arrange
             var dto = new DesignDTO
             {
-                Text = "",  // Texto vacío (campo obligatorio)
+                Text = "",  
                 Volume = 100,
                 Shape = "Circle",
                 LabelColor = "Red"

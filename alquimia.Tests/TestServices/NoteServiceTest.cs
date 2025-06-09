@@ -169,7 +169,7 @@ namespace alquimia.Tests.TestServices
         {
             // Act & Assert
             var exception = await Assert.ThrowsAsync<KeyNotFoundException>(() =>
-                _noteService.GetNoteInfoAsync(999)); // Nota no existente
+                _noteService.GetNoteInfoAsync(999)); 
 
             Assert.Equal("The given key was not present in the dictionary.", exception.Message);
         }

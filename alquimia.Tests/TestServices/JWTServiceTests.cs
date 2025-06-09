@@ -33,7 +33,7 @@ namespace alquimia.Tests.TestServices
 
             // Assert
             Assert.NotNull(token);
-            Assert.Contains("ey", token); // JWT base64 starts with "ey"
+            Assert.Contains("ey", token); 
         }
     }
 }

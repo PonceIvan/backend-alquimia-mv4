@@ -130,7 +130,7 @@ namespace alquimia.Tests.TestServices
             {
                 Name = "Perfume Nuevo",
                 Description = "Descripción Producto Nuevo",
-                TipoProductoDescription = "Tipo Inexistente" // Tipo de producto no registrado
+                TipoProductoDescription = "Tipo Inexistente" 
             };
 
             // Act & Assert
@@ -145,7 +145,7 @@ namespace alquimia.Tests.TestServices
         public async Task GetProductsByProviderAsync_ShouldReturnEmptyList_WhenProviderHasNoProducts()
         {
             // Arrange
-            var providerId = 30; // Asignar un ID de proveedor que no tenga productos asociados
+            var providerId = 30; 
 
             // Act
             var result = await _productService.GetProductsByProviderAsync(providerId);
@@ -161,7 +161,7 @@ namespace alquimia.Tests.TestServices
             {
                 Name = "Perfume Nuevo",
                 Description = "Descripción Producto Nuevo",
-                TipoProductoDescription = "Tipo Inexistente" // Tipo de producto no registrado
+                TipoProductoDescription = "Tipo Inexistente" 
             };
 
             // Act & Assert
@@ -181,7 +181,7 @@ namespace alquimia.Tests.TestServices
 
             // Act & Assert
             var exception = await Assert.ThrowsAsync<KeyNotFoundException>(() =>
-                _productService.UpdateProductAsync(999, updateDTO, 1)); // Producto inexistente
+                _productService.UpdateProductAsync(999, updateDTO, 1)); 
 
             Assert.Equal("Producto no encontrado o no pertenece al proveedor", exception.Message);
         }
