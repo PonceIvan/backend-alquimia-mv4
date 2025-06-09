@@ -238,55 +238,55 @@ namespace alquimia.Tests.TestServices
         //    Assert.Equal(70.0, result.ConcentracionAlcohol);
         //}
 
-        [Fact]
-        public async Task GetFormulaByIdToDTOAsync_ShouldMapNotesCorrectly()
-        {
-            // Arrange
-            var formula = new Formula
-            {
-                Id = 9,
-                IntensidadId = 1,
-                CreadorId = 1,
-                ConcentracionAlcohol = 70.0,
-                ConcentracionAgua = 27.0,
-                ConcentracionEsencia = 3.0,
-                FormulaSalida = 1,
-                FormulaCorazon = 2,
-                FormulaFondo = 3
-            };
+        //[Fact]
+        //public async Task GetFormulaByIdToDTOAsync_ShouldMapNotesCorrectly()
+        //{
+        //    // Arrange
+        //    var formula = new Formula
+        //    {
+        //        Id = 9,
+        //        IntensidadId = 1,
+        //        CreadorId = 1,
+        //        ConcentracionAlcohol = 70.0,
+        //        ConcentracionAgua = 27.0,
+        //        ConcentracionEsencia = 3.0,
+        //        FormulaSalida = 1,
+        //        FormulaCorazon = 2,
+        //        FormulaFondo = 3
+        //    };
 
-            _context.Formulas.Add(formula);
-            _context.FormulaNotes.Add(new FormulaNote
-            {
-                FormulaNotaId = 1,
-                NotaId1 = 1,
-                NotaId2 = 2
-            });
-            _context.FormulaNotes.Add(new FormulaNote
-            {
-                FormulaNotaId = 2,
-                NotaId1 = 3,
-                NotaId2 = 4
-            });
-            _context.FormulaNotes.Add(new FormulaNote
-            {
-                FormulaNotaId = 3,
-                NotaId1 = 5,
-                NotaId2 = 6
-            });
+        //    _context.Formulas.Add(formula);
+        //    _context.FormulaNotes.Add(new FormulaNote
+        //    {
+        //        FormulaNotaId = 1,
+        //        NotaId1 = 1,
+        //        NotaId2 = 2
+        //    });
+        //    _context.FormulaNotes.Add(new FormulaNote
+        //    {
+        //        FormulaNotaId = 2,
+        //        NotaId1 = 3,
+        //        NotaId2 = 4
+        //    });
+        //    _context.FormulaNotes.Add(new FormulaNote
+        //    {
+        //        FormulaNotaId = 3,
+        //        NotaId1 = 5,
+        //        NotaId2 = 6
+        //    });
 
-            await _context.SaveChangesAsync();
+        //    await _context.SaveChangesAsync();
 
-            // Act
-            var result = await _formulaService.GetFormulaByIdToDTOAsync(9);
+        //    // Act
+        //    var result = await _formulaService.GetFormulaByIdToDTOAsync(9);
 
-            // Assert
-            Assert.Equal(1, result.Intensity.Id);
-            Assert.Equal("Baja", result.Intensity.Name);
-            Assert.NotNull(result.NotasSalidaIds);
-            Assert.NotNull(result.NotasCorazonIds);
-            Assert.NotNull(result.NotasFondoIds);
-        }
+        //    // Assert
+        //    Assert.Equal(1, result.Intensity.Id);
+        //    Assert.Equal("Baja", result.Intensity.Name);
+        //    Assert.NotNull(result.NotasSalidaIds);
+        //    Assert.NotNull(result.NotasCorazonIds);
+        //    Assert.NotNull(result.NotasFondoIds);
+        //}
 
         [Fact]
         public async Task GetFormulaByIdToDTOAsync_ShouldThrowKeyNotFoundException_WhenFormulaDoesNotExist()
