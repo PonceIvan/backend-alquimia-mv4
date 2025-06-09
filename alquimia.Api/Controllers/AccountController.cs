@@ -1,4 +1,5 @@
 ﻿using alquimia.Data.Entities;
+using alquimia.Services;
 using alquimia.Services.Interfaces;
 using alquimia.Services.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -260,6 +261,7 @@ namespace alquimia.Api.Controllers
                 ? Guid.NewGuid().ToString("N").Substring(0, 8)
                 : nombre;
         }
+
 
         [Authorize]
         [HttpGet("perfil")]

@@ -28,6 +28,38 @@ namespace alquimia.Api.Controllers
             var products = await _productService.GetProductsByFormulaAsync(dto.FormulaId);
             return Ok(products);
         }
+        
+        
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateProduct([FromBody] CreateProductoDTO dto)
+        {
+            // Simular proveedor autenticado
+            var idProveedor = 1; // TODO: reemplazar por el id real del proveedor autenticado
+
+            try
+            {
+                var product = await _productService.CreateProductAsync(dto, idProveedor);
+                return Ok(product);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetProductById(int id)
+        {
+            try
+            {
+                var product = await _productService.GetProductByIdAsync(id);
+                return Ok(product);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound(new { message = $"Producto con ID {id} no encontrado." });
+            }
+        }
 
         [HttpGet("all")]
         public async Task<IActionResult> GetProductsByFormula()
@@ -35,5 +67,7 @@ namespace alquimia.Api.Controllers
             var products = await _productService.GetAllAsync();
             return Ok(products);
         }
+
+
     }
 }
