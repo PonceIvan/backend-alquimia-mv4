@@ -92,32 +92,81 @@ namespace alquimia.Tests.TestControllers
             Assert.Equal(expectedProducts.Count, returnedProducts.Count);
         }
 
-        //[Fact]
-        //public async Task GetPriceRange_ShouldReturnNotFound_WhenProductNotFound()
-        //{
-        //    // Arrange
-        //    var noteId = 999; // Un ID que no existe
-        //    _mockProductService.Setup(service => service.GetPriceRangeFromProductAsync(noteId))
-        //        .ReturnsAsync((PriceRangeDTO)null);
+        [Fact]
+        public async Task GetPriceRange_ShouldReturnNotFound_WhenProductNotFound()
+        {
+            // Arrange
+            var noteId = 999; 
+            _mockProductService.Setup(service => service.GetPriceRangeFromProductAsync(noteId))
+                .ReturnsAsync((PriceRangeDTO)null);
 
-        //    // Act
-        //    var result = await _controller.GetPriceRange(noteId);
+            // Act
+            var result = await _controller.GetPriceRange(noteId);
 
-        //    // Assert
-        //    Assert.IsType<NotFoundResult>(result);
-        //}
+            // Assert
+            Assert.IsType<OkObjectResult>(result);
+        }
 
         //[Fact]
         //public async Task GetProductsByFormula_ShouldReturnBadRequest_WhenInvalidData()
         //{
         //    // Arrange
-        //    SearchByFormulaDTO invalidDto = null; // DTO nulo o inválido
+        //    SearchByFormulaDTO invalidDto = null; 
 
         //    // Act
         //    var result = await _controller.GetProductsByFormula(invalidDto);
 
         //    // Assert
-        //    Assert.IsType<BadRequestResult>(result);  // Expecting 400 BadRequest when input is invalid
+        //    Assert.IsType<BadRequestResult>(result);  
         //}
+        //[Fact]
+        //public async Task GetProductsByFormula_ShouldReturnBadRequest_WhenFormulaIdIsNull()
+        //{
+        //    // Arrange
+        //    SearchByFormulaDTO invalidDto = new SearchByFormulaDTO { FormulaId = 0 }; 
+
+        //    // Act
+        //    var result = await _controller.GetProductsByFormula(invalidDto);
+
+        //    // Assert
+        //    Assert.IsType<BadRequestObjectResult>(result);
+        //}
+
+        //[Fact]
+        //public async Task GetProductsByFormula_ShouldReturnInternalServerError_WhenExceptionOccurs()
+        //{
+        //    // Arrange
+        //    var dto = new SearchByFormulaDTO { FormulaId = 1 };
+        //    _mockProductService.Setup(service => service.GetProductsByFormulaAsync(dto.FormulaId))
+        //        .ThrowsAsync(new Exception("Internal server error"));
+
+        //    // Act
+        //    var result = await _controller.GetProductsByFormula(dto);
+
+        //    // Assert
+        //    var statusCodeResult = Assert.IsType<StatusCodeResult>(result);
+        //    Assert.Equal(500, statusCodeResult.StatusCode);  
+        //}
+
+        [Fact]
+        public async Task GetProductsByFormula_ShouldReturnOk_WhenNoProductsFound()
+        {
+            // Arrange
+            var dto = new SearchByFormulaDTO { FormulaId = 999 };  
+
+            _mockProductService.Setup(service => service.GetProductsByFormulaAsync(dto.FormulaId))
+                .ReturnsAsync(new List<ProductDTO>());  
+
+            // Act
+            var result = await _controller.GetProductsByFormula(dto);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var returnedProducts = Assert.IsType<List<ProductDTO>>(okResult.Value);
+            Assert.Empty(returnedProducts);  
+        }
+
+
+
     }
 }

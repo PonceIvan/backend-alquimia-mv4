@@ -1,4 +1,5 @@
 ﻿using alquimia.Api.Controllers;
+using alquimia.Data.Entities;
 using alquimia.Services.Interfaces;
 using alquimia.Services.Models;
 using alquimia.Tests.TestUtils;
@@ -93,6 +94,109 @@ namespace alquimia.Tests.TestControllers
             Assert.Equal(2, data.Count);
             Assert.Contains(data, g => g.Family == "Frutal");
             Assert.Contains(data, g => g.Family == "Especiado");
+        }
+        [Fact]
+        public async Task PostCompatibleNotes_ShouldReturnEmptyList_WhenNoSelectedNotes()
+        {
+            // Arrange
+            var dto = new SelectedNotesDTO
+            {
+                ListaDeIdsSeleccionadas = new List<int>(),  // Lista vacía
+                Sector = "Fondo"
+            };
+
+            _mockNoteService.Setup(s => s.GetCompatibleNotesAsync(dto.ListaDeIdsSeleccionadas, dto.Sector))
+                            .ReturnsAsync(new List<NotesGroupedByFamilyDTO>());
+
+            // Act
+            var result = await _controller.PostCompatibleNotes(dto);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var data = Assert.IsType<List<NotesGroupedByFamilyDTO>>(okResult.Value);
+            Assert.Empty(data);  // Debe devolver una lista vacía
+        }
+
+        [Fact]
+        public async Task PostCompatibleNotes_ShouldReturnCompatibleNotes_WhenCompatibleNotesExist()
+        {
+            // Arrange
+            var dto = new SelectedNotesDTO
+            {
+                ListaDeIdsSeleccionadas = new List<int> { 1, 2 },
+                Sector = "Corazón"
+            };
+
+            var mockCompatibleNotes = new List<NotesGroupedByFamilyDTO>
+            {
+                new NotesGroupedByFamilyDTO
+                {
+                    Family = "Frutal",
+                    Notes = new List<NoteDTO>
+                    {
+                        new NoteDTO { Id = 1, Name = "Frutal1", Description = "Frutal1 Description" }
+                    }
+                }
+            };
+
+            _mockNoteService.Setup(s => s.GetCompatibleNotesAsync(dto.ListaDeIdsSeleccionadas, dto.Sector))
+                            .ReturnsAsync(mockCompatibleNotes);
+
+            // Act
+            var result = await _controller.PostCompatibleNotes(dto);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var data = Assert.IsType<List<NotesGroupedByFamilyDTO>>(okResult.Value);
+            Assert.Single(data);
+            Assert.Equal("Frutal", data[0].Family);
+        }
+
+        [Fact]
+        public async Task SaveDesign_ShouldReturnBadRequest_WhenModelStateIsInvalid()
+        {
+            // Arrange
+            var dto = new DesignDTO
+            {
+                Text = "",  // Texto vacío (campo obligatorio)
+                Volume = 100,
+                Shape = "Circle",
+                LabelColor = "Red"
+            };
+
+            _controller.ModelState.AddModelError("Text", "El campo Text es obligatorio.");
+
+            // Act
+            var result = await _controller.SaveDesign(dto);
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            var errors = Assert.IsType<SerializableError>(badRequestResult.Value);
+            Assert.True(errors.ContainsKey("Text"));
+        }
+
+        [Fact]
+        public async Task SaveFormula_ShouldReturnBadRequest_WhenModelStateIsInvalid()
+        {
+            // Arrange
+            var dto = new POSTFormulaDTO
+            {
+                IntensityId = 0,
+                CreatorId = 1,
+                TopNotes = null,
+                HeartNotes = null,
+                BaseNotes = null
+            };
+
+            _controller.ModelState.AddModelError("TopNotes", "TopNotes es obligatorio.");
+
+            // Act
+            var result = await _controller.SaveFormula(dto);
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            var errors = Assert.IsType<SerializableError>(badRequestResult.Value);
+            Assert.True(errors.ContainsKey("TopNotes"));
         }
 
     }
