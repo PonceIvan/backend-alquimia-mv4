@@ -28,5 +28,26 @@ namespace alquimia.Services
                 Image1 = found.Image1,
             };
         }
+        public async Task<int> CreateOlfactoryFamilyAsync(OlfactoryFamilyDTO familyDTO)
+        {
+            var family = new OlfactoryFamily
+            {
+                Nombre = familyDTO.Name,
+                Description = familyDTO.Description,
+                Image1 = familyDTO.Image1
+            };
+
+            _context.OlfactoryFamilies.Add(family);
+            await _context.SaveChangesAsync();
+
+            return family.Id;  
+        }
+        public async Task UpdateOlfactoryFamilyAsync(OlfactoryFamily family)
+        {
+            _context.OlfactoryFamilies.Update(family);
+            await _context.SaveChangesAsync();
+        }
+
+
     }
 }
