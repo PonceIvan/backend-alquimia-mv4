@@ -176,7 +176,7 @@ namespace alquimia.Tests.TestServices
             {
                 Name = "Cítrica",
                 Description = "Familia con notas cítricas.",
-                Image1 = null  // Sin imagen
+                Image1 = null  
             };
 
             var options = new DbContextOptionsBuilder<AlquimiaDbContext>()
@@ -194,7 +194,7 @@ namespace alquimia.Tests.TestServices
             Assert.NotNull(createdFamily);
             Assert.Equal(familyDto.Name, createdFamily.Nombre);
             Assert.Equal(familyDto.Description, createdFamily.Description);
-            Assert.Null(createdFamily.Image1);  // Aseguramos que la imagen es nula
+            Assert.Null(createdFamily.Image1);  
         }
 
         //[Fact]
