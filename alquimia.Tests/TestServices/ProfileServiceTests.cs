@@ -152,7 +152,7 @@ namespace alquimia.Tests.TestServices
         {
             var context = GetDbContext();
 
-            var product1 = new Product { Id = 1, Name = "Producto 1", Description = "Desc 1", TipoProductoId = 1 };
+            var product1 = new Product { Id = 12, Name = "Producto 1", Description = "Desc 1", TipoProductoId = 1 };
             var product2 = new Product { Id = 9, Name = "Producto 2", Description = "Desc 2", TipoProductoId = 1 };
             context.AddRange(product1, product2);
 

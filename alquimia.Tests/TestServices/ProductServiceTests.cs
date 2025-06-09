@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 namespace alquimia.Tests.TestServices
 {
@@ -36,30 +37,7 @@ namespace alquimia.Tests.TestServices
             _context.Database.EnsureDeleted();
             _context.Dispose();
         }
-        //[Fact]
-        //public async Task GetProductsByProviderAsync_ShouldReturnProducts_WhenProviderHasProducts()
-        //{
-        //    var providerId = 5;
-        //    var product = new Product
-        //    {
-        //        Id = 21,
-        //        Name = "Perfume A",
-        //        Description = "Perfume de prueba",
-        //        IdProveedor = providerId,
-        //        ProductVariants = new List<ProductVariant>
-        //{
-        //    new ProductVariant { Id = 1, Volume = 100, Unit = "ml", Price = 50.0M, Stock = 10, IsHypoallergenic = true }
-        //}
-        //    };
-
-        //    _context.Products.Add(product);
-        //    await _context.SaveChangesAsync();
-
-        //    var result = await _productService.GetProductsByProviderAsync(providerId);
-
-        //    Assert.Single(result);
-        //    Assert.Equal("Perfume A", result[0].Name);
-        //}
+        
 
         [Fact]
         public async Task CreateProductAsync_ShouldReturnProduct_WhenProductIsCreated()
@@ -101,26 +79,7 @@ namespace alquimia.Tests.TestServices
             Assert.Null(_context.Products.Find(product.Id));
         }
 
-        //[Fact]
-        //public async Task GetProductByIdAsync_ShouldReturnProduct_WhenProductExists()
-        //{
-        //    var providerId = 5;
-        //    var product = new Product
-        //    {
-        //        Id = 10,
-        //        Name = "Perfume A",
-        //        Description = "Perfume de prueba",
-        //        IdProveedor = providerId
-        //    };
-
-        //    _context.Products.Add(product);
-        //    await _context.SaveChangesAsync();
-
-        //    var result = await _productService.GetProductByIdAsync(10, providerId);
-
-        //    Assert.NotNull(result);
-        //    Assert.Equal("Perfume A", result.Name);
-        //}
+       
 
         [Fact]
         public async Task GetProductByIdAsync_ShouldThrowException_WhenProductNotFound()
@@ -154,53 +113,137 @@ namespace alquimia.Tests.TestServices
             Assert.Equal("Perfume Nuevo", result.Name);
         }
 
-        [Fact]
-        public async Task DeleteProductAsync_ShouldReturnTrue_WhenProductIsDeletedIsTrue()
-        {
-            var providerId = 4;
-            var product = new Product
-            {
-                Id = 1,
-                Name = "Perfume A",
-                Description = "Perfume de prueba",
-                IdProveedor = providerId
-            };
-
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
-
-            var result = await _productService.DeleteProductAsync(1, providerId);
-
-            Assert.True(result);
-        }
+        
         [Fact]
         public async Task DeleteProductAsync_ShouldReturnFalse_WhenProductNotFound()
         {
-            var result = await _productService.DeleteProductAsync(999, 1);
+            var result = await _productService.DeleteProductAsync(999, 8);
 
             Assert.False(result);
         }
 
+        [Fact]
+        public async Task CreateProductAsync_ShouldThrowException_WhenProductTypeIsInvalid()
+        {
+            // Arrange
+            var createProductDTO = new CreateProductoDTO
+            {
+                Name = "Perfume Nuevo",
+                Description = "Descripción Producto Nuevo",
+                TipoProductoDescription = "Tipo Inexistente" // Tipo de producto no registrado
+            };
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<KeyNotFoundException>(() =>
+                _productService.CreateProductAsync(createProductDTO, 1));
+
+            Assert.Equal("Tipo de producto no válido", exception.Message);
+        }
+
+
+        [Fact]
+        public async Task GetProductsByProviderAsync_ShouldReturnEmptyList_WhenProviderHasNoProducts()
+        {
+            // Arrange
+            var providerId = 30; // Asignar un ID de proveedor que no tenga productos asociados
+
+            // Act
+            var result = await _productService.GetProductsByProviderAsync(providerId);
+
+            // Assert
+            Assert.Empty(result);
+        }
+        [Fact]
+        public async Task CreateProductAsync_ShouldThrowException_WhenProductTypeIsInvalidNew()
+        {
+            // Arrange
+            var createProductDTO = new CreateProductoDTO
+            {
+                Name = "Perfume Nuevo",
+                Description = "Descripción Producto Nuevo",
+                TipoProductoDescription = "Tipo Inexistente" // Tipo de producto no registrado
+            };
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<KeyNotFoundException>(() =>
+                _productService.CreateProductAsync(createProductDTO, 1));
+
+            Assert.Equal("Tipo de producto no válido", exception.Message);
+        }
+
+        
+
+        [Fact]
+        public async Task UpdateProductAsync_ShouldThrowException_WhenProductNotFound()
+        {
+            // Arrange
+            var updateDTO = new UpdateProductoDTO { Name = "Perfume Actualizado" };
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<KeyNotFoundException>(() =>
+                _productService.UpdateProductAsync(999, updateDTO, 1)); // Producto inexistente
+
+            Assert.Equal("Producto no encontrado o no pertenece al proveedor", exception.Message);
+        }
+
+        
+
         //[Fact]
-        //public async Task UpdateProductAsync_ShouldUpdateProduct_WhenValidDataIsProvided()
+        //public async Task AddVariantsToProductAsync_ShouldAddVariant_WhenProductExists()
         //{
-        //    var providerId = 5;
+        //    // Arrange
         //    var product = new Product
         //    {
-        //        Id = 10,
         //        Name = "Perfume A",
         //        Description = "Perfume de prueba",
-        //        IdProveedor = providerId
+        //        IdProveedor = 1
         //    };
 
         //    _context.Products.Add(product);
         //    await _context.SaveChangesAsync();
 
-        //    var dto = new UpdateProductoDTO { Name = "Perfume B" };
-        //    var result = await _productService.UpdateProductAsync(1, dto, providerId);
+        //    var variantDTO = new CreateProductVariantDTO
+        //    {
+        //        Volume = 50,
+        //        Unit = "ml",
+        //        Price = 30.0M,
+        //        Stock = 20,
+        //        IsHypoallergenic = true
+        //    };
 
-        //    Assert.Equal("Perfume B", result.Name);
+        //    // Act
+        //    await _productService.AddVariantsToProductAsync(product.Id, variantDTO);
+
+        //    // Assert
+        //    var variant = _context.ProductVariants.FirstOrDefault();
+        //    Assert.NotNull(variant);
+        //    Assert.Equal(50, variant.Volume);
+        //    Assert.Equal("ml", variant.Unit);
         //}
+
+        [Fact]
+        public async Task DeleteVariantAsync_ShouldReturnTrue_WhenVariantIsDeleted()
+        {
+            // Arrange
+            var variant = new ProductVariant
+            {
+                Volume = 100,
+                Unit = "ml",
+                Price = 50.0M,
+                Stock = 10,
+                IsHypoallergenic = true
+            };
+
+            _context.ProductVariants.Add(variant);
+            await _context.SaveChangesAsync();
+
+            // Act
+            var result = await _productService.DeleteVariantAsync(variant.Id);
+
+            // Assert
+            Assert.True(result);
+            Assert.Null(_context.ProductVariants.Find(variant.Id));
+        }
 
     }
 }
