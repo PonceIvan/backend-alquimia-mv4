@@ -16,5 +16,6 @@ namespace alquimia.Services.Interfaces
         Task<bool> IsUpdatedVariantAsync(int variantId, ProductVariantDTO dto);
         Task<List<ProductDTO>> GetProductsByFormulaAsync(int formulaId);
         Task<List<ProductDTO>> GetAllAsync();
+        Task<ProductDTO> GetProductByIdAsync(int idProducto);
     }
 }

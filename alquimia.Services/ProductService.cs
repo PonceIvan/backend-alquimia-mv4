@@ -40,7 +40,10 @@ namespace alquimia.Services
                         Unit = v.Unit,
                         Price = v.Price,
                         Stock = v.Stock,
-                        IsHypoallergenic = v.IsHypoallergenic ?? false
+                        IsHypoallergenic = v.IsHypoallergenic,
+                        IsVegan = v.IsVegan,
+                        IsParabenFree = v.IsParabenFree,
+                        Image = v.Image
                     }).ToList()
                 }).ToListAsync();
         }
@@ -68,7 +71,10 @@ namespace alquimia.Services
                     Unit = v.Unit,
                     Price = v.Price,
                     Stock = v.Stock,
-                    IsHypoallergenic = v.IsHypoallergenic ?? false
+                    IsHypoallergenic = v.IsHypoallergenic,
+                    IsVegan = v.IsVegan,
+                    IsParabenFree = v.IsParabenFree,
+                    Image = v.Image
                 }).ToList()
             };
         }
@@ -95,8 +101,12 @@ namespace alquimia.Services
                         Unit = v.Unit,
                         Price = v.Price,
                         Stock = v.Stock,
-                        IsHypoallergenic = v.IsHypoallergenic
-                    }).ToList() ?? new List<ProductVariant>()
+                        IsHypoallergenic = v.IsHypoallergenic,
+                        IsVegan = v.IsVegan,
+                        IsParabenFree = v.IsParabenFree,
+                        Image = v.Image
+                    }).ToList()
+                  ?? new List<ProductVariant>()
                 };
 
                 _context.Products.Add(producto);
@@ -190,7 +200,42 @@ namespace alquimia.Services
                 MaxPrice = await query.MaxAsync(v => (decimal?)v.Price) ?? 0
             };
         }
+        public async Task<ProductDTO> GetProductByIdAsync(int idProducto)
+        {
+            var producto = await _context.Products
+                .Include(p => p.ProductVariants)
+                .Include(p => p.TipoProducto)
+                .Include(p => p.IdProveedorNavigation)
+                .FirstOrDefaultAsync(p => p.Id == idProducto);
 
+            if (producto == null)
+                throw new KeyNotFoundException("Producto no encontrado");
+
+            return new ProductDTO
+            {
+                Id = producto.Id,
+                Name = producto.Name,
+                Description = producto.Description,
+                ProductType = producto.TipoProducto.Description,
+                Provider = new ProviderDTO
+                {
+                    Id = producto.IdProveedorNavigation.Id,
+                    Nombre = producto.IdProveedorNavigation.Name,
+                },
+                Variants = producto.ProductVariants.Select(v => new ProductVariantDTO
+                {
+                    Id = v.Id,
+                    Volume = v.Volume,
+                    Unit = v.Unit,
+                    Price = v.Price,
+                    Stock = v.Stock,
+                    Image = v.Image,
+                    IsHypoallergenic = v.IsHypoallergenic,
+                    IsVegan = v.IsVegan,
+                    IsParabenFree = v.IsParabenFree
+                }).ToList()
+            };
+        }
         public async Task AddVariantsToProductAsync(int productId, CreateProductVariantDTO dto)
         {
             var producto = await _context.Products.Include(p => p.ProductVariants)
@@ -206,6 +251,9 @@ namespace alquimia.Services
                 Price = dto.Price,
                 Stock = dto.Stock,
                 IsHypoallergenic = dto.IsHypoallergenic,
+                IsVegan = dto.IsVegan,
+                IsParabenFree = dto.IsParabenFree,
+                Image = dto.Image,
                 ProductId = productId
             };
 
@@ -231,8 +279,17 @@ namespace alquimia.Services
             if (dto.Stock.HasValue)
                 variante.Stock = dto.Stock.Value;
 
+            if (dto.IsParabenFree.HasValue)
+                variante.IsParabenFree = dto.IsParabenFree.Value;
+
             if (dto.IsHypoallergenic.HasValue)
                 variante.IsHypoallergenic = dto.IsHypoallergenic.Value;
+
+            if (dto.IsVegan.HasValue)
+                variante.IsVegan = dto.IsVegan.Value;
+
+            if (!string.IsNullOrEmpty(dto.Image))
+                variante.Image = dto.Image;
 
             await _context.SaveChangesAsync();
         }
@@ -247,6 +304,9 @@ namespace alquimia.Services
             variante.Price = dto.Price;
             variante.Stock = dto.Stock;
             variante.IsHypoallergenic = dto.IsHypoallergenic;
+            variante.IsVegan = dto.IsVegan;
+            variante.IsParabenFree = dto.IsParabenFree;
+            variante.Image = dto.Image;
 
             await _context.SaveChangesAsync();
             return true;
@@ -335,6 +395,7 @@ namespace alquimia.Services
                 Variants = p.ProductVariants.Select(v => new ProductVariantDTO
                 {
                     Id = v.Id,
+                    Image = v.Image,
                     Volume = v.Volume,
                     Unit = v.Unit,
                     Price = v.Price,
@@ -375,6 +436,7 @@ namespace alquimia.Services
                     .Select(v => new ProductVariantDTO
                     {
                         Id = v.Id,
+                        Image = v.Image,
                         Volume = v.Volume,
                         Unit = v.Unit,
                         Price = v.Price,
