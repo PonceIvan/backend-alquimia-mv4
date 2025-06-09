@@ -86,7 +86,7 @@ namespace alquimia.Tests.TestControllers
             var context = GetDbContext();
 
             var userManager = GetUserManagerMock();
-            var httpContextAccessor = GetHttpContextAccessor(999); // ID no existe
+            var httpContextAccessor = GetHttpContextAccessor(999); 
 
             var service = new ProfileService(userManager, context, httpContextAccessor);
             var controller = new ProfileController(service);

@@ -26,8 +26,8 @@ df = pd.read_csv(csv_path, encoding="latin1", sep=";")
 def search_perfume(name: str = Query(..., alias="q")):
     result = df[df["Perfume"].str.contains(name, case=False, na=False)]
 
-    print("RESULTADO FILTRADO:", result[["Perfume", "mainaccord1", "mainaccord2", "mainaccord3"]].to_dict())
-
+    #print("RESULTADO FILTRADO:", result[["Perfume", "mainaccord1", "mainaccord2", "mainaccord3"]].to_dict())
+    #perfume = result.iloc[0]
     if result.empty:
         return {"message": "Perfume not found", "notes": []}
     
