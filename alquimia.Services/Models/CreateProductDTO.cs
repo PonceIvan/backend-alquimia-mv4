@@ -15,6 +15,6 @@ namespace alquimia.Services.Models
         [Required]
         public List<CreateProductVariantDTO> Variants { get; set; } = new();
 
-
+        public string? ImagenBase64 { get; set; }
     }
 }

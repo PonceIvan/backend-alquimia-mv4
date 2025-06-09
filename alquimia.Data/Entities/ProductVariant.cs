@@ -23,6 +23,7 @@ namespace alquimia.Data.Entities
         public decimal Price { get; set; }
 
         public int Stock { get; set; }
+        public string? Image {  get; set; }
         public bool? IsHypoallergenic { get; set; }
         public bool? IsVegan { get; set; }
         public bool? IsParabenFree { get; set; }

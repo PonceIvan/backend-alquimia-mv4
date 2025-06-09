@@ -168,8 +168,13 @@ namespace alquimia.Api.Controllers
 
 
         /// /////////////////////////////////////////////////////////////////////
-
-
+        [HttpGet("me")]
+        public IActionResult GetMyInfo()
+        {
+            var idProveedor = GetIdProvider();
+            return Ok(new { idProveedor });
+        }
+        /// /////////////////////////////////////////////////////////////////////
         [HttpPut("products/{idProducto}")]
         public async Task<IActionResult> UpdateProduct(int idProducto, [FromBody] UpdateProductoDTO dto)
         {
