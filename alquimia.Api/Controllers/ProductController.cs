@@ -28,8 +28,8 @@ namespace alquimia.Api.Controllers
             var products = await _productService.GetProductsByFormulaAsync(dto.FormulaId);
             return Ok(products);
         }
-        
-        
+
+
         [HttpPost("create")]
         public async Task<IActionResult> CreateProduct([FromBody] CreateProductoDTO dto)
         {
@@ -68,6 +68,11 @@ namespace alquimia.Api.Controllers
             return Ok(products);
         }
 
-
+        [HttpGet("alcohols")]
+        public async Task<IActionResult> GetAllAlcoholsAsync()
+        {
+            var products = await _productService.GetAllAlcoholsAsync();
+            return Ok(products);
+        }
     }
 }
