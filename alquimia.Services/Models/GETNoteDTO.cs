@@ -8,5 +8,7 @@
         public string Description { get; set; }
         public TimeOnly Duration { get; set; }
 
+        public string? Image { get; set; }
+
     }
 }
