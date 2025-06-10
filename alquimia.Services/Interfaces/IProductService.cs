@@ -18,5 +18,6 @@ namespace alquimia.Services.Interfaces
         Task<List<ProductDTO>> GetAllAsync();
         Task<ProductDTO> GetProductByIdAsync(int idProducto);
         Task<List<ProductDTO>> GetAllAlcoholsAsync();
+        Task<List<ProductDTO>> GetAllBottlesAsync();
     }
 }

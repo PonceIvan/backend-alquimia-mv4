@@ -527,5 +527,66 @@ namespace alquimia.Services
 
             }).ToList();
         }
+
+        public async Task<List<ProductDTO>> GetAllBottlesAsync()
+        {
+            var productos = await _context.Products
+                .Include(p => p.TipoProducto)
+                .Include(p => p.IdProveedorNavigation)
+                .Include(p => p.ProductVariants)
+                .Where(p => p.TipoProducto.Description.ToLower() == "envase")
+                .ToListAsync();
+
+            if (productos == null || productos.Count() == 0)
+            {
+                throw new NullReferenceException();
+            }
+
+            return productos.Select(p => new ProductDTO
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Description = p.Description,
+                ProductType = p.TipoProducto.Description,
+                Provider = new ProviderDTO
+                {
+                    Id = p.IdProveedorNavigation.Id,
+                    Nombre = p.IdProveedorNavigation.Name,
+                },
+                Variants = p.ProductVariants
+                .Where(v => v.Price > 0)
+                .Select(v => new ProductVariantDTO
+                {
+                    Id = v.Id,
+                    Image = v.Image,
+                    Volume = v.Volume,
+                    Unit = v.Unit,
+                    Price = v.Price,
+                    Stock = v.Stock,
+                    IsHypoallergenic = v.IsHypoallergenic,
+                    IsVegan = v.IsVegan,
+                    IsParabenFree = v.IsParabenFree
+                }).ToList(),
+
+                Price = p.ProductVariants
+                .Where(v => v.Price > 0)
+                .OrderBy(v => v.Price)
+                .Select(v => v.Price)
+                .FirstOrDefault(),
+
+                Volume = p.ProductVariants
+                .Where(v => v.Price > 0)
+                .OrderBy(v => v.Price)
+                .Select(v => (int?)v.Volume)
+                .FirstOrDefault(),
+
+                Unit = p.ProductVariants
+                .Where(v => v.Price > 0)
+                .OrderBy(v => v.Price)
+                .Select(v => v.Unit)
+                .FirstOrDefault()
+
+            }).ToList();
+        }
     }
 }

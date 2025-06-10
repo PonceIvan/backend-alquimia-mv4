@@ -74,5 +74,12 @@ namespace alquimia.Api.Controllers
             var products = await _productService.GetAllAlcoholsAsync();
             return Ok(products);
         }
+
+        [HttpGet("bottles")]
+        public async Task<IActionResult> GetAllBottlesAsync()
+        {
+            var products = await _productService.GetAllBottlesAsync();
+            return Ok(products);
+        }
     }
 }
