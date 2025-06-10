@@ -36,7 +36,8 @@ namespace alquimia.Services
                         Family = n.OlfactoryFamily.Nombre,
                         Sector = n.OlfactoryPyramid.Sector,
                         Description = n.Description,
-                        Duration = n.OlfactoryPyramid.Duracion
+                        Duration = n.OlfactoryPyramid.Duracion,
+                        Image = n.Image
                     }).ToList()
                 })
                 .ToListAsync();
@@ -59,7 +60,8 @@ namespace alquimia.Services
                         Family = n.OlfactoryFamily.Nombre,
                         Sector = n.OlfactoryPyramid.Sector,
                         Description = n.Description,
-                        Duration = n.OlfactoryPyramid.Duracion
+                        Duration = n.OlfactoryPyramid.Duracion,
+                        Image = n.Image
                     }).ToList()
                 }).ToListAsync();
         }
@@ -81,7 +83,8 @@ namespace alquimia.Services
                         Family = n.OlfactoryFamily.Nombre,
                         Sector = n.OlfactoryPyramid.Sector,
                         Description = n.Description,
-                        Duration = n.OlfactoryPyramid.Duracion
+                        Duration = n.OlfactoryPyramid.Duracion,
+                        Image = n.Image
                     }).ToList()
                 }).ToListAsync();
         }
@@ -156,7 +159,8 @@ namespace alquimia.Services
                         Description = c.Nota.Description,
                         Family = c.Nota.OlfactoryFamily.Nombre,
                         Sector = c.Nota.OlfactoryPyramid.Sector,
-                        Duration = c.Nota.OlfactoryPyramid.Duracion
+                        Duration = c.Nota.OlfactoryPyramid.Duracion,
+                        Image = c.Nota.Image
                     }).ToList()
                 })
                 .ToList();
@@ -188,7 +192,8 @@ namespace alquimia.Services
                 Family = found.OlfactoryFamily.Nombre,
                 Sector = found.OlfactoryPyramid.Sector,
                 Description = found.Description,
-                Duration = found.OlfactoryPyramid.Duracion
+                Duration = found.OlfactoryPyramid.Duracion,
+                Image = found.Image
             };
         }
     }

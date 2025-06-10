@@ -155,7 +155,8 @@ namespace alquimia.Services
                 Description = note.Description,
                 Family = note.OlfactoryFamily.Nombre,
                 Sector = note.OlfactoryPyramid.Sector,
-                Duration = note.OlfactoryPyramid.Duracion
+                Duration = note.OlfactoryPyramid.Duracion,
+                Image = note.Image
             };
         }
         private GETFormulaNoteDTO MapFormulaNoteToDTO(FormulaNote note)

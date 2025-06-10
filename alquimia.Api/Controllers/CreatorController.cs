@@ -1,13 +1,12 @@
 ﻿using alquimia.Services;
 using alquimia.Services.Interfaces;
 using alquimia.Services.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Note = alquimia.Data.Entities.Note;
 
 namespace alquimia.Api.Controllers
 {
-    [Authorize(Roles = "Creador")]
+    //[Authorize(Roles = "Creador")]
     [Route("creator")]
     [ApiController]
     public class CreatorController : ControllerBase
