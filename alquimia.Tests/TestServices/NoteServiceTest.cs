@@ -1,6 +1,5 @@
 ﻿using alquimia.Data.Entities;
 using alquimia.Services;
-using alquimia.Tests.TestUtils;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
@@ -26,7 +25,7 @@ namespace alquimia.Tests.TestServices
         {
             // Arrange
             var pyramid = new OlfactoryPyramid { Sector = "Corazón", Duracion = new TimeOnly(1, 0) };
-            var family = new OlfactoryFamily { Nombre = "Floral" , Description = "Una familia de flores"};
+            var family = new OlfactoryFamily { Nombre = "Floral", Description = "Una familia de flores" };
             var note = new Note
             {
                 Name = "Jazmín",
@@ -54,7 +53,7 @@ namespace alquimia.Tests.TestServices
         {
             // Arrange
             var pyramid = new OlfactoryPyramid { Sector = "Salida", Duracion = new TimeOnly(1, 0) };
-            var family = new OlfactoryFamily { Nombre = "Cítrica" , Description = "Naranjas y esas"};
+            var family = new OlfactoryFamily { Nombre = "Cítrica", Description = "Naranjas y esas" };
             var note = new Note
             {
                 Name = "Limón",
@@ -82,7 +81,7 @@ namespace alquimia.Tests.TestServices
         {
             // Arrange
             var pyramid = new OlfactoryPyramid { Sector = "Fondo", Duracion = new TimeOnly(2, 0) };
-            var family = new OlfactoryFamily { Nombre = "Amaderado" , Description ="Tronquitos si"};
+            var family = new OlfactoryFamily { Nombre = "Amaderado", Description = "Tronquitos si" };
             var note = new Note
             {
                 Name = "Sándalo",
@@ -91,6 +90,7 @@ namespace alquimia.Tests.TestServices
                 OlfactoryFamily = family
             };
 
+            _context.Notes.RemoveRange(_context.Notes);
             _context.Notes.Add(note);
             await _context.SaveChangesAsync();
 
@@ -109,7 +109,7 @@ namespace alquimia.Tests.TestServices
         {
             // Arrange
             var pyramid = new OlfactoryPyramid { Sector = "Fondo", Duracion = new TimeOnly(2, 0) };
-            var family = new OlfactoryFamily { Nombre = "Amaderado" ,Description="Mas madera"};
+            var family = new OlfactoryFamily { Nombre = "Amaderado", Description = "Mas madera" };
             var note1 = new Note
             {
                 Name = "Sándalo",
@@ -143,7 +143,7 @@ namespace alquimia.Tests.TestServices
         {
             // Arrange
             var pyramid = new OlfactoryPyramid { Sector = "Salida", Duracion = new TimeOnly(1, 0) };
-            var family = new OlfactoryFamily { Nombre = "Frutal" , Description="Que fruta noble la papa"};
+            var family = new OlfactoryFamily { Nombre = "Frutal", Description = "Que fruta noble la papa" };
             var note = new Note
             {
                 Name = "Manzana",
@@ -169,7 +169,7 @@ namespace alquimia.Tests.TestServices
         {
             // Act & Assert
             var exception = await Assert.ThrowsAsync<KeyNotFoundException>(() =>
-                _noteService.GetNoteInfoAsync(999)); 
+                _noteService.GetNoteInfoAsync(999));
 
             Assert.Equal("The given key was not present in the dictionary.", exception.Message);
         }
