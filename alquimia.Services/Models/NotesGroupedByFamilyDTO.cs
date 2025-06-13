@@ -4,6 +4,8 @@
     {
         public string Family { get; set; }
 
+        public int FamilyId { get; set; }
+
         public List<NoteDTO> Notes { get; set; }
     }
 }

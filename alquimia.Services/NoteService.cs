@@ -25,10 +25,11 @@ namespace alquimia.Services
                 .Include(n => n.OlfactoryPyramid)
                 .Include(n => n.OlfactoryFamily)
                 .Where(n => n.OlfactoryPyramid.Sector == Heart)
-                .GroupBy(n => n.OlfactoryFamily.Nombre)
+                .GroupBy(n => new { n.OlfactoryFamily.Id, n.OlfactoryFamily.Nombre }) // agrupamos por ambos
                 .Select(grupo => new NotesGroupedByFamilyDTO
                 {
-                    Family = grupo.Key,
+                    Family = grupo.Key.Nombre,
+                    FamilyId = grupo.Key.Id, // ahora sí podemos acceder al Id
                     Notes = grupo.Select(n => new NoteDTO
                     {
                         Id = n.Id,
@@ -39,8 +40,7 @@ namespace alquimia.Services
                         Duration = n.OlfactoryPyramid.Duracion,
                         Image = n.Image
                     }).ToList()
-                })
-                .ToListAsync();
+                }).ToListAsync();
         }
 
         public async Task<List<NotesGroupedByFamilyDTO>> GetTopNotesGroupedByFamilyAsync()
@@ -49,10 +49,11 @@ namespace alquimia.Services
                 .Include(n => n.OlfactoryPyramid)
                 .Include(n => n.OlfactoryFamily)
                 .Where(n => n.OlfactoryPyramid.Sector == Top)
-                .GroupBy(n => n.OlfactoryFamily.Nombre)
+                .GroupBy(n => new { n.OlfactoryFamily.Id, n.OlfactoryFamily.Nombre }) // agrupamos por ambos
                 .Select(grupo => new NotesGroupedByFamilyDTO
                 {
-                    Family = grupo.Key,
+                    Family = grupo.Key.Nombre,
+                    FamilyId = grupo.Key.Id, // ahora sí podemos acceder al Id
                     Notes = grupo.Select(n => new NoteDTO
                     {
                         Id = n.Id,
@@ -72,10 +73,11 @@ namespace alquimia.Services
                 .Include(n => n.OlfactoryPyramid)
                 .Include(n => n.OlfactoryFamily)
                 .Where(n => n.OlfactoryPyramid.Sector == Base)
-                .GroupBy(n => n.OlfactoryFamily.Nombre)
+                .GroupBy(n => new { n.OlfactoryFamily.Id, n.OlfactoryFamily.Nombre }) // agrupamos por ambos
                 .Select(grupo => new NotesGroupedByFamilyDTO
                 {
-                    Family = grupo.Key,
+                    Family = grupo.Key.Nombre,
+                    FamilyId = grupo.Key.Id, // ahora sí podemos acceder al Id
                     Notes = grupo.Select(n => new NoteDTO
                     {
                         Id = n.Id,
@@ -88,6 +90,7 @@ namespace alquimia.Services
                     }).ToList()
                 }).ToListAsync();
         }
+
 
         public async Task<List<NotesGroupedByFamilyDTO>> GetCompatibleNotesAsync(List<int> seleccionadasIds, string sector)
         {
