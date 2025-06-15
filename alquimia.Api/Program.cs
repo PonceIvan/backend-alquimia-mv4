@@ -24,7 +24,7 @@ builder.Services.AddDbContext<AlquimiaDbContext>(options =>
     options.UseSqlServer(connectionString);
     options.EnableSensitiveDataLogging(); // 👈 para debug
 });
-
+builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
@@ -36,6 +36,7 @@ builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddScoped<IOlfactoryFamilyService, OlfactoryFamilyService>();
 builder.Services.AddScoped<IDesignLabelService, DesignLabelService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.AddScoped<IMercadoPagoService, MercadoPagoService>();
 
 //builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 //{
