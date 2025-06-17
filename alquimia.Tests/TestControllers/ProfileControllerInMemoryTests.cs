@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using alquimia.Api.Controllers;
+﻿using alquimia.Api.Controllers;
 using alquimia.Data.Entities;
-using alquimia.Services.Models;
 using alquimia.Services;
+using alquimia.Services.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using System.Security.Claims;
 using Xunit;
 
 namespace alquimia.Tests.TestControllers
@@ -86,13 +81,14 @@ namespace alquimia.Tests.TestControllers
             var context = GetDbContext();
 
             var userManager = GetUserManagerMock();
-            var httpContextAccessor = GetHttpContextAccessor(999); 
+            var httpContextAccessor = GetHttpContextAccessor(999);
 
             var service = new ProfileService(userManager, context, httpContextAccessor);
             var controller = new ProfileController(service);
 
             // Act
             var result = await controller.GetMyData();
+            Console.WriteLine(result);
 
             // Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);

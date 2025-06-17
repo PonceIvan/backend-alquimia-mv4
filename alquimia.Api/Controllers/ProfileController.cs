@@ -10,12 +10,12 @@ namespace alquimia.Api.Controllers
     [Authorize(Roles = "Creador")]
     public class ProfileController : Controller
     {
-        private readonly IProfileService _profileService;        
+        private readonly IProfileService _profileService;
 
         public ProfileController(IProfileService profileService)
         {
             _profileService = profileService;
-            
+
         }
 
         [HttpGet("data")]
@@ -31,7 +31,7 @@ namespace alquimia.Api.Controllers
         [HttpGet("formulas")]
         public async Task<IActionResult> GetMyFormulas()
         {
-            var formulas = await _profileService.BringMyFormulas();
+            var formulas = await _profileService.BringMyFormulasAsync();
             return Ok(formulas);
         }
 
