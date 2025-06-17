@@ -1,5 +1,4 @@
-﻿using alquimia.Data.Entities;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -12,7 +11,7 @@ namespace alquimia.Data.Entities
 
         public int? IdEstado { get; set; }
 
-        public int? IdFormulas { get; set; }
+        //public int? IdFormulas { get; set; }
 
         public int? IdQuiz { get; set; }
 
@@ -33,8 +32,8 @@ namespace alquimia.Data.Entities
         [ForeignKey("IdEstado")]
         public virtual Status? IdEstadoNavigation { get; set; }
 
-        [ForeignKey("IdFormulas")]
-        public virtual Formula? IdFormulasNavigation { get; set; }
+        //[ForeignKey("IdFormulas")]
+        //public virtual Formula? IdFormulasNavigation { get; set; }
 
         [ForeignKey("IdQuiz")]
         public virtual Quiz? IdQuizNavigation { get; set; }
@@ -44,6 +43,9 @@ namespace alquimia.Data.Entities
 
         // Relaciones propias
         public virtual ICollection<FinalEntity> FinalEntities { get; set; } = new List<FinalEntity>();
+
+        [InverseProperty(nameof(Formula.Creator))]
+        public virtual ICollection<Formula> Formulas { get; set; } = new List<Formula>();
         public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
         public virtual ICollection<Product> Products { get; set; } = new List<Product>();
         public virtual ICollection<UserProductReview> UserProductReviews { get; set; } = new List<UserProductReview>();
