@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using alquimia.Data.Entities;
+﻿using alquimia.Data.Entities;
+using alquimia.Services.Extensions;
 using alquimia.Services.Interfaces;
 using alquimia.Services.Models;
 using Microsoft.AspNetCore.Http;
@@ -44,26 +40,43 @@ namespace alquimia.Services
 
         private async Task<User?> GetCurrentUserAsync()
         {
+            // --- 1. Obtener el Id del usuario autenticado ---------------------------
             var userIdString = _userManager.GetUserId(_httpContextAccessor.HttpContext?.User);
-            if (int.TryParse(userIdString, out var userId))
-            {
-                return await _context.Users
-                    .Include(u => u.Products)
-                    .Include(u => u.UserProducts).ThenInclude(up => up.Producto)
-                    .Include(u => u.IdFormulasNavigation)
-                    .FirstOrDefaultAsync(u => u.Id == userId);
-            }
+            if (!int.TryParse(userIdString, out var userId))
+                return null;
 
-            return null;
+            // --- 2. Traer el usuario con sus colecciones “ligeras” -------------------
+            var user = await _context.Users
+                .Where(u => u.Id == userId)
+                .Include(u => u.Products)
+                .Include(u => u.UserProducts)
+                    .ThenInclude(up => up.Producto)
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+                return null;
+
+            // --- 3. Cargar las fórmulas con TODOS los detalles -----------------------
+            await _context.Entry(user)                         // apunta a la entidad en el ChangeTracker
+                .Collection(u => u.Formulas)            // navega a la colección
+                .Query()                                       // convierte a IQueryable<Formula>
+                .IncludeFormulaNotesWithDetails()              // tu extensión con todos los Include
+                .LoadAsync();                                  // ejecuta y llena la colección
+
+            return user;
         }
 
-        public async Task<List<Formula>> BringMyFormulas()
+        public async Task<List<Formula>> BringMyFormulasAsync()
         {
             var user = await GetCurrentUserAsync();
-            if (user == null || user.IdFormulasNavigation == null)
+            if (user == null)
                 return new List<Formula>();
 
-            return new List<Formula> { user.IdFormulasNavigation };
+            return await _context.Formulas
+                .Where(f => f.CreatorId == user.Id)
+                .IncludeFormulaNotesWithDetails()
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<List<Product>> BringMyProducts()

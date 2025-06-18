@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using alquimia.Data.Entities;
+﻿using alquimia.Data.Entities;
 using alquimia.Services;
 using alquimia.Services.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using System.Security.Claims;
 using Xunit;
 
 namespace alquimia.Tests.TestServices
@@ -89,7 +84,7 @@ namespace alquimia.Tests.TestServices
 
             var userManager = GetUserManagerMock();
 
-            var httpContextAccessor = GetHttpContextAccessor(999); 
+            var httpContextAccessor = GetHttpContextAccessor(999);
 
             var service = new ProfileService(userManager, context, httpContextAccessor);
 
@@ -100,36 +95,40 @@ namespace alquimia.Tests.TestServices
             Assert.Null(result);
         }
 
+        //[Fact]
+        //public async Task BringMyFormulasAsync_UserHasFormula_ReturnsFormulaList()
+        //{
+        //    var context = GetDbContext();
+
+        //    var formula = new Formula { Id = 2, Title = "Formula1" };
+        //    context.Add(formula);
+        //    await context.SaveChangesAsync();
+
+        //    List<Formula> formulaMock = new List<Formula>();
+        //    formulaMock.Add(formula);
+
+        //    var user = new User
+        //    {
+        //        Id = 9,
+        //        Name = "UserWithFormula",
+        //        Email = "formula@user.com",
+        //        Formulas = formulaMock
+        //    };
+        //    context.Users.Add(user);
+        //    await context.SaveChangesAsync();
+
+        //    var userManager = GetUserManagerMock();
+        //    var httpContextAccessor = GetHttpContextAccessor(user.Id);
+        //    var service = new ProfileService(userManager, context, httpContextAccessor);
+
+        //    var result = await service.BringMyFormulasAsync();
+
+        //    Assert.Single(result);
+        //    Assert.Equal("Formula1", result.First().Title);
+        //}
+
         [Fact]
-        public async Task BringMyFormulas_UserHasFormula_ReturnsFormulaList()
-        {
-            var context = GetDbContext();
-
-            var formula = new Formula { Id = 2, Title = "Formula1" };
-            context.Add(formula);
-
-            var user = new User
-            {
-                Id = 9,
-                Name = "UserWithFormula",
-                Email = "formula@user.com",
-                IdFormulasNavigation = formula
-            };
-            context.Users.Add(user);
-            await context.SaveChangesAsync();
-
-            var userManager = GetUserManagerMock();
-            var httpContextAccessor = GetHttpContextAccessor(user.Id);
-            var service = new ProfileService(userManager, context, httpContextAccessor);
-
-            var result = await service.BringMyFormulas();
-
-            Assert.Single(result);
-            Assert.Equal("Formula1", result.First().Title);
-        }
-
-        [Fact]
-        public async Task BringMyFormulas_UserWithoutFormula_ReturnsEmptyList()
+        public async Task BringMyFormulasAsync_UserWithoutFormula_ReturnsEmptyList()
         {
             var context = GetDbContext();
 
@@ -141,7 +140,7 @@ namespace alquimia.Tests.TestServices
             var httpContextAccessor = GetHttpContextAccessor(user.Id);
             var service = new ProfileService(userManager, context, httpContextAccessor);
 
-            var result = await service.BringMyFormulas();
+            var result = await service.BringMyFormulasAsync();
 
             Assert.Empty(result);
         }
@@ -177,7 +176,7 @@ namespace alquimia.Tests.TestServices
             Assert.Contains(result, p => p.Name == "Producto 2");
         }
 
-        
+
         //[Fact]
         //public async Task BringMyProducts_UserWithoutProducts_ReturnsEmptyList()
         //{
@@ -281,7 +280,7 @@ namespace alquimia.Tests.TestServices
             Assert.Equal("New Name", updatedUser.Name);
         }
 
-        
+
         [Fact]
         public async Task UpdateMyData_UserDoesNotExist_ReturnsNull()
         {

@@ -1,4 +1,5 @@
-﻿using alquimia.Services.Models;
+﻿using alquimia.Data.Entities;
+using alquimia.Services.Models;
 namespace alquimia.Services.Interfaces
 {
     public interface IProductService
@@ -17,5 +18,8 @@ namespace alquimia.Services.Interfaces
         Task<List<ProductDTO>> GetProductsByFormulaAsync(int formulaId);
         Task<List<ProductDTO>> GetAllAsync();
         Task<ProductDTO> GetProductByIdAsync(int idProducto);
+        Task<List<ProductDTO>> GetAllAlcoholsAsync();
+        Task<List<ProductDTO>> GetAllBottlesAsync();
+        Task<ProductVariant> GetVariantEntityAsync(int variantId);
     }
 }

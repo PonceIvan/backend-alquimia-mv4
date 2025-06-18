@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Text.Json;
+﻿using alquimia.Services;
+using alquimia.Services.Interfaces;
+using alquimia.Services.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Alquimia.Api.Controllers
 {
@@ -10,90 +9,55 @@ namespace Alquimia.Api.Controllers
     [Route("api/[controller]")]
     public class MpController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
+        private readonly IMercadoPagoService _mpService;
 
-        public MpController(IConfiguration configuration)
+        public MpController(IMercadoPagoService mpService)
         {
-            _configuration = configuration;
+            _mpService = mpService;
         }
 
+        /// <summary>
+        /// Crea la preferencia y devuelve la URL init_point.
+        /// Body: { productVariantId, quantity, externalReference }
+        /// </summary>
         [HttpPost("generate-link")]
-        public async Task<IActionResult> GeneratePaymentLink([FromBody] string externalReference)
+        public async Task<IActionResult> GeneratePaymentLink(
+            [FromBody] CreatePaymentPreferenceDTO dto)
         {
-            var accessToken = _configuration["MercadoPago:AccessToken"];
-
-            if (string.IsNullOrWhiteSpace(accessToken))
+            try
             {
-                return StatusCode(500, "Mercado Pago access token is not configured.");
+                var url = await _mpService.GeneratePaymentLinkAsync(dto);
+                return Ok(new { url });
             }
-
-            using var client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", accessToken);
-
-            var requestBody = new
+            catch (KeyNotFoundException knf)
             {
-                items = new[]
-                {
-                    new
-                    {
-                        title       = "Custom Payment",
-                        quantity    = 1,
-                        unit_price  = 1000
-                    }
-                },
-                back_urls = new
-                {
-                    success = "https://your-site.com/api/mercadopago/success",
-                    failure = "https://your-site.com/api/mercadopago/failure",
-                    pending = "https://your-site.com/api/mercadopago/pending"
-                },
-                auto_return = "approved",
-                external_reference = externalReference
-            };
-
-            var jsonBody = JsonSerializer.Serialize(requestBody);
-            var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
-
-            var response = await client.PostAsync("https://api.mercadopago.com/checkout/preferences", content);
-            var responseText = await response.Content.ReadAsStringAsync();
-
-            if (!response.IsSuccessStatusCode)
-            {
-                return StatusCode((int)response.StatusCode, responseText);
+                return NotFound(knf.Message);
             }
-
-            var json = JsonDocument.Parse(responseText);
-            var initPoint = json.RootElement.GetProperty("init_point").GetString();
-
-            return Ok(new { Url = initPoint });
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
+
+        // ────────────────────── CALLBACKS ──────────────────────
+        // Mercado Pago redirige aquí según el estado del pago.
+        // Si deseas manejar IPN/webhooks, crea otro endpoint aparte.
 
         [HttpGet("success")]
         public IActionResult PaymentSuccess(
             [FromQuery] string payment_id,
             [FromQuery] string status,
             [FromQuery] string external_reference)
-        {
-            return Ok(new
-            {
-                Message = "Payment successful.",
-                PaymentId = payment_id,
-                Status = status,
-                ExternalReference = external_reference
-            });
-        }
+            => Redirect(
+                $"{Request.Scheme}://pago-exitoso.onrender.com/success.html" +
+                $"?payment_id={payment_id}&status={status}&external_reference={external_reference}");
 
         [HttpGet("failure")]
         public IActionResult PaymentFailure()
-        {
-            return BadRequest("The payment was rejected or cancelled.");
-        }
+            => Redirect("https://pago-exitoso.onrender.com/failure.html");
 
         [HttpGet("pending")]
         public IActionResult PaymentPending()
-        {
-            return Ok("The payment is pending.");
-        }
+            => Redirect("https://pago-exitoso.onrender.com/pending.html");
     }
 }

@@ -170,6 +170,12 @@ namespace alquimia.Data.Entities
 
             modelBuilder.Entity<Formula>(entity =>
             {
+                modelBuilder.Entity<Formula>()
+                .HasOne(f => f.Creator)
+                .WithMany(u => u.Formulas)
+                .HasForeignKey(f => f.CreatorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
                 entity.HasOne(d => d.FormulaCorazonNavigation).WithMany(p => p.FormulaFormulaCorazonNavigations)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Formulas_corazon");
@@ -292,7 +298,7 @@ namespace alquimia.Data.Entities
 
                 entity.HasOne(d => d.IdEstadoNavigation).WithMany(p => p.Users).HasConstraintName("FK_estado_Users");
 
-                entity.HasOne(d => d.IdFormulasNavigation).WithMany(p => p.Users).HasConstraintName("FK_formulas_Users");
+                //entity.HasOne(d => d.IdFormulasNavigation).WithMany(p => p.Users).HasConstraintName("FK_formulas_Users");
 
                 entity.HasOne(d => d.IdQuizNavigation).WithMany(p => p.Users).HasConstraintName("FK_quiz_Users");
 

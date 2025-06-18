@@ -21,6 +21,9 @@ public partial class Note
     [Required]
     public int OlfactoryPyramidId { get; set; }
 
+    [StringLength(256)]
+    public string? Image { get; set; }
+
     [ForeignKey("OlfactoryFamilyId")]
     [InverseProperty("Notes")]
     public virtual OlfactoryFamily OlfactoryFamily { get; set; } = null!;
