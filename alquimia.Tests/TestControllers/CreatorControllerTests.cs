@@ -1,5 +1,4 @@
 ﻿using alquimia.Api.Controllers;
-using alquimia.Data.Entities;
 using alquimia.Services.Interfaces;
 using alquimia.Services.Models;
 using alquimia.Tests.TestUtils;
@@ -54,9 +53,11 @@ namespace alquimia.Tests.TestControllers
         [Fact]
         public async Task GetBaseNotes_ReturnsOKWithAListOfBaseNotes()
         {
-            _mockNoteService.Setup(s => s.GetBaseNotesGroupedByFamilyAsync()).ReturnsAsync(MockGroupedNotesDataDTO.GetBaseNotesGrouped());
+            string sectorInSpanish = "Fondo";
+            _mockNoteService.Setup(s => s.GetNotesGroupedByFamilyAsync(sectorInSpanish)).ReturnsAsync(MockGroupedNotesDataDTO.GetBaseNotesGrouped());
 
-            var result = await _controller.GetBaseNotes();
+            string sectorInEnglish = "base";
+            var result = await _controller.GetNotesBySector(sectorInEnglish);
 
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
             var data = Assert.IsType<List<NotesGroupedByFamilyDTO>>(okResult.Value);
@@ -69,9 +70,11 @@ namespace alquimia.Tests.TestControllers
         [Fact]
         public async Task GetTopNotes_ReturnsOKWithAListOfTopNotes()
         {
-            _mockNoteService.Setup(s => s.GetTopNotesGroupedByFamilyAsync()).ReturnsAsync(MockGroupedNotesDataDTO.GetTopNotesGrouped());
+            string sectorInSpanish = "Salida";
+            _mockNoteService.Setup(s => s.GetNotesGroupedByFamilyAsync(sectorInSpanish)).ReturnsAsync(MockGroupedNotesDataDTO.GetTopNotesGrouped());
 
-            var result = await _controller.GetTopNotes();
+            string sectorInEnglish = "top";
+            var result = await _controller.GetNotesBySector(sectorInEnglish);
 
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
             var data = Assert.IsType<List<NotesGroupedByFamilyDTO>>(okResult.Value);
@@ -84,9 +87,11 @@ namespace alquimia.Tests.TestControllers
         [Fact]
         public async Task GetHeartNotes_ReturnsOKWithAListOfHeartNotes()
         {
-            _mockNoteService.Setup(s => s.GetHeartNotesGroupedByFamilyAsync()).ReturnsAsync(MockGroupedNotesDataDTO.GetHeartNotesGrouped());
+            string sectorInSpanish = "Corazón";
+            _mockNoteService.Setup(s => s.GetNotesGroupedByFamilyAsync(sectorInSpanish)).ReturnsAsync(MockGroupedNotesDataDTO.GetHeartNotesGrouped());
 
-            var result = await _controller.GetHeartNotes();
+            string sectorInEnglish = "heart";
+            var result = await _controller.GetNotesBySector(sectorInEnglish);
 
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
             var data = Assert.IsType<List<NotesGroupedByFamilyDTO>>(okResult.Value);
@@ -95,13 +100,14 @@ namespace alquimia.Tests.TestControllers
             Assert.Contains(data, g => g.Family == "Frutal");
             Assert.Contains(data, g => g.Family == "Especiado");
         }
+
         [Fact]
         public async Task PostCompatibleNotes_ShouldReturnEmptyList_WhenNoSelectedNotes()
         {
             // Arrange
             var dto = new SelectedNotesDTO
             {
-                ListaDeIdsSeleccionadas = new List<int>(),  
+                ListaDeIdsSeleccionadas = new List<int>(),
                 Sector = "Fondo"
             };
 
@@ -114,7 +120,7 @@ namespace alquimia.Tests.TestControllers
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var data = Assert.IsType<List<NotesGroupedByFamilyDTO>>(okResult.Value);
-            Assert.Empty(data);  
+            Assert.Empty(data);
         }
 
         [Fact]
@@ -158,7 +164,7 @@ namespace alquimia.Tests.TestControllers
             // Arrange
             var dto = new DesignDTO
             {
-                Text = "",  
+                Text = "",
                 Volume = 100,
                 Shape = "Circle",
                 LabelColor = "Red"
