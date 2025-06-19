@@ -19,17 +19,88 @@ namespace alquimia.Services
             _context = context;
         }
 
-        public async Task<List<NotesGroupedByFamilyDTO>> GetHeartNotesGroupedByFamilyAsync()
+        //public async Task<List<NotesGroupedByFamilyDTO>> GetHeartNotesGroupedByFamilyAsync()
+        //{
+        //    return await _context.Notes
+        //        .Include(n => n.OlfactoryPyramid)
+        //        .Include(n => n.OlfactoryFamily)
+        //        .Where(n => n.OlfactoryPyramid.Sector == Heart)
+        //        .GroupBy(n => new { n.OlfactoryFamily.Id, n.OlfactoryFamily.Nombre }) // agrupamos por ambos
+        //        .Select(grupo => new NotesGroupedByFamilyDTO
+        //        {
+        //            Family = grupo.Key.Nombre,
+        //            FamilyId = grupo.Key.Id, // ahora sí podemos acceder al Id
+        //            Notes = grupo.Select(n => new NoteDTO
+        //            {
+        //                Id = n.Id,
+        //                Name = n.Name,
+        //                Family = n.OlfactoryFamily.Nombre,
+        //                Sector = n.OlfactoryPyramid.Sector,
+        //                Description = n.Description,
+        //                Duration = n.OlfactoryPyramid.Duracion,
+        //                Image = n.Image
+        //            }).ToList()
+        //        }).ToListAsync();
+        //}
+
+        //public async Task<List<NotesGroupedByFamilyDTO>> GetTopNotesGroupedByFamilyAsync()
+        //{
+        //    return await _context.Notes
+        //        .Include(n => n.OlfactoryPyramid)
+        //        .Include(n => n.OlfactoryFamily)
+        //        .Where(n => n.OlfactoryPyramid.Sector == Top)
+        //        .GroupBy(n => new { n.OlfactoryFamily.Id, n.OlfactoryFamily.Nombre }) 
+        //        .Select(grupo => new NotesGroupedByFamilyDTO
+        //        {
+        //            Family = grupo.Key.Nombre,
+        //            FamilyId = grupo.Key.Id, 
+        //            Notes = grupo.Select(n => new NoteDTO
+        //            {
+        //                Id = n.Id,
+        //                Name = n.Name,
+        //                Family = n.OlfactoryFamily.Nombre,
+        //                Sector = n.OlfactoryPyramid.Sector,
+        //                Description = n.Description,
+        //                Duration = n.OlfactoryPyramid.Duracion,
+        //                Image = n.Image
+        //            }).ToList()
+        //        }).ToListAsync();
+        //}
+
+        //public async Task<List<NotesGroupedByFamilyDTO>> GetBaseNotesGroupedByFamilyAsync()
+        //{
+        //    return await _context.Notes
+        //        .Include(n => n.OlfactoryPyramid)
+        //        .Include(n => n.OlfactoryFamily)
+        //        .Where(n => n.OlfactoryPyramid.Sector == Base)
+        //        .GroupBy(n => new { n.OlfactoryFamily.Id, n.OlfactoryFamily.Nombre }) 
+        //        .Select(grupo => new NotesGroupedByFamilyDTO
+        //        {
+        //            Family = grupo.Key.Nombre,
+        //            FamilyId = grupo.Key.Id,
+        //            Notes = grupo.Select(n => new NoteDTO
+        //            {
+        //                Id = n.Id,
+        //                Name = n.Name,
+        //                Family = n.OlfactoryFamily.Nombre,
+        //                Sector = n.OlfactoryPyramid.Sector,
+        //                Description = n.Description,
+        //                Duration = n.OlfactoryPyramid.Duracion,
+        //                Image = n.Image
+        //            }).ToList()
+        //        }).ToListAsync();
+        //}
+        public Task<List<NotesGroupedByFamilyDTO>> GetNotesGroupedByFamilyAsync(string sectorInSpanish)
         {
-            return await _context.Notes
+            return _context.Notes
                 .Include(n => n.OlfactoryPyramid)
                 .Include(n => n.OlfactoryFamily)
-                .Where(n => n.OlfactoryPyramid.Sector == Heart)
-                .GroupBy(n => new { n.OlfactoryFamily.Id, n.OlfactoryFamily.Nombre }) // agrupamos por ambos
+                .Where(n => n.OlfactoryPyramid.Sector == sectorInSpanish)
+                .GroupBy(n => new { n.OlfactoryFamily.Id, n.OlfactoryFamily.Nombre })
                 .Select(grupo => new NotesGroupedByFamilyDTO
                 {
                     Family = grupo.Key.Nombre,
-                    FamilyId = grupo.Key.Id, // ahora sí podemos acceder al Id
+                    FamilyId = grupo.Key.Id,
                     Notes = grupo.Select(n => new NoteDTO
                     {
                         Id = n.Id,
@@ -42,55 +113,6 @@ namespace alquimia.Services
                     }).ToList()
                 }).ToListAsync();
         }
-
-        public async Task<List<NotesGroupedByFamilyDTO>> GetTopNotesGroupedByFamilyAsync()
-        {
-            return await _context.Notes
-                .Include(n => n.OlfactoryPyramid)
-                .Include(n => n.OlfactoryFamily)
-                .Where(n => n.OlfactoryPyramid.Sector == Top)
-                .GroupBy(n => new { n.OlfactoryFamily.Id, n.OlfactoryFamily.Nombre }) // agrupamos por ambos
-                .Select(grupo => new NotesGroupedByFamilyDTO
-                {
-                    Family = grupo.Key.Nombre,
-                    FamilyId = grupo.Key.Id, // ahora sí podemos acceder al Id
-                    Notes = grupo.Select(n => new NoteDTO
-                    {
-                        Id = n.Id,
-                        Name = n.Name,
-                        Family = n.OlfactoryFamily.Nombre,
-                        Sector = n.OlfactoryPyramid.Sector,
-                        Description = n.Description,
-                        Duration = n.OlfactoryPyramid.Duracion,
-                        Image = n.Image
-                    }).ToList()
-                }).ToListAsync();
-        }
-
-        public async Task<List<NotesGroupedByFamilyDTO>> GetBaseNotesGroupedByFamilyAsync()
-        {
-            return await _context.Notes
-                .Include(n => n.OlfactoryPyramid)
-                .Include(n => n.OlfactoryFamily)
-                .Where(n => n.OlfactoryPyramid.Sector == Base)
-                .GroupBy(n => new { n.OlfactoryFamily.Id, n.OlfactoryFamily.Nombre }) // agrupamos por ambos
-                .Select(grupo => new NotesGroupedByFamilyDTO
-                {
-                    Family = grupo.Key.Nombre,
-                    FamilyId = grupo.Key.Id, // ahora sí podemos acceder al Id
-                    Notes = grupo.Select(n => new NoteDTO
-                    {
-                        Id = n.Id,
-                        Name = n.Name,
-                        Family = n.OlfactoryFamily.Nombre,
-                        Sector = n.OlfactoryPyramid.Sector,
-                        Description = n.Description,
-                        Duration = n.OlfactoryPyramid.Duracion,
-                        Image = n.Image
-                    }).ToList()
-                }).ToListAsync();
-        }
-
 
         public async Task<List<NotesGroupedByFamilyDTO>> GetCompatibleNotesAsync(List<int> seleccionadasIds, string sector)
         {
