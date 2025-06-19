@@ -1,42 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mail;
+﻿using alquimia.Services.Interfaces;
+using alquimia.Services.Models;
+using Microsoft.Extensions.Options;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using alquimia.Services.Interfaces;
-using Microsoft.Extensions.Configuration;
+using System.Net.Mail;
 
 namespace alquimia.Services
 {
     public class EmailService : IEmailService
     {
-        private readonly IConfiguration _config;
+        //private readonly IConfiguration _config;
+        private readonly EmailSettings _settings;
 
-        public EmailService(IConfiguration config)
+        //public EmailService(IConfiguration config)
+        //{
+        //    _config = config;
+        //}
+        public EmailService(IOptions<EmailSettings> options)
         {
-            _config = config;
+            _settings = options.Value;
         }
 
-        public async Task SendEmailAsync(string destinatario, string asunto, string mensajeHtml)
+        public async Task SendEmailAsync(string recipient, string _subject, string mensajeHtml)
         {
-            var smtpClient = new SmtpClient(_config["Email:SmtpHost"])
+            using var smtpClient = new SmtpClient(_settings.SmtpHost, _settings.SmtpPort)
             {
-                Port = int.Parse(_config["Email:SmtpPort"]),
-                Credentials = new NetworkCredential(_config["Email:User"], _config["Email:Password"]),
+                //Port = int.Parse(_config["Email:SmtpPort"]),
+                Credentials = new NetworkCredential(_settings.User, _settings.Password),
                 EnableSsl = true,
             };
 
             var mailMessage = new MailMessage
             {
-                From = new MailAddress(_config["Email:From"], "Alquimia"),
-                Subject = asunto,
+                From = new MailAddress(_settings.From, "Alquimia"),
+                Subject = _subject,
                 Body = mensajeHtml,
                 IsBodyHtml = true,
             };
-            mailMessage.To.Add(destinatario);
-
+            mailMessage.To.Add(recipient);
             await smtpClient.SendMailAsync(mailMessage);
         }
     }
