@@ -1,14 +1,12 @@
-﻿using alquimia.Data.Entities;
-using alquimia.Services;
-using alquimia.Services.Interfaces;
+﻿using alquimia.Services.Interfaces;
 using alquimia.Services.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using System.Security.Claims;
 //using Humanizer;
 using User = alquimia.Data.Entities.User;
-
 
 namespace alquimia.Api.Controllers
 {
@@ -21,15 +19,19 @@ namespace alquimia.Api.Controllers
         private readonly ILogger<AccountController> _logger;
         private readonly IJwtService _jwtService;
         private readonly IEmailService _emailService;
+        private readonly IConfiguration _config;
+        private readonly IEmailTemplateService _emailTemplate;
 
         public AccountController(UserManager<User> userManager, SignInManager<User> signInManager,
-            ILogger<AccountController> logger, IJwtService jwtService, IEmailService emailService)
+            ILogger<AccountController> logger, IJwtService jwtService, IEmailService emailService, IConfiguration config, IEmailTemplateService emailTemplate)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _jwtService = jwtService;
             _emailService = emailService;
+            _config = config;
+            _emailTemplate = emailTemplate;
         }
 
         [HttpPost("register")]
@@ -90,7 +92,6 @@ namespace alquimia.Api.Controllers
             if (string.IsNullOrWhiteSpace(dto.Email) || string.IsNullOrWhiteSpace(dto.Password))
                 return BadRequest(new { mensaje = "Email y contraseña son obligatorios." });
 
-
             var usuario = await _userManager.FindByEmailAsync(dto.Email);
 
             if (usuario == null)
@@ -98,8 +99,6 @@ namespace alquimia.Api.Controllers
                 _logger.LogWarning("Intento de login con email no registrado: {Email}", dto.Email);
                 return Unauthorized(new { mensaje = "Usuario no encontrado." });
             }
-
-
 
             if (string.IsNullOrWhiteSpace(usuario.UserName) || usuario.Id == 0)
                 return StatusCode(500, new { mensaje = "El usuario tiene datos incompletos (UserName o Id)." });
@@ -221,15 +220,7 @@ namespace alquimia.Api.Controllers
 
             await _signInManager.SignInAsync(usuarioPersistido, isPersistent: false);
             _logger.LogInformation("Proveedor registrado exitosamente como Creador: {Email}", dto.Email);
-            var mensajeBienvenida = $@"
-                <h1>¡Bienvenido a Alquimia, {dto.Name}!</h1>
-                <p>Gracias por registrarte como proveedor.</p>
-                <p>Tu cuenta ha sido creada exitosamente, pero antes de poder cargar tus productos, debe ser aprobada por nuestro equipo.</p>
-                <p>Te avisaremos por correo una vez que tu cuenta esté habilitada.</p>
-                <br/>
-                <p>Gracias por tu paciencia.</p>
-                <p><strong>Equipo de Alquimia</strong></p>";
-
+            var mensajeBienvenida = _emailTemplate.GetWelcomeEmail(dto.Name);
             await _emailService.SendEmailAsync(dto.Email, "Bienvenido a Alquimia - Cuenta en revisión", mensajeBienvenida);
             return Ok(new { mensaje = "Proveedor registrado correctamente como creador en espera de aprobación.", token });
         }
@@ -245,7 +236,56 @@ namespace alquimia.Api.Controllers
             });
         }
 
+        [Authorize]
+        [HttpGet("perfil")]
+        public async Task<IActionResult> ObtenerPerfil()
+        {
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            var user = await _userManager.FindByEmailAsync(userEmail);
+            var roles = await _userManager.GetRolesAsync(user);
+            return Ok(new
+            {
+                nombre = user.Name,
+                email = user.Email,
+                rol = roles.FirstOrDefault()
+            });
+        }
 
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDTO model)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                throw new KeyNotFoundException("Usuario no encontrado");
+            }
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var encodedToken = WebUtility.UrlEncode(token);
+
+            var frontendBaseUrl = _config["AppSettings:FrontendBaseUrl"];
+            var callbackUrl = $"{frontendBaseUrl}/reset-password?email={model.Email}&token={encodedToken}";
+
+            var message = _emailTemplate.GetPasswordResetEmail(user.Name, callbackUrl);
+
+            await _emailService.SendEmailAsync(model.Email, "Recuperar contraseña - Alquimia", message);
+
+            return Ok("Se envió un enlace para restablecer la contraseña.");
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO model)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+                throw new KeyNotFoundException("Usuario no encontrado");
+
+            var result = await _userManager.ResetPasswordAsync(user, WebUtility.UrlDecode(model.Token), model.NewPassword);
+
+            if (!result.Succeeded)
+                throw new ArgumentException("Ocurrió un error:" + result.Errors.Select(e => e.Description));
+
+            return Ok("Contraseña restablecida correctamente.");
+        }
         private string GenerateUserNameSeguro(string email)
         {
             if (string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
@@ -260,22 +300,6 @@ namespace alquimia.Api.Controllers
             return string.IsNullOrWhiteSpace(nombre)
                 ? Guid.NewGuid().ToString("N").Substring(0, 8)
                 : nombre;
-        }
-
-
-        [Authorize]
-        [HttpGet("perfil")]
-        public async Task<IActionResult> ObtenerPerfil()
-        {
-            var userEmail = User.FindFirstValue(ClaimTypes.Email);
-            var user = await _userManager.FindByEmailAsync(userEmail);
-            var roles = await _userManager.GetRolesAsync(user);
-            return Ok(new
-            {
-                nombre = user.Name,
-                email = user.Email,
-                rol = roles.FirstOrDefault()
-            });
         }
 
 

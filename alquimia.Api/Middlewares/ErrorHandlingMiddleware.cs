@@ -19,7 +19,7 @@ namespace alquimia.Api.Middlewares
         {
             try
             {
-                await _next(context); // Continua con la siguiente parte del pipeline
+                await _next(context);
             }
             catch (Exception ex)
             {
@@ -36,36 +36,40 @@ namespace alquimia.Api.Middlewares
             switch (exception)
             {
                 case ArgumentNullException:
-                    status = (int)HttpStatusCode.BadRequest; // 400
-                    error = "Faltan datos requeridos en la solicitud.";
-                    break;
-
                 case ArgumentException:
                     status = (int)HttpStatusCode.BadRequest; // 400
-                    error = "Parámetros inválidos en la solicitud.";
+                    error = string.IsNullOrWhiteSpace(exception.Message)
+                        ? "Solicitud inválida. Los parámetros son incorrectos."
+                        : exception.Message;
                     break;
 
                 case UnauthorizedAccessException:
-                    status = (int)HttpStatusCode.Unauthorized; // 401
-                    error = "Acceso no autorizado.";
+                    status = (int)HttpStatusCode.Unauthorized; //401
+                    error = string.IsNullOrWhiteSpace(exception.Message)
+                        ? "Acceso no autorizado."
+                        : exception.Message;
                     break;
 
                 case KeyNotFoundException:
                 case NullReferenceException:
-                    status = (int)HttpStatusCode.NotFound; // 404
-                    error = "El recurso solicitado no fue encontrado.";
+                    status = (int)HttpStatusCode.NotFound; //404
+                    error = string.IsNullOrWhiteSpace(exception.Message)
+                        ? "El recurso solicitado no fue encontrado."
+                        : exception.Message;
                     break;
 
                 default:
-                    status = (int)HttpStatusCode.InternalServerError; // 500
-                    error = "Error interno del servidor.";
+                    status = (int)HttpStatusCode.InternalServerError; //500
+                    error = "Ocurrió un error inesperado. Intente más tarde.";
                     break;
             }
 
             var response = new ErrorResponseDTO
             {
                 Status = status,
-                Error = error
+                Error = error,
+                Timestamp = DateTime.UtcNow,
+                TraceId = context.TraceIdentifier
             };
 
             var json = JsonSerializer.Serialize(response);

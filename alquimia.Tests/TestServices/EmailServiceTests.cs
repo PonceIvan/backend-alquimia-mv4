@@ -1,28 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
-using alquimia.Services;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+﻿using alquimia.Services;
+using alquimia.Services.Models;
+using Microsoft.Extensions.Options;
 using Moq;
-using Xunit;
 
 namespace alquimia.Tests.TestServices
 {
     public class EmailServiceTests
     {
-        private readonly Mock<IConfiguration> _configMock;
-        private readonly Mock<SmtpClient> _smtpClientMock;
+        private readonly Mock<IOptions<EmailSettings>> _optionsMock;
         private readonly EmailService _emailService;
 
         public EmailServiceTests()
         {
-            _configMock = new Mock<IConfiguration>();
-            _smtpClientMock = new Mock<SmtpClient>();
-            _emailService = new EmailService(_configMock.Object);
+            var emailSettings = new EmailSettings
+            {
+                SmtpHost = "smtp.example.com",
+                SmtpPort = 587,
+                User = "no-reply@alquimia.com",
+                Password = "password123",
+                From = "no-reply@alquimia.com"
+            };
+
+            _optionsMock = new Mock<IOptions<EmailSettings>>();
+            _optionsMock.Setup(opt => opt.Value).Returns(emailSettings);
+
+            _emailService = new EmailService(_optionsMock.Object);
         }
 
         //[Fact]
@@ -154,14 +156,14 @@ namespace alquimia.Tests.TestServices
         //[Fact]
         //public async Task SendEmailAsync_ShouldThrowException_WhenConfigurationIsMissing()
         //{
-            
+
         //   var destinatario = "test@example.com";
         //    var asunto = "Test Subject";
         //    var mensajeHtml = "<p>This is a test email</p>";
 
         //    _configMock.SetupGet(c => c["Email:SmtpHost"]).Returns<string>(null); // Missing configuration
 
-            
+
         //    var exception = await Assert.ThrowsAsync<ArgumentNullException>(() =>
         //        _emailService.SendEmailAsync(destinatario, asunto, mensajeHtml));
 

@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using alquimia.Api.Controllers;
+﻿using alquimia.Api.Controllers;
 using alquimia.Data.Entities;
 using alquimia.Services.Interfaces;
 using alquimia.Services.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Security.Claims;
 using Xunit;
 
 namespace alquimia.Tests.TestControllers
@@ -24,6 +20,8 @@ namespace alquimia.Tests.TestControllers
         private readonly Mock<ILogger<AccountController>> _loggerMock;
         private readonly Mock<IJwtService> _jwtServiceMock;
         private readonly Mock<IEmailService> _emailServiceMock;
+        private readonly Mock<IConfiguration> _configMock;
+        private readonly Mock<IEmailTemplateService> _emailTemplateMock;
         private readonly AlquimiaDbContext _context;
         private readonly AccountController _controller;
 
@@ -39,8 +37,10 @@ namespace alquimia.Tests.TestControllers
             _loggerMock = new Mock<ILogger<AccountController>>();
             _jwtServiceMock = new Mock<IJwtService>();
             _emailServiceMock = new Mock<IEmailService>();
+            _configMock = new Mock<IConfiguration>();
+            _emailTemplateMock = new Mock<IEmailTemplateService>();
 
-            _controller = new AccountController(_userManagerMock.Object, _signInManagerMock.Object, _loggerMock.Object, _jwtServiceMock.Object, _emailServiceMock.Object);
+            _controller = new AccountController(_userManagerMock.Object, _signInManagerMock.Object, _loggerMock.Object, _jwtServiceMock.Object, _emailServiceMock.Object, _configMock.Object, _emailTemplateMock.Object);
         }
 
         [Fact]
@@ -55,7 +55,7 @@ namespace alquimia.Tests.TestControllers
             Assert.Contains("ya está registrado", badRequest.Value.ToString());
         }
 
-        
+
         [Fact]
         public async Task Login_ShouldReturnUnauthorized_WhenPasswordIsIncorrect()
         {
@@ -89,7 +89,7 @@ namespace alquimia.Tests.TestControllers
             Assert.Contains("ya está registrado", badRequest.Value.ToString());
         }
 
-        
+
 
         [Fact]
         public async Task RegisterProvider_ShouldSetEsProveedorTrue_OnUserCreation()
