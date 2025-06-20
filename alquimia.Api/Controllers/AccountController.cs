@@ -244,7 +244,7 @@ namespace alquimia.Api.Controllers
             var user = await _userManager.FindByEmailAsync(userEmail);
             var roles = await _userManager.GetRolesAsync(user);
             return Ok(new
-            {
+            {   id = user.Id,
                 nombre = user.Name,
                 email = user.Email,
                 rol = roles.FirstOrDefault()
