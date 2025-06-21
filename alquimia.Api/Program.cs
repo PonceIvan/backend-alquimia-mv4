@@ -3,6 +3,7 @@ using alquimia.Api.Middlewares;
 using alquimia.Api.Seed;
 using alquimia.Data.Entities;
 using alquimia.Services;
+using alquimia.Services.Handler;
 using alquimia.Services.Interfaces;
 using alquimia.Services.Models;
 using Microsoft.AspNetCore.Authentication;
@@ -14,9 +15,6 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-
-//var connectionString = Environment.GetEnvironmentVariable("ALQUIMIA_DB_CONNECTION")
-//                      ?? builder.Configuration.GetConnectionString("DefaultConnection");
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -42,6 +40,13 @@ builder.Services.AddScoped<IDesignLabelService, DesignLabelService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IMercadoPagoService, MercadoPagoService>();
 builder.Services.AddScoped<IEmailTemplateService, EmailTemplateService>();
+builder.Services.AddScoped<IChatbotService, ChatbotService>();
+builder.Services.AddScoped<IChatDynamicNodeHandler, DinamicNotesHandler>();
+builder.Services.AddScoped<IChatDynamicNodeHandler, DinamicTopNotesHandler>();
+builder.Services.AddScoped<IChatDynamicNodeHandler, DinamicHeartNotesHandler>();
+builder.Services.AddScoped<IChatDynamicNodeHandler, DinamicBaseNotesHandler>();
+builder.Services.AddScoped<IChatDynamicNodeHandler, DinamicFamilyHandler>();
+builder.Services.AddScoped<IChatDynamicNodeHandler, DinamicIntensitiesHandler>();
 
 //builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 //{

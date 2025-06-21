@@ -15,6 +15,7 @@ namespace alquimia.Api.Middlewares
             _logger = logger;
         }
 
+
         public async Task Invoke(HttpContext context)
         {
             try
