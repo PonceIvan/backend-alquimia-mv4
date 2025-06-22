@@ -1,9 +1,9 @@
-﻿using alquimia.Services;
+﻿using alquimia.Api.Helpers;
+using alquimia.Services;
 using alquimia.Services.Interfaces;
 using alquimia.Services.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Note = alquimia.Data.Entities.Note;
 
 namespace alquimia.Api.Controllers
 {
@@ -39,25 +39,14 @@ namespace alquimia.Api.Controllers
             return Ok("Ruta activa");
         }
 
-        [HttpGet("base-notes")]
-        public async Task<ActionResult<IEnumerable<Note>>> GetBaseNotes()
+        [HttpGet("{sector}-notes")]
+        public async Task<ActionResult<IEnumerable<NotesGroupedByFamilyDTO>>> GetNotesBySector(string sector)
         {
-            List<NotesGroupedByFamilyDTO> notes = await _notaService.GetBaseNotesGroupedByFamilyAsync();
+            if (!SectorMapper.TryMapToSpanish(sector, out var mappedSector))
+                throw new ArgumentNullException();
+
+            var notes = await _notaService.GetNotesGroupedByFamilyAsync(mappedSector);
             return Ok(notes);
-        }
-
-        [HttpGet("heart-notes")]
-        public async Task<ActionResult<IEnumerable<Note>>> GetHeartNotes()
-        {
-            List<NotesGroupedByFamilyDTO> notas = await _notaService.GetHeartNotesGroupedByFamilyAsync();
-            return Ok(notas);
-        }
-
-        [HttpGet("top-notes")]
-        public async Task<ActionResult<IEnumerable<Note>>> GetTopNotes()
-        {
-            List<NotesGroupedByFamilyDTO> notas = await _notaService.GetTopNotesGroupedByFamilyAsync();
-            return Ok(notas);
         }
 
         [HttpPost("compatibilities")]

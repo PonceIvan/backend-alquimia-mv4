@@ -527,7 +527,17 @@ namespace alquimia.Services
 
             }).ToList();
         }
+        public async Task<ProductVariant> GetVariantEntityAsync(int variantId)
+        {
+            var variant = await _context.ProductVariants
+                .Include(v => v.Product)
+                .FirstOrDefaultAsync(v => v.Id == variantId);
 
+            if (variant == null)
+                throw new KeyNotFoundException("Variante no encontrada");
+
+            return variant;
+        }
         public async Task<List<ProductDTO>> GetAllBottlesAsync()
         {
             var productos = await _context.Products

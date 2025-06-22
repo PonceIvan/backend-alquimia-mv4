@@ -7,7 +7,7 @@
         public GETFormulaNoteDTO NotasCorazonIds { get; set; }
         public GETFormulaNoteDTO NotasFondoIds { get; set; }
         public IntensityDTO Intensity { get; set; }
-        public int IdCreador { get; set; }
+        public int? CreatorId { get; set; }
         public double ConcentracionAlcohol { get; set; }
         public double ConcentracionAgua { get; set; }
         public double ConcentracionEsencia { get; set; }

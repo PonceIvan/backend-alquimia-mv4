@@ -39,53 +39,16 @@ namespace alquimia.Services
 
             try
             {
-                var top = new FormulaNote
-                {
-                    NotaId1 = dto.TopNotes.Note1.Id,
-                    NotaId2 = dto.TopNotes.Note2?.Id,
-                    NotaId3 = dto.TopNotes.Note3?.Id,
-                    NotaId4 = dto.TopNotes.Note4?.Id
-                };
-                _context.FormulaNotes.Add(top);
+                var top = FormulaNoteHelper.CreateFormulaNote(dto.TopNotes);
+                var heart = FormulaNoteHelper.CreateFormulaNote(dto.HeartNotes);
+                var _base = FormulaNoteHelper.CreateFormulaNote(dto.BaseNotes);
+
+                _context.FormulaNotes.AddRange(top, heart, _base);
                 await _context.SaveChangesAsync();
-                Console.WriteLine(top.FormulaNotaId);
 
-                var heart = new FormulaNote
-                {
-                    NotaId1 = dto.HeartNotes.Note1.Id,
-                    NotaId2 = dto.HeartNotes.Note2?.Id,
-                    NotaId3 = dto.HeartNotes.Note3?.Id,
-                    NotaId4 = dto.HeartNotes.Note4?.Id
-                };
-                _context.FormulaNotes.Add(heart);
-                await _context.SaveChangesAsync();
-                Console.WriteLine(heart.FormulaNotaId);
+                var formulaConcentration = new FormulaConcentrationHelper().CalculateConcentrationBasedOnIntensity(dto.IntensityId);
 
-                var _base = new FormulaNote
-                {
-                    NotaId1 = dto.BaseNotes.Note1.Id,
-                    NotaId2 = dto.BaseNotes.Note2?.Id,
-                    NotaId3 = dto.BaseNotes.Note3?.Id,
-                    NotaId4 = dto.BaseNotes.Note4?.Id
-                };
-                _context.FormulaNotes.Add(_base);
-                await _context.SaveChangesAsync();
-                Console.WriteLine(_base.FormulaNotaId);
-
-                var formulaConcentration = new FormulaConcentration().CalculateConcentrationBasedOnIntensity(dto.IntensityId);
-                Console.WriteLine($"Alcohol: {formulaConcentration.Alcohol}, Agua: {formulaConcentration.Water}, Esencia: {formulaConcentration.Essence}");
-
-                var formula = new Formula
-                {
-                    FormulaSalida = top.FormulaNotaId,
-                    FormulaCorazon = heart.FormulaNotaId,
-                    FormulaFondo = _base.FormulaNotaId,
-                    IntensidadId = dto.IntensityId,
-                    ConcentracionAlcohol = formulaConcentration.Alcohol,
-                    ConcentracionAgua = formulaConcentration.Water,
-                    ConcentracionEsencia = formulaConcentration.Essence,
-                    CreadorId = dto.CreatorId
-                };
+                Formula formula = CreateFormulaEntity(dto, top, heart, _base, formulaConcentration);
 
                 _context.Formulas.Add(formula);
                 await _context.SaveChangesAsync();
@@ -95,7 +58,7 @@ namespace alquimia.Services
                     var user = await _context.Users.FindAsync(dto.CreatorId);
                     if (user != null)
                     {
-                        user.IdFormulas = formula.Id;
+                        formula.Creator = user;
                         _context.Users.Update(user);
                         await _context.SaveChangesAsync();
                     }
@@ -110,6 +73,22 @@ namespace alquimia.Services
                 throw;
             }
         }
+
+        private static Formula CreateFormulaEntity(POSTFormulaDTO dto, FormulaNote top, FormulaNote heart, FormulaNote _base, FormulaConcentrationHelper formulaConcentration)
+        {
+            return new Formula
+            {
+                FormulaSalida = top.FormulaNotaId,
+                FormulaCorazon = heart.FormulaNotaId,
+                FormulaFondo = _base.FormulaNotaId,
+                IntensidadId = dto.IntensityId,
+                ConcentracionAlcohol = formulaConcentration.Alcohol,
+                ConcentracionAgua = formulaConcentration.Water,
+                ConcentracionEsencia = formulaConcentration.Essence,
+                CreatorId = dto.CreatorId
+            };
+        }
+
         public async Task<GETFormulaDTO> GetFormulaByIdToDTOAsync(int id)
         {
             Formula? found = await GetFormulaAsync(id);
@@ -124,7 +103,7 @@ namespace alquimia.Services
                     Description = found.Intensidad.Description,
                     Category = found.Intensidad.Category
                 },
-                IdCreador = found.CreadorId,
+                CreatorId = found.CreatorId,
                 ConcentracionAlcohol = found.ConcentracionAlcohol,
                 ConcentracionAgua = found.ConcentracionAgua,
                 ConcentracionEsencia = found.ConcentracionEsencia,

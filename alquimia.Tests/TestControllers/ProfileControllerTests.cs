@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using alquimia.Api.Controllers;
+﻿using alquimia.Api.Controllers;
 using alquimia.Data.Entities;
 using alquimia.Services.Interfaces;
 using alquimia.Services.Models;
@@ -36,7 +31,7 @@ namespace alquimia.Tests.TestControllers
         {
             // Arrange
             var mockProfileService = new Mock<IProfileService>();
-            var userProfile = new UserProfileDto { Name = "Juan"};
+            var userProfile = new UserProfileDto { Name = "Juan" };
             mockProfileService.Setup(service => service.BringMyData()).ReturnsAsync(userProfile);
             var controller = new ProfileController(mockProfileService.Object);
 
@@ -62,7 +57,7 @@ namespace alquimia.Tests.TestControllers
         [Fact]
         public async Task GetMyFormulas_UserHasNoFormulas_ReturnsEmptyList()
         {
-            _mockService.Setup(s => s.BringMyFormulas()).ReturnsAsync(new List<Formula>());
+            _mockService.Setup(s => s.BringMyFormulasAsync()).ReturnsAsync(new List<Formula>());
             var result = await _controller.GetMyFormulas();
             var actionResult = Assert.IsType<OkObjectResult>(result);
             var list = Assert.IsType<List<Formula>>(actionResult.Value);
@@ -73,7 +68,7 @@ namespace alquimia.Tests.TestControllers
         public async Task GetMyFormulas_UserHasFormulas_ReturnsList()
         {
             var formulas = new List<Formula> { new Formula { Id = 1, Title = "Formula 1" } };
-            _mockService.Setup(s => s.BringMyFormulas()).ReturnsAsync(formulas);
+            _mockService.Setup(s => s.BringMyFormulasAsync()).ReturnsAsync(formulas);
             var result = await _controller.GetMyFormulas();
             var actionResult = Assert.IsType<OkObjectResult>(result);
             var list = Assert.IsType<List<Formula>>(actionResult.Value);
@@ -81,7 +76,7 @@ namespace alquimia.Tests.TestControllers
             Assert.Equal("Formula 1", list[0].Title);
         }
 
-        
+
         [Fact]
         public async Task GetMyProducts_UserHasNoProducts_ReturnsEmptyList()
         {
@@ -103,7 +98,7 @@ namespace alquimia.Tests.TestControllers
             Assert.Equal("Product 1", list[0].Name);
         }
 
-        
+
         [Fact]
         public async Task GetMyWishlist_UserHasNoWishlist_ReturnsEmptyList()
         {
@@ -126,7 +121,7 @@ namespace alquimia.Tests.TestControllers
             Assert.Equal("WishProduct", list[0].Name);
         }
 
-        
+
         [Fact]
         public async Task UpdateMyData_UserNotFound_ReturnsNotFound()
         {
@@ -149,8 +144,8 @@ namespace alquimia.Tests.TestControllers
             Assert.Equal("Juan", returnedDto.Name);
             Assert.Equal("juan@mail.com", returnedDto.Email);
         }
-        
-        
+
+
 
     }
 }

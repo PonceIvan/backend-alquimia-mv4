@@ -22,10 +22,12 @@ public partial class Formula
 
     public double ConcentracionEsencia { get; set; }
 
-    public int CreadorId { get; set; }
-
     [StringLength(20)]
     public string? Title { get; set; }
+    public int? CreatorId { get; set; }
+
+    [ForeignKey(nameof(CreatorId))]
+    public virtual User? Creator { get; set; }
 
     [ForeignKey("FormulaCorazon")]
     [InverseProperty("FormulaFormulaCorazonNavigations")]
@@ -42,12 +44,4 @@ public partial class Formula
     [ForeignKey("IntensidadId")]
     [InverseProperty("Formulas")]
     public virtual Intensity Intensidad { get; set; } = null!;
-
-    [InverseProperty("IdFormulasNavigation")]
-    public virtual ICollection<User> Users { get; set; } = new List<User>();
-
-    public override string ToString()
-    {
-        return $"Id: {Id}, ConAlco: {ConcentracionAlcohol}, ConAgua: {ConcentracionAgua}, ConEsen: {ConcentracionEsencia}";
-    }
 }

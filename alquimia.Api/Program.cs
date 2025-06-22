@@ -4,6 +4,7 @@ using alquimia.Api.Seed;
 using alquimia.Data.Entities;
 using alquimia.Services;
 using alquimia.Services.Interfaces;
+using alquimia.Services.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -25,6 +26,9 @@ builder.Services.AddDbContext<AlquimiaDbContext>(options =>
     options.EnableSensitiveDataLogging(); // 👈 para debug
 });
 
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Email"));
+
+builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
@@ -35,7 +39,9 @@ builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddScoped<IOlfactoryFamilyService, OlfactoryFamilyService>();
 builder.Services.AddScoped<IDesignLabelService, DesignLabelService>();
-builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IMercadoPagoService, MercadoPagoService>();
+builder.Services.AddScoped<IEmailTemplateService, EmailTemplateService>();
 
 //builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 //{

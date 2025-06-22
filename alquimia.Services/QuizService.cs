@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace alquimia.Services
 {
-
     public class QuizService : IQuizService
     {
         private readonly AlquimiaDbContext _context;
@@ -66,11 +65,18 @@ namespace alquimia.Services
                 }
             }
 
-            var superFamilyScores = SuperFamilyMapping.Groups.ToDictionary(g => g.Key, g => g.Value.Sum(sf => subFamilyScores.GetValueOrDefault(sf, 0)));
+            var superFamilyScores = SuperFamilyMapping.Groups.ToDictionary(
+                g => g.Key,
+                g => g.Value.Sum(sf => subFamilyScores.GetValueOrDefault(sf, 0)));
+
             var dominantSuperFamily = superFamilyScores.OrderByDescending(s => s.Value).FirstOrDefault().Key;
             var allSubFamilies = SuperFamilyMapping.Groups[dominantSuperFamily];
 
-            var orderedSubFamilies = allSubFamilies.Where(sf => subFamilyScores.ContainsKey(sf)).OrderByDescending(sf => subFamilyScores[sf]).ToList();
+            var orderedSubFamilies = allSubFamilies
+                .Where(sf => subFamilyScores.ContainsKey(sf))
+                .OrderByDescending(sf => subFamilyScores[sf])
+                .ToList();
+
             var topMatchedSubFamilies = orderedSubFamilies.Take(2).ToList();
             var fallbackSubFamilies = orderedSubFamilies.Skip(2).ToList();
 
@@ -84,7 +90,8 @@ namespace alquimia.Services
 
             foreach (var subFamily in topMatchedSubFamilies)
             {
-                var family = await _context.OlfactoryFamilies.Include(f => f.Notes).FirstOrDefaultAsync(f => f.Nombre.ToLower() == subFamily.ToLower());
+                var family = await _context.OlfactoryFamilies.Include(f => f.Notes)
+                    .FirstOrDefaultAsync(f => f.Nombre.ToLower() == subFamily.ToLower());
 
                 if (family != null)
                 {
@@ -94,11 +101,8 @@ namespace alquimia.Services
                         CompatibleNotes = family.Notes.Select(n => n.Name).ToList()
                     });
                 }
-                else
-                {
-                    Console.WriteLine($"[DEBUG] No se encontró la familia '{subFamily}' en la base de datos");
-                }
             }
+
 
             var usedNotes = new HashSet<string>();
             string? top = await GetNoteWithFallback(1, topMatchedSubFamilies, fallbackSubFamilies, usedNotes);
@@ -124,32 +128,53 @@ namespace alquimia.Services
             return result;
         }
 
-        private async Task<string?> GetNoteWithFallback(int pyramidLevel, List<string> topFamilies, List<string> fallbackFamilies, HashSet<string> usedNotes)
+        private async Task<string?> GetNoteWithFallback(
+            int pyramidLevel,
+            List<string> topFamilies,
+            List<string> fallbackFamilies,
+            HashSet<string> usedNotes)
         {
+            var usedNoteEntities = await _context.Notes
+                .Where(n => usedNotes.Contains(n.Name))
+                .ToListAsync();
+
             foreach (var fam in topFamilies.Concat(fallbackFamilies))
             {
-                var family = await _context.OlfactoryFamilies.Include(f => f.Notes).FirstOrDefaultAsync(f => f.Nombre.ToLower() == fam.ToLower());
+                var family = await _context.OlfactoryFamilies
+                    .Include(f => f.Notes)
+                    .FirstOrDefaultAsync(f => f.Nombre.ToLower() == fam.ToLower());
 
-                if (family == null)
+                if (family == null) continue;
+
+                foreach (var candidateNote in family.Notes
+                    .Where(n => n.OlfactoryPyramidId == pyramidLevel && !usedNotes.Contains(n.Name)))
                 {
-                    Console.WriteLine($"[DEBUG] No se encontró la familia '{fam}' para el nivel {pyramidLevel}");
-                    continue;
-                }
+                    bool isCompatible = true;
 
-                var note = family.Notes
-                    .Where(n => n.OlfactoryPyramidId == pyramidLevel && !usedNotes.Contains(n.Name))
-                    .Select(n => n.Name)
-                    .FirstOrDefault();
+                    foreach (var usedNote in usedNoteEntities)
+                    {
+                        var isIncompatible = await _context.IncompatibleNotes.AnyAsync(incomp =>
+                            (incomp.NotaId == usedNote.Id && incomp.NotaIncompatibleId == candidateNote.Id) ||
+                            (incomp.NotaId == candidateNote.Id && incomp.NotaIncompatibleId == usedNote.Id));
 
-                if (note != null)
-                {
-                    usedNotes.Add(note);
-                    return note;
+                        if (isIncompatible)
+                        {
+                            isCompatible = false;
+                            break;
+                        }
+                    }
+
+                    if (isCompatible)
+                    {
+                        usedNotes.Add(candidateNote.Name);
+                        return candidateNote.Name;
+                    }
                 }
             }
 
-            Console.WriteLine($"[DEBUG] No se encontró ninguna nota compatible en el nivel {pyramidLevel}");
             return null;
         }
     }
 }
+
+
