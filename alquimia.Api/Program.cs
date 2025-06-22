@@ -35,6 +35,7 @@ builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddScoped<IOlfactoryFamilyService, OlfactoryFamilyService>();
 builder.Services.AddScoped<IDesignLabelService, DesignLabelService>();
+builder.Services.AddScoped<IEmailTemplateService, EmailTemplateService>(); // ✅ Registro agregado
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddScoped<IMercadoPagoService, MercadoPagoService>();
 
@@ -152,7 +153,9 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
     options.User.RequireUniqueEmail = true;
 });
+
 builder.Services.AddApplicationInsightsTelemetry();
+
 // 🏁 Build y Middleware
 var app = builder.Build();
 
