@@ -14,7 +14,7 @@ using Microsoft.ApplicationInsights.AspNetCore.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 🗄️ Conexión a la base de datos
+//  Conexión a la base de datos
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<AlquimiaDbContext>(options =>
