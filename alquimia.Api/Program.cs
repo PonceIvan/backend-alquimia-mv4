@@ -180,8 +180,8 @@ app.UseSwaggerUI(c =>
 });
 
 app.UseStaticFiles();
-app.UseCors("FrontendPolicy");
 app.UseRouting();
+app.UseCors("FrontendPolicy"); // ✅ MOVIDO AQUÍ
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
