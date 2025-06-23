@@ -88,14 +88,35 @@ namespace alquimia.Services
             return user.Products.ToList();
         }
 
-        public async Task<List<Product>> BringMyWishlist()
+        public async Task<List<ProductDTO>> GetUserWishlistAsync(string userId)
         {
-            var user = await GetCurrentUserAsync();
-            if (user == null)
-                return new List<Product>();
+            var userProducts = await _context.UserProducts
+            .Include(up => up.Producto)
+                .ThenInclude(p => p.ProductVariants)
+            .Where(up => up.UsuarioId.ToString() == userId && up.Producto != null)
+            .Select(up => up.Producto)
+            .ToListAsync();
 
-            return user.UserProducts.Select(up => up.Producto).ToList();
+            return userProducts.Select(p => new ProductDTO
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Description = p.Description,
+                Variants = p.ProductVariants.Select(v => new ProductVariantDTO
+                {
+                    Id = v.Id,
+                    Volume = v.Volume,
+                    Unit = v.Unit,
+                    Price = v.Price,
+                    Stock = v.Stock,
+                    Image = v.Image,
+                    IsHypoallergenic = v.IsHypoallergenic,
+                    IsVegan = v.IsVegan,
+                    IsParabenFree = v.IsParabenFree
+                }).ToList()
+            }).ToList();
         }
+
 
         public async Task<UserProfileDto?> UpdateMyData(UserProfileDto dto)
         {

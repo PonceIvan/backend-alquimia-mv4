@@ -1,4 +1,5 @@
-﻿using alquimia.Services.Interfaces;
+﻿using System.Security.Claims;
+using alquimia.Services.Interfaces;
 using alquimia.Services.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -43,9 +44,14 @@ namespace alquimia.Api.Controllers
         }
 
         [HttpGet("wishlist")]
-        public async Task<IActionResult> GetMyWishlist()
+        public async Task<IActionResult> GetWishlist()
         {
-            var wishlist = await _profileService.BringMyWishlist();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            var wishlist = await _profileService.GetUserWishlistAsync(userId);
             return Ok(wishlist);
         }
 
