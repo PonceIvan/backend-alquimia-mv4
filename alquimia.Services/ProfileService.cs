@@ -32,7 +32,10 @@ namespace alquimia.Services
                 Name = user.Name,
                 Email = user.Email,
                 EsProveedor = user.EsProveedor,
-                //CUIL = user.CUIL,
+                IdEstado = user.IdEstado,
+                CUIL = user.Cuil,
+                cantidadFavoritos = user.UserProducts.Count,
+                cantidadFormulas = user.Formulas.Count,
                 //Ubicacion = user.Ubicacion,
                 //CodigoPostal = user.CodigoPostal
             };
