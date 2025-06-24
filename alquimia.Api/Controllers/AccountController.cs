@@ -263,7 +263,7 @@ namespace alquimia.Api.Controllers
             var encodedToken = WebUtility.UrlEncode(token);
 
             var frontendBaseUrl = _config["AppSettings:FrontendBaseUrl"];
-            var callbackUrl = $"{frontendBaseUrl}/reset-password?email={model.Email}&token={encodedToken}";
+            var callbackUrl = $"{frontendBaseUrl}restablecer-contrasenia?email={model.Email}&token={encodedToken}";
 
             var message = _emailTemplate.GetPasswordResetEmail(user.Name, callbackUrl);
 
