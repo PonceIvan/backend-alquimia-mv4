@@ -83,52 +83,21 @@ namespace alquimia.Services
 
         public Task<ChatNode?> GetNodeByIdAsync(string id)
         {
-            _staticNodes.TryGetValue(id, out var node);
+            if (!_staticNodes.TryGetValue(id, out var node))
+                throw new KeyNotFoundException($"Nodo '{id}' no encontrado");
+
             return Task.FromResult(node);
         }
 
-        public async Task<ChatNode?> GetDynamicNodeAsync(string id)
+        public async Task<ChatNode> GetDynamicNodeAsync(string id)
         {
             var handler = _handlers.FirstOrDefault(h => h.CanHandle(id));
-            return handler != null ? await handler.HandleAsync(id) : null;
+            Console.WriteLine("handler" + handler.CanHandle(id));
+            if (handler == null)
+                throw new KeyNotFoundException($"Nodo dinámico '{id}' no encontrado");
+
+            return await handler.HandleAsync(id);
         }
-
-        //public async Task<ChatNode?> GetDynamicNodeAsync(string id)
-        //{
-        //    if (id == "aprendizaje-notas")
-        //    {
-        //        //var salida = await _noteService.GetNoteNamesBySectorAsync("Salida");
-        //        //var corazon = await _noteService.GetNoteNamesBySectorAsync("Corazón");
-        //        //var fondo = await _noteService.GetNoteNamesBySectorAsync("Fondo");
-
-        //        //var msg = $"🔸 Salida: {string.Join(", ", salida.Take(3))}\n🔸 Corazón: {string.Join(", ", corazon.Take(3))}\n🔸 Fondo: {string.Join(", ", fondo.Take(3))}";
-
-        //    }
-
-        //    if (id == "aprendizaje")
-        //    {
-
-        //        return new ChatNode
-        //        {
-        //            Id = id,
-        //            Message = "¿Qué querés aprender sobre el mundo de los perfumes ?",
-        //            Type = "decision",
-        //            Options = new List<ChatOption>
-        //        {
-        //            new ChatOption { Label = "Conocer sobre las familias olfativas", NextNodeId = "aprendizaje-familias" },
-        //            new ChatOption { Label = "Conocer sobre las notas", NextNodeId = "aprendizaje-notas" },
-        //            new ChatOption { Label = "Volver al inicio", NextNodeId = "inicio" }
-        //        }
-        //        };
-        //    }
-
-        //    if (id == "inicio")
-        //    {
-        //        return GetInicioNode();
-        //    }
-
-        //    return null;
-        //}
 
         private void ValidateChatNodes(List<ChatNode> nodeList)
         {
