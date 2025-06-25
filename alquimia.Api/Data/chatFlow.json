@@ -37,7 +37,7 @@
     "options": [
       {
         "label": "Quiero registrarme como proveedor",
-        "nextNodeId": "proveedor-registrarme-dinamico"
+        "nextNodeId": "proveedor-registrarme"
       },
       {
         "label": "Quiero saber más antes de registrarme como proveedor",
@@ -45,7 +45,7 @@
       },
       {
         "label": "Estoy registrado como proveedor y necesito ayuda",
-        "nextNodeId": "proveedor-ayuda-dinamico"
+        "nextNodeId": "proveedor-ayuda"
       },
       {
         "label": "Volver al menú principal",
@@ -136,6 +136,20 @@
       {
         "label": "Volver atrás",
         "nextNodeId": "proveedor-mas"
+      },
+      {
+        "label": "Volver al menú principal",
+        "nextNodeId": "inicio"
+      }
+    ]
+  },
+  {
+    "id": "proveedor-ayuda-gestion",
+    "message": "Para gestionar tus productos en Alquimia, ingresá a tu panel de proveedor. Desde ahí podés:\n\n- Cargar nuevos productos.\n- Editar los detalles de los existentes.\n- Cambiar imágenes o precios.\n- Publicar o despublicar productos según disponibilidad.\n\nAccedé a tu panel desde el botón \"Mi cuenta\" en la esquina superior derecha, y seleccioná \"Mis productos\".",
+    "options": [
+      {
+        "label": "Volver atrás",
+        "nextNodeId": "proveedor-ayuda"
       },
       {
         "label": "Volver al menú principal",

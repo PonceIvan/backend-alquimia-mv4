@@ -1,6 +1,7 @@
 ﻿using alquimia.Services.Interfaces;
 using alquimia.Services.Models;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -11,10 +12,13 @@ namespace alquimia.Services
         private readonly Dictionary<string, ChatNode> _staticNodes;
         private readonly IEnumerable<IChatDynamicNodeHandler> _handlers;
         private readonly INoteService _noteService;
+        private readonly IConfiguration _config;
 
-        public ChatbotService(IWebHostEnvironment env, IEnumerable<IChatDynamicNodeHandler> handlers)
+        public ChatbotService(IWebHostEnvironment env, IEnumerable<IChatDynamicNodeHandler> handlers, IConfiguration config)
         {
             _handlers = handlers;
+            _config = config;
+
             var path = Path.Combine(env.ContentRootPath, "Data", "chatFlow.json");
             if (File.Exists(path))
             {
@@ -22,8 +26,11 @@ namespace alquimia.Services
                 Console.WriteLine("Ruta del JSON: " + path);
                 Console.WriteLine("Existe el archivo: " + File.Exists(path));
                 var json = File.ReadAllText(path);
-                //var nodeList = JsonSerializer.Deserialize<List<ChatNode>>(json);
-                //_staticNodes = nodeList!.ToDictionary(n => n.Id, n => n);
+                var frontendUrl = _config["AppSettings:FrontendBaseUrl"];
+                json = json.Replace("{{FrontendBaseUrl}}", frontendUrl);
+                Console.WriteLine("Mensaje con URL reemplazada:");
+                Console.WriteLine(json);
+
                 try
                 {
                     var options = new JsonSerializerOptions
