@@ -2,7 +2,7 @@ name: Build and deploy ASP.NET Core app to Azure Web App - Alquimia-deploy-back
 
 on:
   push:
-    branches: [ rama-develop-pre-presentacion ]
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
