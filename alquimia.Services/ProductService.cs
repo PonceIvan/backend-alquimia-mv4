@@ -598,5 +598,35 @@ namespace alquimia.Services
 
             }).ToList();
         }
+        public async Task AddToWishlistAsync(int userId, int productId)
+        {
+            var exists = await _context.UserProducts
+                .AnyAsync(up => up.UsuarioId == userId && up.ProductoId == productId);
+
+            if (!exists)
+            {
+                var userProduct = new UserProduct
+                {
+                    UsuarioId = userId,
+                    ProductoId = productId
+                };
+
+                _context.UserProducts.Add(userProduct);
+                await _context.SaveChangesAsync();
+            }
+        }
+        public async Task RemoveFromWishlistAsync(int userId, int productId)
+        {
+            var userProduct = await _context.UserProducts
+                .FirstOrDefaultAsync(up => up.UsuarioId == userId && up.ProductoId == productId);
+
+            if (userProduct != null)
+            {
+                _context.UserProducts.Remove(userProduct);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+
     }
 }
