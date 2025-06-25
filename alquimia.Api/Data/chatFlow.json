@@ -1,0 +1,34 @@
+[
+  {
+    "id": "inicio",
+    "message": "¡Hola! ¿Con qué te puedo ayudar?",
+    "options": [
+      {
+        "label": "Aprender sobre perfumes y aromas",
+        "nextNodeId": "aprendizaje"
+      },
+      {
+        "label": "Soy proveedor y necesito ayuda",
+        "nextNodeId": "proveedor"
+      }
+    ]
+  },
+  {
+    "id": "aprendizaje",
+    "message": "¿Qué te gustaría aprender sobre el mundo de las fragancias?",
+    "options": [
+      {
+        "label": "Aprender sobre las familias olfativas",
+        "nextNodeId": "aprendizaje-familias-dinamico"
+      },
+      {
+        "label": "Aprender sobre las notas",
+        "nextNodeId": "aprendizaje-notas-dinamico"
+      },
+      {
+        "label": "Aprender sobre las intensidades de los perfumes",
+        "nextNodeId": "aprendizaje-intensidades-dinamico"
+      }
+    ]
+  }
+]
