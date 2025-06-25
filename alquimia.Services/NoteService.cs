@@ -9,10 +9,6 @@ namespace alquimia.Services
     public class NoteService : INoteService
     {
         private readonly AlquimiaDbContext _context;
-        private const string Base = "Fondo";
-        private const string Heart = "Corazón";
-        private const string Top = "Salida";
-        private const int UmbralCompatibilidad = 70;
 
         public NoteService(AlquimiaDbContext context)
         {
@@ -107,7 +103,7 @@ namespace alquimia.Services
             return resultado;
         }
 
-        public async Task<NoteDTO> GetNoteInfoAsync(int id)
+        public async Task<NoteDTO> GetNoteInfoAsync(int id) // returns a note, its family and olfactory pyramid
         {
             var found = await _context.Notes
                 .Include(n => n.OlfactoryPyramid)
@@ -120,6 +116,15 @@ namespace alquimia.Services
             }
 
             return NoteToDTO(found);
+        }
+        public async Task<List<string>> GetNoteNamesBySectorAsync(string sector)
+        {
+            return await _context.Notes
+                .Where(n => n.OlfactoryPyramid.Sector == sector)
+                .Select(n => n.Name)
+                .Distinct()
+                .Take(10)
+                .ToListAsync();
         }
 
         private NoteDTO NoteToDTO(Note found)

@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Data\chatFlow.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
@@ -30,6 +34,12 @@
   <ItemGroup>
     <ProjectReference Include="..\alquimia.Data\alquimia.Data.csproj" />
     <ProjectReference Include="..\alquimia.Services\alquimia.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Data\chatFlow.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
