@@ -1,28 +1,31 @@
-﻿namespace alquimia.Services.Handler
+﻿using alquimia.Services.Interfaces;
+using alquimia.Services.Models;
+
+namespace alquimia.Services.Handler
 {
-    using global::alquimia.Services.Interfaces;
-    using global::alquimia.Services.Models;
-
-    namespace alquimia.Services.Handler
+    public class DinamicStateProviderHelp : IChatDynamicNodeHandler
     {
-        public class DinamicStateProviderHelp : IChatDynamicNodeHandler
+        public bool CanHandle(string nodeId) => nodeId == "proveedor-ayuda-estado-dinamico";
+
+        public async Task<ChatNode?> HandleAsync(string nodeId)
         {
-            public bool CanHandle(string nodeId) => nodeId == "proveedor-ayuda-estado-dinamico";
+            var msg = "Para conocer el estado de tu cuenta, por favor ingresá tu correo electrónico:";
 
-            public async Task<ChatNode?> HandleAsync(string nodeId)
+            return new ChatNode
             {
-                var msg = "Para conocer el estado de tu cuenta, por favor ingresá tu correo electrónico:";
-
-                return new ChatNode
+                Id = "proveedor-ayuda-estado-dinamico",
+                Message = msg,
+                Type = "input",
+                Options = new List<ChatOption>
                 {
-                    Id = "proveedor-ayuda-estado-dinamico",
-                    Message = msg,
-                    Type = "input",
-                    InputType = "email",
-                    NextNodeId = "proveedor-ayuda-estado-respuesta-dinamico",
-                };
-            }
+                    new ChatOption { Label = "Volver atrás", NextNodeId = "proveedor-ayuda" },
+                    new ChatOption { Label = "Volver al menú", NextNodeId = "inicio" }
+                },
+                InputType = "email",
+                NextNodeId = "proveedor-ayuda-estado-respuesta-dinamico",
+            };
         }
     }
-
 }
+
+

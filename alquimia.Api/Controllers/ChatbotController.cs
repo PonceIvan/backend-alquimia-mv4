@@ -33,6 +33,5 @@ namespace alquimia.Api.Controllers
             var node = await _chatbotService.GetNodeByIdAsync("inicio");
             return Ok(node);
         }
-
     }
 }

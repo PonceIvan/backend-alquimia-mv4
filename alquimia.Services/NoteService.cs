@@ -46,26 +46,20 @@ namespace alquimia.Services
                 .Include(n => n.OlfactoryFamily)
                 .Include(n => n.OlfactoryPyramid)
                 .ToListAsync();
-
             var todasLasNotasDelSector = await _context.Notes
                 .Where(n => n.OlfactoryPyramid.Sector == sector)
                 .Include(n => n.OlfactoryFamily)
                 .Include(n => n.OlfactoryPyramid)
                 .ToListAsync();
-
             var incompatibilidades = await _context.IncompatibleNotes.ToListAsync();
             var compatibilidades = await _context.FamilyCompatibilities.ToListAsync();
-
             var compatiblesConCompatibilidad = new List<(Note Nota, int MinCompatibilidad)>();
-
             foreach (var candidata in todasLasNotasDelSector)
             {
                 if (seleccionadas.Any(n => n.Id == candidata.Id))
                     continue;
-
                 bool esCompatible = true;
                 int minCompatibilidad = int.MaxValue;
-
                 foreach (var seleccionada in seleccionadas)
                 {
                     if (incompatibilidades.Any(i =>
@@ -75,27 +69,19 @@ namespace alquimia.Services
                         esCompatible = false;
                         break;
                     }
-
                     int f1 = Math.Min(seleccionada.OlfactoryFamilyId, candidata.OlfactoryFamilyId);
                     int f2 = Math.Max(seleccionada.OlfactoryFamilyId, candidata.OlfactoryFamilyId);
-
                     var compat = compatibilidades.FirstOrDefault(c =>
                         c.FamiliaMenor == f1 && c.FamiliaMayor == f2);
-
                     if (compat == null || compat.GradoDeCompatibilidad < 70)
                     {
                         esCompatible = false;
                         break;
                     }
-
                     minCompatibilidad = Math.Min(minCompatibilidad, compat.GradoDeCompatibilidad);
                 }
-
-                if (esCompatible)
-                    compatiblesConCompatibilidad.Add((candidata, minCompatibilidad));
+                if (esCompatible) compatiblesConCompatibilidad.Add((candidata, minCompatibilidad));
             }
-
-            // Ordenamos antes de agrupar
             var resultado = compatiblesConCompatibilidad
                 .OrderByDescending(c => c.MinCompatibilidad)
                 .GroupBy(c => c.Nota.OlfactoryFamily.Nombre)
@@ -114,7 +100,6 @@ namespace alquimia.Services
                     }).ToList()
                 })
                 .ToList();
-
             return resultado;
         }
 

@@ -44,11 +44,10 @@ namespace alquimia.Services
                     foreach (var node in nodeList)
                     {
                         if (node.Options == null)
-                            node.Options = new List<ChatOption>(); // evitar null reference
+                            node.Options = new List<ChatOption>();
                     }
                     ValidateChatNodes(nodeList);
 
-                    // Verificamos que no haya IDs nulos o vacíos
                     var invalidIds = nodeList!
                         .Where(n => string.IsNullOrWhiteSpace(n.Id))
                         .Select(n => n.Id ?? "<null>")
@@ -60,7 +59,6 @@ namespace alquimia.Services
                         throw new Exception("IDs inválidos (vacíos o nulos) detectados.");
                     }
 
-                    // Duplicados reales
                     var duplicatedIds = nodeList!
                         .GroupBy(n => n.Id)
                         .Where(g => g.Count() > 1)
@@ -78,7 +76,7 @@ namespace alquimia.Services
                 catch (Exception ex)
                 {
                     Console.WriteLine("❌ Error deserializando chatFlow.json: " + ex.Message);
-                    _staticNodes = new(); // fallback limpio
+                    _staticNodes = new();
                 }
             }
             else
@@ -99,11 +97,10 @@ namespace alquimia.Services
         public async Task<ChatNode> GetDynamicNodeAsync(string id)
         {
             var handler = _handlers.FirstOrDefault(h => h.CanHandle(id));
-            Console.WriteLine("handler" + handler.CanHandle(id));
-            if (handler == null)
-                throw new KeyNotFoundException($"Nodo dinámico '{id}' no encontrado");
+            if (handler != null)
+                return await handler.HandleAsync(id);
 
-            return await handler.HandleAsync(id);
+            throw new KeyNotFoundException($"Nodo dinámico '{id}' no encontrado");
         }
 
         private void ValidateChatNodes(List<ChatNode> nodeList)

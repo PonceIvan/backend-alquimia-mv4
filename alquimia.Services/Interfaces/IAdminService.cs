@@ -8,6 +8,6 @@ namespace alquimia.Services.Interfaces
         Task<ProviderDTO?> GetPendingOrApprovedProviderByIdAsync(int id);
         Task<bool> ApprovePendingProviderAsync(int id);
         Task<bool> DeactivateProviderAsync(int id);
-        //Task<ProviderDTO?> GetPendingOrApprovedProviderByEmailAsync(string email);
+        Task<ProviderDTO?> GetPendingOrApprovedProviderByEmailAsync(string email);
     }
 }

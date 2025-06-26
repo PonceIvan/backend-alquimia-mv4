@@ -85,7 +85,7 @@
   },
   {
     "id": "proveedor-mas-1",
-    "message": "Alquimia es una plataforma innovadora que permite a los usuarios diseñar perfumes personalizados en base a sus gustos y preferencias olfativas.\n\nComo proveedor, tu marca puede ser parte de este proceso mágico. Tus productos (frascos, esencias y etiquetas) se integran en nuestra tienda creativa.\n\nLlegás a un público nuevo, creativo y en búsqueda de experiencias únicas. Gestionás todo desde un panel propio, simple e intuitivo.\n\nSumarte a Alquimia es una forma de visibilizar tu marca, aumentar ventas y conectar con el futuro de la perfumería personalizada.",
+    "message": "Alquimia es una plataforma innovadora que permite a los usuarios diseñar <strong>perfumes personalizados </strong>en base a sus gustos y preferencias olfativas.\nComo proveedor, tu marca puede ser parte de este proceso mágico. Tus productos (frascos, esencias y etiquetas) se integran en nuestra tienda creativa.\nLlegás a un público nuevo, creativo y en búsqueda de experiencias únicas. Gestionás todo desde un panel <strong>propio, simple e intuitivo</strong>.\n\nSumarte a Alquimia es una forma de visibilizar <strong>tu marca</strong>, aumentar <strong>ventas</strong> y conectar con el futuro de la <strong>perfumería personalizada.</strong>",
     "options": [
       {
         "label": "Volver atrás",
@@ -144,8 +144,30 @@
     ]
   },
   {
+    "id": "proveedor-ayuda",
+    "message": "Te agradecemos por unirte a la comunidad de proveedores de Alquimia. Seleccioná algunas de las siguientes opciones para que podamos ayudarte.",
+    "options": [
+      {
+        "label": "Me interesa saber cómo gestionar mis productos.",
+        "nextNodeId": "proveedor-ayuda-gestion"
+      },
+      {
+        "label": "Quiero conocer el estado de mi cuenta.",
+        "nextNodeId": "proveedor-ayuda-estado-dinamico"
+      },
+      {
+        "label": "Volver atrás",
+        "nextNodeId": "proveedor"
+      },
+      {
+        "label": "Volver al menú principal",
+        "nextNodeId": "inicio"
+      }
+    ]
+  },
+  {
     "id": "proveedor-ayuda-gestion",
-    "message": "Para gestionar tus productos en Alquimia, ingresá a tu panel de proveedor. Desde ahí podés:\n\n- Cargar nuevos productos.\n- Editar los detalles de los existentes.\n- Cambiar imágenes o precios.\n- Publicar o despublicar productos según disponibilidad.\n\nAccedé a tu panel desde el botón \"Mi cuenta\" en la esquina superior derecha, y seleccioná \"Mis productos\".",
+    "message": "Para gestionar tus productos en Alquimia, ingresá a tu panel de proveedor. Desde ahí podés:\n\n- Cargar nuevos productos.\n- Editar los detalles de los existentes.\n- Cambiar imágenes o precios.\n- Publicar o despublicar productos según disponibilidad.\n\nAccedé a tu panel desde el botón \"Mi cuenta\" en la esquina superior derecha, y seleccioná \"Mis productos\"",
     "options": [
       {
         "label": "Volver atrás",
@@ -156,5 +178,24 @@
         "nextNodeId": "inicio"
       }
     ]
+  },
+  {
+    "id": "proveedor-registrarme",
+    "message": "Nos alegra que te interese unirte a la comunidad de proveedores de Alquimia. Para hacerlo, <a href='{{FrontendBaseUrl}}/registro-proveedor' target='_blank'>hacé clic acá</a>:",
+    "options": [
+      {
+        "label": "¿Cómo es el proceso de registro y aprobación?",
+        "nextNodeId": "proveedor-mas-4"
+      },
+      {
+        "label": "Volver atrás",
+        "nextNodeId": "proveedor"
+      },
+      {
+        "label": "Volver al menú principal",
+        "nextNodeId": "inicio"
+      }
+    ]
   }
+
 ]
