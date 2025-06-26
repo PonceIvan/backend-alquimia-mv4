@@ -21,5 +21,7 @@ namespace alquimia.Services.Interfaces
         Task<List<ProductDTO>> GetAllAlcoholsAsync();
         Task<List<ProductDTO>> GetAllBottlesAsync();
         Task<ProductVariant> GetVariantEntityAsync(int variantId);
+        Task AddToWishlistAsync(int productId, int userId);
+        Task RemoveFromWishlistAsync(int userId, int productId);
     }
 }

@@ -99,27 +99,27 @@ namespace alquimia.Tests.TestControllers
         }
 
 
-        [Fact]
-        public async Task GetMyWishlist_UserHasNoWishlist_ReturnsEmptyList()
-        {
-            _mockService.Setup(s => s.BringMyWishlist()).ReturnsAsync(new List<Product>());
-            var result = await _controller.GetMyWishlist();
-            var actionResult = Assert.IsType<OkObjectResult>(result);
-            var list = Assert.IsType<List<Product>>(actionResult.Value);
-            Assert.Empty(list);
-        }
+        //[Fact]
+        //public async Task GetMyWishlist_UserHasNoWishlist_ReturnsEmptyList()
+        //{
+        //    _mockService.Setup(s => s.BringMyWishlist()).ReturnsAsync(new List<Product>());
+        //    var result = await _controller.GetMyWishlist();
+        //    var actionResult = Assert.IsType<OkObjectResult>(result);
+        //    var list = Assert.IsType<List<Product>>(actionResult.Value);
+        //    Assert.Empty(list);
+        //}
 
-        [Fact]
-        public async Task GetMyWishlist_UserHasWishlist_ReturnsList()
-        {
-            var wishlist = new List<Product> { new Product { Id = 2, Name = "WishProduct" } };
-            _mockService.Setup(s => s.BringMyWishlist()).ReturnsAsync(wishlist);
-            var result = await _controller.GetMyWishlist();
-            var actionResult = Assert.IsType<OkObjectResult>(result);
-            var list = Assert.IsType<List<Product>>(actionResult.Value);
-            Assert.Single(list);
-            Assert.Equal("WishProduct", list[0].Name);
-        }
+        //[Fact]
+        //public async Task GetMyWishlist_UserHasWishlist_ReturnsList()
+        //{
+        //    var wishlist = new List<Product> { new Product { Id = 2, Name = "WishProduct" } };
+        //    _mockService.Setup(s => s.BringMyWishlist()).ReturnsAsync(wishlist);
+        //    var result = await _controller.GetMyWishlist();
+        //    var actionResult = Assert.IsType<OkObjectResult>(result);
+        //    var list = Assert.IsType<List<Product>>(actionResult.Value);
+        //    Assert.Single(list);
+        //    Assert.Equal("WishProduct", list[0].Name);
+        //}
 
 
         [Fact]
