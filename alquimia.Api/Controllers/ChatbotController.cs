@@ -17,25 +17,21 @@ namespace alquimia.Api.Controllers
         [HttpGet("node/{id}")]
         public async Task<IActionResult> GetNode(string id)
         {
-            // Buscar primero en nodos estáticos
-            var node = await _chatbotService.GetNodeByIdAsync(id);
-            if (node != null) return Ok(node);
-
-            // Luego buscar en nodos dinámicos
-            var dynamicNode = await _chatbotService.GetDynamicNodeAsync(id);
-            if (dynamicNode != null) return Ok(dynamicNode);
-
-            return NotFound("Nodo no encontrado");
+            try
+            {
+                return Ok(await _chatbotService.GetNodeByIdAsync(id));
+            }
+            catch (KeyNotFoundException)
+            {
+                return Ok(await _chatbotService.GetDynamicNodeAsync(id));
+            }
         }
 
         [HttpGet("start")]
         public async Task<IActionResult> Start()
         {
-            // Ahora "inicio" es estático, no dinámico
             var node = await _chatbotService.GetNodeByIdAsync("inicio");
-            if (node != null) return Ok(node);
-
-            return NotFound("Nodo 'inicio' no encontrado");
+            return Ok(node);
         }
     }
 }
