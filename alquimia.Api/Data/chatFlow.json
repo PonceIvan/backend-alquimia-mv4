@@ -28,6 +28,10 @@
       {
         "label": "Aprender sobre las intensidades de los perfumes",
         "nextNodeId": "aprendizaje-intensidades-dinamico"
+      },
+      {
+        "label": "Volver al menú principal",
+        "nextNodeId": "inicio"
       }
     ]
   },
@@ -99,7 +103,7 @@
   },
   {
     "id": "proveedor-mas-2",
-    "message": "Publicar tus productos en Alquimia te ofrece múltiples beneficios: Visibilidad ante una comunidad creativa interesada en fragancias personalizadas.\n Integración directa en el proceso de creación de perfumes por parte de usuarios.\n Un panel de gestión simple donde podés controlar tu catálogo y ventas.\n La posibilidad de integrar tu catálogo con tu tienda de Mercado Libre (si contás con una). \n La posibilidad de expandir tu marca sin necesidad de una tienda propia.\n\nAdemás, formás parte de un ecosistema que apuesta por la innovación, el diseño y la colaboración.",
+    "message": "Publicar tus productos en Alquimia te ofrece múltiples <strong>beneficios:</strong> \n<strong>Visibilidad</strong> ante una comunidad creativa interesada en fragancias personalizadas.\n<strong>Integración directa</strong> en el proceso de creación de perfumes por parte de usuarios.\nUn <strong>panel de gestión</strong> simple donde podés controlar tu catálogo y ventas.\n<strong>Integrar</strong> tu catálogo con tu tienda de Mercado Libre (si contás con una). \n La posibilidad de expandir tu marca <strong>sin necesidad<strong> de una tienda propia.\n\nAdemás, formás parte de un ecosistema que apuesta por la innovación, el diseño y la colaboración.",
     "options": [
       {
         "label": "Volver atrás",
@@ -113,7 +117,7 @@
   },
   {
     "id": "proveedor-mas-3",
-    "message": "Para empezar a vender en Alquimia y gestionar tu tienda de forma completa, vas a necesitar activar una suscripción anual.\n\n¡No te preocupes! Es un único pago por todo el año, y podés abonarlo de forma rápida y segura con Mercado Pago.\n\nEsta suscripción te da acceso total a tu panel, visibilidad en la plataforma y la posibilidad de llegar a cientos de usuarios que buscan productos únicos como los tuyos.",
+    "message": "Para empezar a vender en Alquimia y gestionar tu tienda de forma completa, vas a necesitar activar una <strong>suscripción anual</strong>.\n\n¡No te preocupes! Es un <strong>único pago</strong> por todo el año, y podés abonarlo de forma rápida y segura con Mercado Pago.\n\nEsta suscripción te da <strong>acceso total</strong> a tu panel, visibilidad en la plataforma y la posibilidad de llegar a cientos de usuarios que buscan productos únicos como los tuyos.",
     "options": [
       {
         "label": "Volver atrás",
@@ -127,7 +131,7 @@
   },
   {
     "id": "proveedor-mas-4",
-    "message": "El proceso de registro como proveedor en Alquimia es simple y guiado paso a paso.\n\n1. Completás un formulario con tus datos y rubro y por último abonas la suscripción. \n2. Validamos la información para garantizar la calidad de la plataforma.\n3. Si todo está correcto, se aprueba tu cuenta y accedés a tu panel de proveedor.\n\nDesde ahí, podés subir productos, editar tu tienda y comenzar a vender.\n\nEl equipo de Alquimia está disponible para ayudarte en cualquier momento del proceso.",
+    "message": "El proceso de registro como proveedor en Alquimia es simple y guiado paso a paso. \n<strong>1. Completás</strong> un formulario con tus datos y rubro y por último abonas la suscripción. \n<strong>2. Validamos</strong> la información para garantizar la calidad de la plataforma.\n3. Si todo está correcto, se <strong>aprueba</strong> tu cuenta y accedés a <strong>tu panel</strong> de proveedor.\n\nDesde ahí, podés subir productos, editar tu tienda y comenzar a vender.\n\nEl equipo de Alquimia está disponible para ayudarte en cualquier momento del proceso.",
     "options": [
       {
         "label": "Quiero saber más sobre el proceso de suscripción",
@@ -167,7 +171,7 @@
   },
   {
     "id": "proveedor-ayuda-gestion",
-    "message": "Para gestionar tus productos en Alquimia, ingresá a tu panel de proveedor. Desde ahí podés:\n\n- Cargar nuevos productos.\n- Editar los detalles de los existentes.\n- Cambiar imágenes o precios.\n- Publicar o despublicar productos según disponibilidad.\n\nAccedé a tu panel desde el botón \"Mi cuenta\" en la esquina superior derecha, y seleccioná \"Mis productos\"",
+    "message": "Para gestionar tus productos en Alquimia, ingresá a tu panel de proveedor. Desde ahí podés:\n<strong>- Cargar</strong> nuevos productos.\n<strong>- Editar</strong> los detalles de los existentes.\n<strong>- Cambiar</strong> imágenes o precios.\n<strong>- Publicar o despublicar</strong> productos según disponibilidad.\n<strong>Accedé a tu panel</strong> desde el botón \"Mi cuenta\" en la esquina superior derecha, y seleccioná \"Mis productos\"",
     "options": [
       {
         "label": "Volver atrás",

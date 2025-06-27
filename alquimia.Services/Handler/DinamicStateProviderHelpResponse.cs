@@ -34,7 +34,7 @@ namespace alquimia.Services.Handler
             }
 
             var provider = await _adminService.GetPendingOrApprovedProviderByEmailAsync(email);
-            var textState = provider.EsAprobado ? "aprobado" : "pendiente de aprobación";
+            var textState = provider.EsAprobado ? "<strong>aprobado</strong>" : "<strong>pendiente de aprobación</strong>";
 
             return new ChatNode
             {

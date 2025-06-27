@@ -18,8 +18,8 @@ namespace alquimia.Services.Handler
         {
             var top = await _noteService.GetNoteNamesBySectorAsync("Salida");
 
-            var msg = $" Las notas de salida son las primeras que se perciben al aplicar un perfume. " +
-                $"Son ligeras y volátiles, como {string.Join(", ", top.Take(3))}";
+            var msg = $" Las <strong>notas de salida</strong> son las primeras que se perciben al aplicar un perfume. " +
+                $"Son <strong>ligeras</strong> y <strong>volátiles</strong>, como {string.Join(", ", top.Take(3))}";
 
             return new ChatNode
             {
