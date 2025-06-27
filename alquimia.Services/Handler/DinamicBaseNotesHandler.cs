@@ -18,7 +18,7 @@ namespace alquimia.Services.Handler
         {
             var _base = await _noteService.GetNoteNamesBySectorAsync("Fondo");
 
-            var msg = $"Las notas de fondo son las últimas notas que se perciben en un perfume y son las más duraderas, permaneciendo en la piel durante varias horas. Algunas de ellas son: {string.Join(", ", _base.Take(3))}";
+            var msg = $"Las <strong>notas de fondo</strong> son las últimas notas que se perciben en un perfume y son las más <strong>duraderas</strong>, permaneciendo en la piel durante varias horas. \nAlgunas de ellas son: {string.Join(", ", _base.Take(3))}";
 
             return new ChatNode
             {
