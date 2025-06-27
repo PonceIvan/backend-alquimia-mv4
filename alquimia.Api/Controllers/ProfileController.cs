@@ -8,7 +8,7 @@ namespace alquimia.Api.Controllers
 {
     [Route("profile")]
     [ApiController]
-    [Authorize(Roles = "Creador")]
+
     public class ProfileController : Controller
     {
         private readonly IProfileService _profileService;
@@ -56,7 +56,7 @@ namespace alquimia.Api.Controllers
         }
 
         [HttpPut("data")]
-        public async Task<IActionResult> UpdateMyData([FromBody] UserProfileDto updatedData)
+        public async Task<IActionResult> UpdateMyData([FromBody] UserProfileUpdateDto updatedData)
         {
             var user = await _profileService.UpdateMyData(updatedData);
             if (user == null)
