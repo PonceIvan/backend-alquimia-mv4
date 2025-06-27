@@ -23,7 +23,7 @@ namespace alquimia.Services.Handler
 
             var familyDescriptions = string.Join(" ", randomFamilies.Select(f => $"- {f.Name}: {f.Description}"));
 
-            var msg = "Las familias olfativas son categorías que agrupan las fragancias según sus características aromáticas predominantes. Es decir, que categorizan a las notas en grupos. Algunas de ellas son: " + familyDescriptions;
+            var msg = "Las <strong>familias olfativas</strong> son categorías que agrupan las fragancias según sus <strong>características aromáticas</strong> predominantes. Es decir, que categorizan a las notas en grupos. Algunas de ellas son: " + familyDescriptions;
 
             return new ChatNode
             {

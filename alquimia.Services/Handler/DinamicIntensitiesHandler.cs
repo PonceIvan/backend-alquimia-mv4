@@ -19,7 +19,7 @@ namespace alquimia.Services.Handler
 
             var intensitiesDescription = string.Join(" ", intensities.Select(f => $"- {f.Name}: {f.Description} - {f.Category}"));
 
-            var msg = "La intensidad de un perfume se refiere a qué tan fuerte y duradero es su aroma. Esto depende de la concentración de esencias aromáticas: a mayor concentración, más intensidad y duración. Algunos ejemplos son: " +
+            var msg = "La <strong>intensidad</strong> de un perfume se refiere a qué tan fuerte y duradero es su aroma. Esto depende de la concentración de esencias aromáticas: a <strong>mayor concentración</strong>, <strong>más intensidad</strong> y <strong>duración</strong>. \nAlgunos ejemplos son: " +
            string.Join("; ", intensities.Select(f => $"{f.Name}: {f.Description} ({f.Category})")) + ".";
 
             return new ChatNode

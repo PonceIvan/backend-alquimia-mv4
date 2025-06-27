@@ -9,7 +9,7 @@ namespace alquimia.Services.Handler
 
         public async Task<ChatNode?> HandleAsync(string nodeId)
         {
-            var msg = "Para conocer el estado de tu cuenta, por favor ingresá tu correo electrónico:";
+            var msg = "Para conocer el estado de tu cuenta, por favor <strong>ingresá</strong> tu correo electrónico:";
 
             return new ChatNode
             {
