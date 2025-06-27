@@ -70,7 +70,7 @@ namespace alquimia.Tests.TestControllers
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            var profile = Assert.IsType<UserProfileDto>(okResult.Value);
+            var profile = Assert.IsType<UserProfileUpdateDto>(okResult.Value);
             Assert.Equal("User One", profile.Name);
         }
 

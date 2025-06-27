@@ -7,7 +7,7 @@ using alquimia.Data.Entities;
 
 namespace alquimia.Services.Models
 {
-    public class UserProfileDto
+    public class UserProfileUpdateDto
     {
         public string Name { get; set; } = null!;
         public string Email { get; set; } = null!;
