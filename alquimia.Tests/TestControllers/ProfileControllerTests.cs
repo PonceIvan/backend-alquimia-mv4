@@ -21,7 +21,7 @@ namespace alquimia.Tests.TestControllers
         [Fact]
         public async Task GetMyData_UserNotFound_ReturnsNotFound()
         {
-            _mockService.Setup(s => s.BringMyData()).ReturnsAsync((UserProfileDto)null);
+            _mockService.Setup(s => s.BringMyData()).ReturnsAsync((UserProfileUpdateDto)null);
             var result = await _controller.GetMyData();
             var actionResult = Assert.IsType<NotFoundObjectResult>(result);
             Assert.Equal("Usuario no encontrado", actionResult.Value);
@@ -31,7 +31,7 @@ namespace alquimia.Tests.TestControllers
         {
             // Arrange
             var mockProfileService = new Mock<IProfileService>();
-            var userProfile = new UserProfileDto { Name = "Juan" };
+            var userProfile = new UserProfileUpdateDto { Name = "Juan" };
             mockProfileService.Setup(service => service.BringMyData()).ReturnsAsync(userProfile);
             var controller = new ProfileController(mockProfileService.Object);
 
@@ -40,17 +40,17 @@ namespace alquimia.Tests.TestControllers
 
             // Assert
             var actionResult = Assert.IsType<OkObjectResult>(result);
-            var returnValue = Assert.IsType<UserProfileDto>(actionResult.Value);
+            var returnValue = Assert.IsType<UserProfileUpdateDto>(actionResult.Value);
             Assert.Equal("Juan", returnValue.Name);
         }
         [Fact]
         public async Task GetMyData_UserFound_ReturnsOkWithUserData()
         {
-            var user = new UserProfileDto { Name = "Juan", Email = "juan@mail.com" };
+            var user = new UserProfileUpdateDto { Name = "Juan", Email = "juan@mail.com" };
             _mockService.Setup(s => s.BringMyData()).ReturnsAsync(user);
             var result = await _controller.GetMyData();
             var actionResult = Assert.IsType<OkObjectResult>(result);
-            var returnedUser = Assert.IsType<UserProfileDto>(actionResult.Value);
+            var returnedUser = Assert.IsType<UserProfileUpdateDto>(actionResult.Value);
             Assert.Equal("Juan", returnedUser.Name);
             Assert.Equal("juan@mail.com", returnedUser.Email);
         }
@@ -125,8 +125,8 @@ namespace alquimia.Tests.TestControllers
         [Fact]
         public async Task UpdateMyData_UserNotFound_ReturnsNotFound()
         {
-            var dto = new UserProfileDto { Name = "Juan" };
-            _mockService.Setup(s => s.UpdateMyData(dto)).ReturnsAsync((UserProfileDto)null);
+            var dto = new UserProfileUpdateDto { Name = "Juan" };
+            _mockService.Setup(s => s.UpdateMyData(dto)).ReturnsAsync((UserProfileUpdateDto)null);
             var result = await _controller.UpdateMyData(dto);
             var actionResult = Assert.IsType<NotFoundObjectResult>(result);
             Assert.Equal("Usuario no encontrado", actionResult.Value);
@@ -135,12 +135,12 @@ namespace alquimia.Tests.TestControllers
         [Fact]
         public async Task UpdateMyData_UserUpdated_ReturnsOkWithUpdatedData()
         {
-            var dto = new UserProfileDto { Name = "Juan" };
-            var updatedDto = new UserProfileDto { Name = "Juan", Email = "juan@mail.com" };
+            var dto = new UserProfileUpdateDto { Name = "Juan" };
+            var updatedDto = new UserProfileUpdateDto { Name = "Juan", Email = "juan@mail.com" };
             _mockService.Setup(s => s.UpdateMyData(dto)).ReturnsAsync(updatedDto);
             var result = await _controller.UpdateMyData(dto);
             var actionResult = Assert.IsType<OkObjectResult>(result);
-            var returnedDto = Assert.IsType<UserProfileDto>(actionResult.Value);
+            var returnedDto = Assert.IsType<UserProfileUpdateDto>(actionResult.Value);
             Assert.Equal("Juan", returnedDto.Name);
             Assert.Equal("juan@mail.com", returnedDto.Email);
         }

@@ -38,6 +38,8 @@ namespace alquimia.Services
                 cantidadFormulas = user.Formulas.Count,
                 //Ubicacion = user.Ubicacion,
                 //CodigoPostal = user.CodigoPostal
+                Empresa = user.Empresa,
+                Rubro = user.Rubro,
             };
         }
 
@@ -121,19 +123,40 @@ namespace alquimia.Services
         }
 
 
-        public async Task<UserProfileDto?> UpdateMyData(UserProfileDto dto)
+        public async Task<UserProfileDto?> UpdateMyData(UserProfileUpdateDto dto)
         {
             var user = await GetCurrentUserAsync();
             if (user == null) return null;
 
-            user.Name = dto.Name;
-            //user.CUIL = dto.CUIL;
+            if (dto.Name != null)
+                user.Name = dto.Name;
+            if (dto.Empresa != null)
+                user.Empresa = dto.Empresa;
+            if (dto.CUIL != null)
+                user.Cuil = dto.CUIL;
+            if (dto.Rubro != null)
+                user.Rubro = dto.Rubro;
             //user.Ubicacion = dto.Ubicacion;
             //user.CodigoPostal = dto.CodigoPostal;
 
+            // Persist the changes using the identity user manager to
+            // ensure all related identity fields are handled correctly
+            _context.Users.Update(user);
             await _context.SaveChangesAsync();
 
-            return dto;
+
+            return new UserProfileDto
+            {
+                Name = user.Name,
+                Email = user.Email,
+                EsProveedor = user.EsProveedor,
+                IdEstado = user.IdEstado,
+                CUIL = user.Cuil,
+                Empresa = user.Empresa,
+                Rubro = user.Rubro,
+                cantidadFavoritos = user.UserProducts.Count,
+                cantidadFormulas = user.Formulas.Count,
+            };
         }
     }
 }
