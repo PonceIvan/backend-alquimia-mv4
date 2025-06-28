@@ -264,7 +264,7 @@ namespace alquimia.Tests.TestServices
             var httpContextAccessor = GetHttpContextAccessor(user.Id);
             var service = new ProfileService(userManager, context, httpContextAccessor);
 
-            var dto = new UserProfileDto
+            var dto = new UserProfileUpdateDto
             {
                 Name = "New Name",
                 Email = "oldemail@user.com",
@@ -290,7 +290,7 @@ namespace alquimia.Tests.TestServices
             var httpContextAccessor = GetHttpContextAccessor(999);
             var service = new ProfileService(userManager, context, httpContextAccessor);
 
-            var dto = new UserProfileDto
+            var dto = new UserProfileUpdateDto
             {
                 Name = "New Name",
                 Email = "newemail@user.com",
