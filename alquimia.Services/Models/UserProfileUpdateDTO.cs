@@ -12,5 +12,7 @@ namespace alquimia.Services.Models
         public string? Empresa { get; set; }
         public string? CUIL { get; set; }
         public string? Rubro { get; set; }
+        public string Email { get; set; }
+        public bool EsProveedor { get; set; }
     }
 }
