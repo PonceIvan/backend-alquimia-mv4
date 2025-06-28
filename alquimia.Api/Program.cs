@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using Microsoft.ApplicationInsights.AspNetCore.Extensions;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
