@@ -24,6 +24,7 @@ builder.Services.AddDbContext<AlquimiaDbContext>(options =>
 });
 
 // 💡 Servicios y dependencias
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Email"));
 builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IProductService, ProductService>();
