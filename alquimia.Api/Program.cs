@@ -39,7 +39,7 @@ builder.Services.AddScoped<IDesignLabelService, DesignLabelService>();
 builder.Services.AddScoped<IEmailTemplateService, EmailTemplateService>(); // ✅ Registro agregado
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddScoped<IMercadoPagoService, MercadoPagoService>();
-builder.Services.AddScoped<IEmailTemplateService, EmailTemplateService>();
+
 builder.Services.AddScoped<IChatbotService, ChatbotService>();
 builder.Services.AddScoped<IChatDynamicNodeHandler, DinamicNotesHandler>();
 builder.Services.AddScoped<IChatDynamicNodeHandler, DinamicTopNotesHandler>();
