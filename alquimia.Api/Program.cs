@@ -1,5 +1,6 @@
 // Program.cs – Alquimia API (corrigido)
 using alquimia.Services.Models;
+using Microsoft.AspNetCore.DataProtection; 
 using alquimia.Api.Middlewares;
 using alquimia.Api.Seed;
 using alquimia.Data.Entities;
