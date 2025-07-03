@@ -130,65 +130,26 @@ namespace alquimia.Api.Controllers
             return NoContent();
         }
 
-        //[HttpPost("send-pdf")]
-        //public async Task<IActionResult> SendPDFToProvider([FromBody] SendPDFToProvider dto)
-        //{
-        //    if (string.IsNullOrWhiteSpace(dto.Email))
-        //        throw new ArgumentNullException();
-
-        //    if (string.IsNullOrWhiteSpace(dto.FileContentBase64))
-        //        throw new ArgumentNullException();
-
-        //    byte[] fileBytes;
-
-        //    try
-        //    {
-        //        fileBytes = Convert.FromBase64String(dto.FileContentBase64);
-        //    }
-        //    catch
-        //    {
-        //        throw new ArgumentNullException("El contenido del PDF no es válido.");
-        //    }
-
-        //    var message = _emailTemplate.GetDesignPDFProviderEmail(dto.ProviderName, dto.CreatorName);
-
-        //    var result = await _emailService.SendEmailWithAttachmentAsync(
-        //        dto.Email,
-        //        "PDF del diseño de etiqueta",
-        //        message,
-        //        fileBytes,
-        //        dto.FileName
-        //    );
-
-        //    if (!result)
-        //        return StatusCode(500, "Ocurrió un error al enviar el correo.");
-
-        //    return Ok("Correo enviado correctamente.");
-        //}
-
         [HttpPost("send-pdf")]
         public async Task<IActionResult> SendPDFToProvider(
     [FromForm] SendPDFToProvider dto)
         {
             if (string.IsNullOrWhiteSpace(dto.Email))
-                return BadRequest("El email es obligatorio.");
+                throw new KeyNotFoundException("El email es obligatorio.");
 
             if (dto.File == null || dto.File.Length == 0)
-                return BadRequest("No se recibió el archivo PDF.");
+                throw new ArgumentNullException("No se recibió el archivo PDF.");
 
             byte[] attachmentBytes;
 
-            // Usar un MemoryStream para guardar el contenido del archivo
             using (var memoryStream = new MemoryStream())
             {
                 await dto.File.CopyToAsync(memoryStream);
                 attachmentBytes = memoryStream.ToArray();
             }
 
-            // Generar el contenido del email
             var message = _emailTemplate.GetDesignPDFProviderEmail(dto.ProviderName, dto.CreatorName);
 
-            // Enviar el email con el adjunto
             var result = await _emailService.SendEmailWithAttachmentAsync(
                 dto.Email,
                 "PDF del diseño de etiqueta",

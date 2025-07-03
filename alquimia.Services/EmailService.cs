@@ -63,7 +63,6 @@ namespace alquimia.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error enviando correo: {ex.Message}");
                 return false;
             }
         }
