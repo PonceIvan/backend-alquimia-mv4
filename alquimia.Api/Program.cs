@@ -1,3 +1,5 @@
+// Program.cs – Alquimia API (corrigido)
+
 using alquimia.Api.Middlewares;
 using alquimia.Api.Seed;
 using alquimia.Data.Entities;
@@ -11,22 +13,30 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-
+using Azure.Identity; // Requiere Azure.Identity package
+using Azure.Extensions.AspNetCore.DataProtection.Blobs; // Requiere Azure.Extensions.AspNetCore.DataProtection.Blobs
 
 var builder = WebApplication.CreateBuilder(args);
 
+// 🔗 Connection string
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<AlquimiaDbContext>(options =>
 {
     options.UseSqlServer(connectionString);
-    options.EnableSensitiveDataLogging(); // Debugging
+
+    // Solo para Development: registra datos sensibles en los logs
+    if (builder.Environment.IsDevelopment())
+    {
+        options.EnableSensitiveDataLogging();
+    }
 });
 
 // 💡 Servicios y dependencias
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Email"));
 builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<INoteService, NoteService>();
@@ -36,11 +46,12 @@ builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddScoped<IOlfactoryFamilyService, OlfactoryFamilyService>();
 builder.Services.AddScoped<IDesignLabelService, DesignLabelService>();
-builder.Services.AddScoped<IEmailTemplateService, EmailTemplateService>(); // ✅ Registro agregado
+builder.Services.AddScoped<IEmailTemplateService, EmailTemplateService>(); // 🔄 Registro único
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddScoped<IMercadoPagoService, MercadoPagoService>();
-
 builder.Services.AddScoped<IChatbotService, ChatbotService>();
+
+// Handlers dinámicos
 builder.Services.AddScoped<IChatDynamicNodeHandler, DinamicNotesHandler>();
 builder.Services.AddScoped<IChatDynamicNodeHandler, DinamicTopNotesHandler>();
 builder.Services.AddScoped<IChatDynamicNodeHandler, DinamicHeartNotesHandler>();
@@ -49,19 +60,6 @@ builder.Services.AddScoped<IChatDynamicNodeHandler, DinamicFamilyHandler>();
 builder.Services.AddScoped<IChatDynamicNodeHandler, DinamicIntensitiesHandler>();
 builder.Services.AddScoped<IChatDynamicNodeHandler, DinamicStateProviderHelpResponse>();
 builder.Services.AddScoped<IChatDynamicNodeHandler, DinamicStateProviderHelp>();
-
-//builder.Services.AddControllersWithViews().AddJsonOptions(options =>
-//{
-//    options.JsonSerializerOptions.PropertyNamingPolicy = null;
-//});
-
-//builder.Services.AddControllers()
-//    .AddJsonOptions(x =>
-//        x.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles)
-//    .AddJsonOptions(options =>
-//    {
-//        options.JsonSerializerOptions.PropertyNamingPolicy = null;
-//    });
 
 // 🧩 Controladores
 builder.Services.AddControllers()
@@ -77,7 +75,7 @@ builder.Services.AddIdentity<User, Role>()
     .AddEntityFrameworkStores<AlquimiaDbContext>()
     .AddDefaultTokenProviders();
 
-// 🔐 JWT
+// 🔐 JWT & Google – un solo AddAuthentication
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]);
 
@@ -86,6 +84,7 @@ builder.Services.AddAuthentication(options =>
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
+// JWT Bearer
 .AddJwtBearer(options =>
 {
     options.RequireHttpsMetadata = true;
@@ -100,17 +99,31 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = jwtSettings["Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(key)
     };
+})
+// Google OAuth
+.AddGoogle(options =>
+{
+    options.ClientId = builder.Configuration["OAuth:ClientID"];
+    options.ClientSecret = builder.Configuration["OAuth:ClientSecret"];
+    options.CallbackPath = "/signin-google";
+    options.ClaimActions.MapJsonKey("urn:google:picture", "picture", "url");
 });
 
-// 🌐 Google Auth
-builder.Services.AddAuthentication()
-    .AddGoogle(options =>
+// 🔑 Data Protection – persistencia de claves para reset de contraseña
+if (!builder.Environment.IsDevelopment())
+{
+    var blobUri = builder.Configuration["DataProtection:BlobUri"]; // p.ej.: https://<storage>.blob.core.windows.net/dpkeys/keys.xml
+    if (!string.IsNullOrWhiteSpace(blobUri))
     {
-        options.ClientId = builder.Configuration["OAuth:ClientID"];
-        options.ClientSecret = builder.Configuration["OAuth:ClientSecret"];
-        options.CallbackPath = "/signin-google";
-        options.ClaimActions.MapJsonKey("urn:google:picture", "picture", "url");
-    });
+        builder.Services.AddDataProtection()
+            .SetApplicationName("AlquimiaAPI")
+            .PersistKeysToAzureBlobStorage(new Uri(blobUri), new DefaultAzureCredential());
+    }
+}
+else
+{
+    builder.Services.AddDataProtection().SetApplicationName("AlquimiaAPI");
+}
 
 // 🍪 Cookies
 builder.Services.ConfigureApplicationCookie(options =>
@@ -127,8 +140,7 @@ builder.Services.AddSwaggerGen(c =>
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Description = @"JWT Authorization header usando el esquema Bearer.  
-                        Ingresá el token así: Bearer {tu token}.",
+        Description = @"JWT Authorization header usando el esquema Bearer.  \nIngresá el token así: Bearer {tu token}.",
         Name = "Authorization",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey,
@@ -160,10 +172,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy("FrontendPolicy", policy =>
     {
         policy.WithOrigins(
-            "http://localhost:3000",                          // Next.js dev
-            "https://localhost:5035",                         // Swagger
-            "https://localhost:5173",                         // Vite dev
-            "https://frontend-alquimia.vercel.app"           // ✅ Producción en Vercel
+            "http://localhost:3000",              // Next.js dev
+            "https://localhost:5035",             // Swagger
+            "https://localhost:5173",             // Vite dev
+            "https://frontend-alquimia.vercel.app" // Producción
         )
         .AllowAnyHeader()
         .AllowAnyMethod()
@@ -171,28 +183,26 @@ builder.Services.AddCors(options =>
     });
 });
 
-// ⚙️ Configuración de Identity
+// ⚙️ Configuración de Identity extra
 builder.Services.Configure<IdentityOptions>(options =>
 {
     options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
     options.User.RequireUniqueEmail = true;
 });
 
-
-
 // 🏁 Build y Middleware
 var app = builder.Build();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
-// 🧪 Seeders
+// 🧪 Seeders (solo una vez al arrancar)
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     await RoleSeeder.SeedRolesAsync(services);
     await UserSeeder.SeedAdminAsync(services);
     await ProductSeeder.SeedTiposProductoAsync(services);
-    // await UserSeeder.SeedProveedoresAsync(services); // Descomenta si lo necesitás
+    // await UserSeeder.SeedProveedoresAsync(services); // Descomentá si lo necesitás
 }
 
 // 📚 Swagger UI
@@ -205,8 +215,10 @@ app.UseSwaggerUI(c =>
 
 app.UseStaticFiles();
 app.UseRouting();
-app.UseCors("FrontendPolicy"); // ✅ MOVIDO AQUÍ
+app.UseCors("FrontendPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
+
 app.Run();
