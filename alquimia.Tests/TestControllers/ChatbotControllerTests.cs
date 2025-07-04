@@ -49,6 +49,26 @@ namespace alquimia.Tests.TestControllers
             Assert.Equal(200, result.StatusCode);
             Assert.Equal(learningNode, result.Value);
         }
+
+        [Fact]
+        public async Task GetNode_ReturnsOk_WhenADynamicExistentNodeIsRequested()
+        {
+            var familiesNode = new ChatNode
+            {
+                Id = "aprendizaje-familias-dinamico",
+                Message = "¿Qué te gustaría aprender sobre las familias olfativas?"
+            };
+
+            _serviceMock.Setup(s => s.GetNodeByIdAsync("aprendizaje-familias-dinamico")).ThrowsAsync(new KeyNotFoundException());
+
+            _serviceMock.Setup(s => s.GetDynamicNodeByIdAsync("aprendizaje-familias-dinamico")).ReturnsAsync(familiesNode);
+
+            var result = await _controller.GetNode("aprendizaje-familias-dinamico") as OkObjectResult;
+
+            Assert.NotNull(result);
+            Assert.Equal(200, result.StatusCode);
+            Assert.Equal(familiesNode, result.Value);
+        }
         //GetNode returns a dinamic node when a dynamic node is requested
         //GetNode does not return static node when a dynamic node is requested
         //GetNode throws KeyNotFound when StaticNode Not Found SERVICE
