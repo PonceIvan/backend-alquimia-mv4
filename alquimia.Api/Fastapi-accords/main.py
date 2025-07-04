@@ -1,13 +1,19 @@
 ﻿    
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
+import requests
+from bs4 import BeautifulSoup
 import pandas as pd
-
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  
+    allow_origins=["http://localhost:3000",
+    "https://frontend-alquimia.vercel.app"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -104,25 +110,72 @@ accord_translations = {
 @app.get("/api/perfume")
 def search_perfume(name: str = Query(..., alias="q")):
     normalized_name = name.replace(" ", "-").lower()
-    result = df[df["Perfume"].str.lower().str.contains(normalized_name, na=False)]
+    results = df[df["Perfume"].str.lower().str.contains(normalized_name, na=False)]
 
-    if result.empty:
+    if results.empty:
         return {"message": "Perfume not found", "notes": []}
     
-    perfume = result.iloc[0]  # Tomamos el primero que coincida
-    notes = [
-        perfume.get("mainaccord1"),
-        perfume.get("mainaccord2"),
-        perfume.get("mainaccord3")
-    ]
-    
-    translated_notes = [accord_translations.get(n.lower(), n) for n in notes if pd.notna(n)]
-    return {
-        "perfume": perfume["Perfume"],
-        "brand": perfume["Brand"],
-        #"notes": [n for n in notes if pd.notna(n)]
-        "notes": translated_notes
-    }
+    #perfume = results.iloc[0]  # Tomamos el primero que coincida
+    #notes = [
+    #    perfume.get("mainaccord1"),
+    #    perfume.get("mainaccord2"),
+    #    perfume.get("mainaccord3")
+    #]
+    perfumes_list = []
+    for _, row in results.head(4).iterrows():
+        notes = [
+            row.get("mainaccord1"),
+            row.get("mainaccord2"),
+            row.get("mainaccord3")
+        ]
+        translated_notes = [accord_translations.get(n.lower(), n) for n in notes if pd.notna(n)]
+        perfumes_list.append({
+            "perfume": row["Perfume"],
+            "brand": row["Brand"],
+            "notes": translated_notes,
+            "url": row.get("url")
+        })
+
+    return {"results": perfumes_list}
+        #translated_notes = [accord_translations.get(n.lower(), n) for n in notes if pd.notna(n)]
+        #return {
+        #    "perfume": perfume["Perfume"],
+        #    "brand": perfume["Brand"],
+        #    #"notes": [n for n in notes if pd.notna(n)]
+        #    "notes": translated_notes
+        #}
 
 
     
+@app.get("/api/perfume-image")
+def get_perfume_image(url: str = Query(...)):
+    chrome_options = Options()
+    chrome_options.binary_location = r"C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe"  
+    #chrome_options.add_argument("--headless=new")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+
+    service = Service("./chromedriver.exe")
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+
+    driver.get(url)
+    driver.implicitly_wait(5)
+
+    imgs = driver.find_elements("tag name", "img")
+    perfume_img = None
+
+    for i, im in enumerate(imgs):
+        try:
+            src = im.get_attribute("src")
+            if src and "/mdimg/perfume-thumbs/" in src:
+                perfume_img = src
+                break
+        except Exception as e:
+            print(f"Error en imagen {i}: {e}")
+
+    driver.quit()
+
+    return {"image": perfume_img}
+
+

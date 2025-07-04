@@ -2,3 +2,7 @@ fastapi
 uvicorn
 pandas
 python-multipart
+beautifulsoup4
+requests
+selenium
+webdriver-manager
