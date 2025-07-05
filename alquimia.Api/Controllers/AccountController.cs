@@ -122,7 +122,7 @@ _logger.LogInformation("🔁 redirect_uri usado para Google OAuth: {RedirectUrl}
 var properties = _signInManager.ConfigureExternalAuthenticationProperties("Google", redirectUrl);
 return Challenge(properties, "Google");
 
-    return Content($"Redirect URI: {absoluteRedirectUri}");
+
 }
 
         [HttpGet("signin-google")]
