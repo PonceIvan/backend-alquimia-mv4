@@ -92,7 +92,7 @@ namespace alquimia.Api.Controllers
             if (string.IsNullOrWhiteSpace(dto.Email) || string.IsNullOrWhiteSpace(dto.Password))
                 return BadRequest(new { mensaje = "Email y contraseña son obligatorios." });
 
-            var usuario = await _userManager.FindByEmailAsync(dto.Email);
+               var usuario = await _userManager.FindByEmailAsync(dto.Email);
 
             if (usuario == null)
             {
@@ -117,7 +117,7 @@ namespace alquimia.Api.Controllers
         [HttpGet("login-google")]
         public IActionResult LoginWithGoogle()
         {
-            var redirectUrl = Url.Action("GoogleLoginCallback", "Cuenta");
+            var redirectUrl = Url.Action("GoogleLoginCallback", "Account");
             var properties = _signInManager.ConfigureExternalAuthenticationProperties("Google", redirectUrl);
             return Challenge(properties, "Google");
         }
@@ -126,11 +126,12 @@ namespace alquimia.Api.Controllers
         public async Task<IActionResult> GoogleLoginCallback()
         {
             _logger.LogInformation("Callback de login con Google recibido");
+            var frontendBaseUrl = _config["AppSettings:FrontendBaseUrl"] ?? "http://localhost:3000/";
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
                 _logger.LogError("Fallo al obtener la información de login externo.");
-                return Redirect("http://localhost:3000/Login?error=callback");
+                return Redirect($"{frontendBaseUrl}Login?error=callback");
             }
 
 
@@ -138,7 +139,7 @@ namespace alquimia.Api.Controllers
 
             if (result.Succeeded)
             {
-                return Redirect("http://localhost:3000/login/redirectgoogle");
+                return Redirect($"{frontendBaseUrl}login/redirectgoogle");
             }
 
             // Crear el usuario si no existe
@@ -155,13 +156,15 @@ namespace alquimia.Api.Controllers
 
             var createResult = await _userManager.CreateAsync(newUser);
             if (!createResult.Succeeded)
-                return Redirect("http://localhost:3000/Login?error=creation");
+            {
+                return Redirect($"{frontendBaseUrl}Login?error=creation");
+            }
             var roles = await _userManager.GetRolesAsync(newUser);
             var token = _jwtService.GenerateToken(newUser, roles);
             await _userManager.AddLoginAsync(newUser, info);
             await _signInManager.SignInAsync(newUser, isPersistent: false);
             _logger.LogInformation("Google login info recibida para: {Email}", info.Principal.FindFirstValue(ClaimTypes.Email));
-            return Redirect("http://localhost:3000/Login/RedirectGoogle");
+            return Redirect($"{frontendBaseUrl}Login/RedirectGoogle");
         }
         [HttpPost("register-provider")]
         public async Task<IActionResult> RegisterProvider([FromBody] RegisterProviderDTO dto)
