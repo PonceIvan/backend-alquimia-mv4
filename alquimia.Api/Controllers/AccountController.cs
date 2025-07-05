@@ -142,19 +142,14 @@ namespace alquimia.Api.Controllers
                 return Redirect("http://localhost:3000/Login?error=callback");
             }
 
-            if (debug)
-            {
-                return Ok(new
-                {
-                    provider = info.LoginProvider,
-                    key = info.ProviderKey,
-                    email = info.Principal.FindFirstValue(ClaimTypes.Email),
-                    name = info.Principal.FindFirstValue(ClaimTypes.Name)
-                });
-            }
-
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
-            var frontendRedirect = _config["OAuth:Url"] ?? "https://frontend-alquimia.vercel.app/Login/RedirectGoogle";
+            var frontendRedirect = _config["OAuth:Url"];
+            if (string.IsNullOrWhiteSpace(frontendRedirect) ||
+                frontendRedirect.Contains("/account/signin-google", StringComparison.OrdinalIgnoreCase))
+            {
+                var baseUrl = _config["AppSettings:FrontendBaseUrl"] ?? "https://frontend-alquimia.vercel.app/";
+                frontendRedirect = baseUrl.TrimEnd('/') + "/Login/RedirectGoogle";
+            }
 
             if (result.Succeeded)
             {
@@ -214,12 +209,19 @@ namespace alquimia.Api.Controllers
         {
             var loginEndpoint = Url.Action("LoginWithGoogle", "Account", null, Request.Scheme);
             var callback = Url.Action("GoogleLoginCallback", "Account", null, Request.Scheme);
+            var frontendRedirect = _config["OAuth:Url"];
+            if (string.IsNullOrWhiteSpace(frontendRedirect) ||
+                frontendRedirect.Contains("/account/signin-google", StringComparison.OrdinalIgnoreCase))
+            {
+                var baseUrl = _config["AppSettings:FrontendBaseUrl"] ?? "https://frontend-alquimia.vercel.app/";
+                frontendRedirect = baseUrl.TrimEnd('/') + "/Login/RedirectGoogle";
+            }
             return Ok(new
             {
                 clientIdDefined = !string.IsNullOrWhiteSpace(_config["OAuth:ClientID"]),
                 loginEndpoint,
                 callback,
-                frontendRedirect = _config["OAuth:Url"]
+                frontendRedirect
             });
         }
 
