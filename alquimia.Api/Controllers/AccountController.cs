@@ -120,10 +120,7 @@ public IActionResult LoginWithGoogle()
     var redirectUrl = Url.Action("GoogleLoginCallback", "Account", null, Request.Scheme);
     var absoluteRedirectUri = $"{Request.Scheme}://{Request.Host}{redirectUrl}";
 
-    _logger.LogInformation("🔁 redirect_uri usado para Google OAuth: {RedirectUrl}", absoluteRedirectUri);
-
-    var properties = _signInManager.ConfigureExternalAuthenticationProperties("Google", absoluteRedirectUri);
-    return Challenge(properties, "Google");
+    return Content($"Redirect URI: {absoluteRedirectUri}");
 }
 
         [HttpGet("signin-google")]
