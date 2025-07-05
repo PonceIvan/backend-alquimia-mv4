@@ -49,7 +49,7 @@ namespace alquimia.Api.Controllers
             {
                 UserName = GenerateUserNameSeguro(dto.Email),
                 Email = dto.Email,
-                SecurityStamp = Guid.NewGuid().ToString(), // Obligatorio
+                SecurityStamp = Guid.NewGuid().ToString(),
                 Name = dto.Name?.Trim()
             };
 
@@ -60,12 +60,10 @@ namespace alquimia.Api.Controllers
                 return BadRequest(result.Errors);
             }
 
-            // 🔁 Recuperar desde base de datos para garantizar que Id esté persistido
             var usuarioPersistido = await _userManager.FindByEmailAsync(dto.Email);
             if (usuarioPersistido == null)
                 return StatusCode(500, new { mensaje = "No se pudo recuperar el usuario recién creado." });
 
-            // ✅ Asignar rol si no lo tiene
             if (!await _userManager.IsInRoleAsync(usuarioPersistido, dto.Rol))
             {
                 var roleResult = await _userManager.AddToRoleAsync(usuarioPersistido, dto.Rol);
@@ -141,7 +139,6 @@ namespace alquimia.Api.Controllers
                 return Redirect("http://localhost:3000/login/redirectgoogle");
             }
 
-            // Crear el usuario si no existe
             var email = info.Principal.FindFirstValue(ClaimTypes.Email);
             var name = info.Principal.FindFirstValue(ClaimTypes.Name);
 
@@ -150,7 +147,7 @@ namespace alquimia.Api.Controllers
                 Email = email,
                 UserName = GenerateUserNameSeguro(email),
                 Name = name,
-                SecurityStamp = Guid.NewGuid().ToString() // ✅ agregado
+                SecurityStamp = Guid.NewGuid().ToString()
             };
 
             var createResult = await _userManager.CreateAsync(newUser);
@@ -198,12 +195,10 @@ namespace alquimia.Api.Controllers
                 return BadRequest(result.Errors);
             }
 
-            // Reconfirmar existencia
             var usuarioPersistido = await _userManager.FindByEmailAsync(dto.Email);
             if (usuarioPersistido == null)
                 return StatusCode(500, new { mensaje = "No se pudo recuperar el proveedor recién creado." });
 
-            // Asignar rol de "Creador" inicialmente
             var rolInicial = "Creador";
             if (!await _userManager.IsInRoleAsync(usuarioPersistido, rolInicial))
             {
@@ -244,7 +239,8 @@ namespace alquimia.Api.Controllers
             var user = await _userManager.FindByEmailAsync(userEmail);
             var roles = await _userManager.GetRolesAsync(user);
             return Ok(new
-            {   id = user.Id,
+            {
+                id = user.Id,
                 nombre = user.Name,
                 email = user.Email,
                 rol = roles.FirstOrDefault()
@@ -293,15 +289,11 @@ namespace alquimia.Api.Controllers
 
             var nombre = email.Split('@')[0];
 
-            // Eliminar caracteres no permitidos
             nombre = new string(nombre.Where(char.IsLetterOrDigit).ToArray());
 
-            // Si quedó vacío, generamos uno al azar
             return string.IsNullOrWhiteSpace(nombre)
                 ? Guid.NewGuid().ToString("N").Substring(0, 8)
                 : nombre;
         }
-
-
     }
 }
