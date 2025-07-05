@@ -65,7 +65,7 @@ jobs:
               { "name": "Jwt__DurationInMinutes", "value": "60", "slotSetting": false },
               { "name": "OAuth__ClientID", "value": "${{ secrets.GOOGLE_CLIENT_ID }}", "slotSetting": false },
               { "name": "OAuth__ClientSecret", "value": "${{ secrets.GOOGLE_CLIENT_SECRET }}", "slotSetting": false },
-              { "name": "OAuth__Url", "value": "https://tudominio.com/Login/RedirectGoogle", "slotSetting": false },
+              { "name": "OAuth__Url", "value": "https://alquimia-deploy-back-a8dqhub8ekdff8dk.brazilsouth-01.azurewebsites.net/account/signin-google", "slotSetting": false },
               { "name": "Email__User", "value": "${{ secrets.EMAIL_USER }}", "slotSetting": false },
               { "name": "Email__Password", "value": "${{ secrets.EMAIL_PASSWORD }}", "slotSetting": false },
               { "name": "Email__From", "value": "${{ secrets.EMAIL_FROM }}", "slotSetting": false },
