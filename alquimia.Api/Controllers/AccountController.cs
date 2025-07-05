@@ -1,11 +1,10 @@
-﻿using alquimia.Services.Interfaces;
+using alquimia.Services.Interfaces;
 using alquimia.Services.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Security.Claims;
-//using Humanizer;
 using User = alquimia.Data.Entities.User;
 
 namespace alquimia.Api.Controllers
@@ -23,7 +22,8 @@ namespace alquimia.Api.Controllers
         private readonly IEmailTemplateService _emailTemplate;
 
         public AccountController(UserManager<User> userManager, SignInManager<User> signInManager,
-            ILogger<AccountController> logger, IJwtService jwtService, IEmailService emailService, IConfiguration config, IEmailTemplateService emailTemplate)
+            ILogger<AccountController> logger, IJwtService jwtService, IEmailService emailService,
+            IConfiguration config, IEmailTemplateService emailTemplate)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -38,6 +38,7 @@ namespace alquimia.Api.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterDTO dto)
         {
             _logger.LogInformation("Intentando registrar usuario con email: {Email}", dto.Email);
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
@@ -49,68 +50,42 @@ namespace alquimia.Api.Controllers
             {
                 UserName = GenerateUserNameSeguro(dto.Email),
                 Email = dto.Email,
-                SecurityStamp = Guid.NewGuid().ToString(), // Obligatorio
+                SecurityStamp = Guid.NewGuid().ToString(),
                 Name = dto.Name?.Trim()
             };
 
             var result = await _userManager.CreateAsync(nuevoUsuario, dto.Password);
             if (!result.Succeeded)
-            {
-                _logger.LogError("Error al crear el usuario: {Errores}", result.Errors);
                 return BadRequest(result.Errors);
-            }
 
-            // 🔁 Recuperar desde base de datos para garantizar que Id esté persistido
-            var usuarioPersistido = await _userManager.FindByEmailAsync(dto.Email);
-            if (usuarioPersistido == null)
-                return StatusCode(500, new { mensaje = "No se pudo recuperar el usuario recién creado." });
+            if (!await _userManager.IsInRoleAsync(nuevoUsuario, dto.Rol))
+                await _userManager.AddToRoleAsync(nuevoUsuario, dto.Rol);
 
-            // ✅ Asignar rol si no lo tiene
-            if (!await _userManager.IsInRoleAsync(usuarioPersistido, dto.Rol))
-            {
-                var roleResult = await _userManager.AddToRoleAsync(usuarioPersistido, dto.Rol);
-                if (!roleResult.Succeeded)
-                {
-                    _logger.LogError("Error al asignar el rol: {Errores}", roleResult.Errors);
-                    return BadRequest(new { mensaje = "Error al asignar el rol." });
-                }
-            }
+            var roles = await _userManager.GetRolesAsync(nuevoUsuario);
+            var token = _jwtService.GenerateToken(nuevoUsuario, roles);
+            await _signInManager.SignInAsync(nuevoUsuario, isPersistent: false);
 
-            var roles = await _userManager.GetRolesAsync(usuarioPersistido);
-            var token = _jwtService.GenerateToken(usuarioPersistido, roles);
-
-            await _signInManager.SignInAsync(usuarioPersistido, isPersistent: false);
-            _logger.LogInformation("Usuario registrado exitosamente: {Email}", dto.Email);
             return Ok(new { mensaje = "Usuario registrado correctamente.", token });
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDTO dto)
         {
-            _logger.LogInformation("Intentando login para el email: {Email}", dto.Email);
-
             if (string.IsNullOrWhiteSpace(dto.Email) || string.IsNullOrWhiteSpace(dto.Password))
                 return BadRequest(new { mensaje = "Email y contraseña son obligatorios." });
 
             var usuario = await _userManager.FindByEmailAsync(dto.Email);
-
             if (usuario == null)
-            {
-                _logger.LogWarning("Intento de login con email no registrado: {Email}", dto.Email);
                 return Unauthorized(new { mensaje = "Usuario no encontrado." });
-            }
 
-            if (string.IsNullOrWhiteSpace(usuario.UserName) || usuario.Id == 0)
-                return StatusCode(500, new { mensaje = "El usuario tiene datos incompletos (UserName o Id)." });
-
-            var result = await _signInManager.CheckPasswordSignInAsync(usuario, dto.Password, lockoutOnFailure: false);
-
+            var result = await _signInManager.CheckPasswordSignInAsync(usuario, dto.Password, false);
             if (!result.Succeeded)
                 return Unauthorized(new { mensaje = "Credenciales inválidas." });
+
             var roles = await _userManager.GetRolesAsync(usuario);
             var token = _jwtService.GenerateToken(usuario, roles);
-            await _signInManager.SignInAsync(usuario, isPersistent: false);
-            _logger.LogInformation("Login exitoso para {Email}", dto.Email);
+            await _signInManager.SignInAsync(usuario, false);
+
             return Ok(new { mensaje = "Login exitoso ✅", token });
         }
 
@@ -118,8 +93,10 @@ namespace alquimia.Api.Controllers
         public IActionResult LoginWithGoogle([FromQuery] bool debug = false)
         {
             var redirectUrl = Url.Action("GoogleLoginCallback", "Account", null, Request.Scheme);
+
             _logger.LogInformation("🔁 redirect_uri usado para Google OAuth: {RedirectUrl}", redirectUrl);
             var properties = _signInManager.ConfigureExternalAuthenticationProperties("Google", redirectUrl);
+
             if (debug)
             {
                 return Ok(new
@@ -128,6 +105,7 @@ namespace alquimia.Api.Controllers
                     callback = redirectUrl
                 });
             }
+
             return Challenge(properties, "Google");
 
         }
@@ -135,10 +113,9 @@ namespace alquimia.Api.Controllers
         [HttpGet("signin-google")]
         public async Task<IActionResult> GoogleLoginCallback([FromQuery] bool debug = false)
         {
-            _logger.LogInformation("Callback de login con Google recibido");
-            var info = await _signInManager.GetExternalLoginInfoAsync();
-            if (info == null)
+            try
             {
+
                 _logger.LogError("Fallo al obtener la información de login externo.");
                 if (debug)
                     return BadRequest(new { mensaje = "No se pudo obtener la información externa." });
@@ -172,14 +149,20 @@ namespace alquimia.Api.Controllers
                     });
                 }
                 return Redirect(frontendRedirect);
+
             }
+        }
 
-            // Crear el usuario si no existe
-            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-            var name = info.Principal.FindFirstValue(ClaimTypes.Name);
+        [HttpGet("debug/google-config")]
+        public IActionResult GoogleConfigDebug()
+        {
+            var loginEndpoint = Url.Action("LoginWithGoogle", "Account", null, Request.Scheme);
+            var callback = Url.Action("GoogleLoginCallback", "Account", null, Request.Scheme);
+            var frontendRedirect = _config["OAuth:Url"];
 
-            var newUser = new User
+            if (string.IsNullOrWhiteSpace(frontendRedirect) || frontendRedirect.Contains("/account/signin-google"))
             {
+
                 Email = email,
                 UserName = GenerateUserNameSeguro(email),
                 Name = name,
@@ -219,6 +202,7 @@ namespace alquimia.Api.Controllers
                 var baseUrl = _config["AppSettings:FrontendBaseUrl"] ?? "https://frontend-alquimia.vercel.app/";
                 frontendRedirect = baseUrl.TrimEnd('/') + "/Login/RedirectGoogle";
             }
+
             return Ok(new
             {
                 clientIdDefined = !string.IsNullOrWhiteSpace(_config["OAuth:ClientID"]),
@@ -226,6 +210,7 @@ namespace alquimia.Api.Controllers
                 callback,
                 frontendRedirect
             });
+
         }
 
         [HttpGet("debug/google-login")]
@@ -246,15 +231,25 @@ namespace alquimia.Api.Controllers
                 callbackUrl,
                 frontendRedirect
             });
+
         }
+
+        [HttpGet("debug/google-login")]
+        public IActionResult GoogleLoginDebug()
+        {
+            var loginUrl = Url.Action("LoginWithGoogle", "Account", new { debug = true }, Request.Scheme);
+            var callbackUrl = Url.Action("GoogleLoginCallback", "Account", new { debug = true }, Request.Scheme);
+
+            return Ok(new
+            {
+                loginUrl,
+                callbackUrl
+            });
+        }
+
         [HttpPost("register-provider")]
         public async Task<IActionResult> RegisterProvider([FromBody] RegisterProviderDTO dto)
         {
-            _logger.LogInformation("Intentando registrar proveedor con email: {Email}", dto.Email);
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             var usuarioExistente = await _userManager.FindByEmailAsync(dto.Email);
             if (usuarioExistente != null)
                 return BadRequest(new { mensaje = "El email ya está registrado." });
@@ -269,7 +264,6 @@ namespace alquimia.Api.Controllers
                 Cuil = dto.Cuil,
                 Rubro = dto.Rubro,
                 OtroProducto = string.Join(",", dto.OtroProducto),
-                //TarjetaNombre = dto.TarjetaNombre,
                 TarjetaNumero = dto.TarjetaNumero,
                 TarjetaVencimiento = dto.TarjetaVencimiento,
                 TarjetaCVC = dto.TarjetaCVC
@@ -277,46 +271,27 @@ namespace alquimia.Api.Controllers
 
             var result = await _userManager.CreateAsync(nuevoUsuario, dto.Password);
             if (!result.Succeeded)
-            {
-                _logger.LogError("Error al crear el usuario proveedor: {Errores}", result.Errors);
                 return BadRequest(result.Errors);
-            }
 
-            // Reconfirmar existencia
-            var usuarioPersistido = await _userManager.FindByEmailAsync(dto.Email);
-            if (usuarioPersistido == null)
-                return StatusCode(500, new { mensaje = "No se pudo recuperar el proveedor recién creado." });
+            await _userManager.AddToRoleAsync(nuevoUsuario, "Creador");
 
-            // Asignar rol de "Creador" inicialmente
-            var rolInicial = "Creador";
-            if (!await _userManager.IsInRoleAsync(usuarioPersistido, rolInicial))
-            {
-                var roleResult = await _userManager.AddToRoleAsync(usuarioPersistido, rolInicial);
-                if (!roleResult.Succeeded)
-                {
-                    _logger.LogError("Error al asignar rol inicial: {Errores}", roleResult.Errors);
-                    return BadRequest(new { mensaje = "Error al asignar el rol inicial." });
-                }
-            }
+            var roles = await _userManager.GetRolesAsync(nuevoUsuario);
+            var token = _jwtService.GenerateToken(nuevoUsuario, roles);
+            await _signInManager.SignInAsync(nuevoUsuario, false);
 
-            var roles = await _userManager.GetRolesAsync(usuarioPersistido);
-            var token = _jwtService.GenerateToken(usuarioPersistido, roles);
-
-            await _signInManager.SignInAsync(usuarioPersistido, isPersistent: false);
-            _logger.LogInformation("Proveedor registrado exitosamente como Creador: {Email}", dto.Email);
             var mensajeBienvenida = _emailTemplate.GetWelcomeEmail(dto.Name);
             await _emailService.SendEmailAsync(dto.Email, "Bienvenido a Alquimia - Cuenta en revisión", mensajeBienvenida);
+
             return Ok(new { mensaje = "Proveedor registrado correctamente como creador en espera de aprobación.", token });
         }
 
         [HttpGet("auth/status")]
         public IActionResult State()
         {
-            var usuario = User.Identity;
             return Ok(new
             {
-                autenticado = usuario?.IsAuthenticated ?? false,
-                nombre = usuario?.Name
+                autenticado = User.Identity?.IsAuthenticated ?? false,
+                nombre = User.Identity?.Name
             });
         }
 
@@ -328,7 +303,8 @@ namespace alquimia.Api.Controllers
             var user = await _userManager.FindByEmailAsync(userEmail);
             var roles = await _userManager.GetRolesAsync(user);
             return Ok(new
-            {   id = user.Id,
+            {
+                id = user.Id,
                 nombre = user.Name,
                 email = user.Email,
                 rol = roles.FirstOrDefault()
@@ -340,17 +316,13 @@ namespace alquimia.Api.Controllers
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
-            {
                 throw new KeyNotFoundException("Usuario no encontrado");
-            }
+
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var encodedToken = WebUtility.UrlEncode(token);
-
             var frontendBaseUrl = _config["AppSettings:FrontendBaseUrl"];
             var callbackUrl = $"{frontendBaseUrl}restablecer-contrasenia?email={model.Email}&token={encodedToken}";
-
             var message = _emailTemplate.GetPasswordResetEmail(user.Name, callbackUrl);
-
             await _emailService.SendEmailAsync(model.Email, "Recuperar contraseña - Alquimia", message);
 
             return Ok("Se envió un enlace para restablecer la contraseña.");
@@ -364,28 +336,23 @@ namespace alquimia.Api.Controllers
                 throw new KeyNotFoundException("Usuario no encontrado");
 
             var result = await _userManager.ResetPasswordAsync(user, WebUtility.UrlDecode(model.Token), model.NewPassword);
-
             if (!result.Succeeded)
-                throw new ArgumentException("Ocurrió un error:" + result.Errors.Select(e => e.Description));
+                throw new ArgumentException("Ocurrió un error: " + string.Join(", ", result.Errors.Select(e => e.Description)));
 
             return Ok("Contraseña restablecida correctamente.");
         }
+
         private string GenerateUserNameSeguro(string email)
         {
             if (string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
-                return Guid.NewGuid().ToString("N").Substring(0, 8);
+                return Guid.NewGuid().ToString("N")[..8];
 
             var nombre = email.Split('@')[0];
-
-            // Eliminar caracteres no permitidos
             nombre = new string(nombre.Where(char.IsLetterOrDigit).ToArray());
 
-            // Si quedó vacío, generamos uno al azar
             return string.IsNullOrWhiteSpace(nombre)
-                ? Guid.NewGuid().ToString("N").Substring(0, 8)
+                ? Guid.NewGuid().ToString("N")[..8]
                 : nombre;
         }
-
-
     }
 }
