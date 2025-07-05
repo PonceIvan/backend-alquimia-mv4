@@ -22,7 +22,8 @@ namespace alquimia.Api.Controllers
         private readonly IEmailTemplateService _emailTemplate;
 
         public AccountController(UserManager<User> userManager, SignInManager<User> signInManager,
-            ILogger<AccountController> logger, IJwtService jwtService, IEmailService emailService, IConfiguration config, IEmailTemplateService emailTemplate)
+            ILogger<AccountController> logger, IJwtService jwtService, IEmailService emailService,
+            IConfiguration config, IEmailTemplateService emailTemplate)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -132,76 +133,101 @@ namespace alquimia.Api.Controllers
         [HttpGet("signin-google")]
         public async Task<IActionResult> GoogleLoginCallback([FromQuery] bool debug = false)
         {
-            _logger.LogInformation("Callback de login con Google recibido");
-            var info = await _signInManager.GetExternalLoginInfoAsync();
-            if (info == null)
+            try
             {
-                _logger.LogError("Fallo al obtener la información de login externo.");
-                if (debug)
-                    return BadRequest(new { mensaje = "No se pudo obtener la información externa." });
-                return Redirect("http://localhost:3000/Login?error=callback");
-            }
+                _logger.LogInformation("Callback de login con Google recibido");
 
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
-            var frontendRedirect = _config["OAuth:Url"];
-            if (string.IsNullOrWhiteSpace(frontendRedirect) ||
-                frontendRedirect.Contains("/account/signin-google", StringComparison.OrdinalIgnoreCase))
-            {
-                var baseUrl = _config["AppSettings:FrontendBaseUrl"] ?? "https://frontend-alquimia.vercel.app/";
-                frontendRedirect = baseUrl.TrimEnd('/') + "/Login/RedirectGoogle";
-            }
+                var info = await _signInManager.GetExternalLoginInfoAsync();
+                if (info == null)
+                {
+                    _logger.LogWarning("No se pudo obtener la información externa del login.");
+                    if (debug)
+                        return BadRequest(new { mensaje = "No se pudo obtener la información externa." });
 
-            if (result.Succeeded)
-            {
-                var existingUser = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
-                var rolesExisting = await _userManager.GetRolesAsync(existingUser);
-                var tokenExisting = _jwtService.GenerateToken(existingUser, rolesExisting);
-                await _signInManager.SignInAsync(existingUser, isPersistent: false);
+                    return Redirect("https://frontend-alquimia.vercel.app/Login?error=callback");
+                }
+
+                var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
+
+                var frontendRedirect = _config["OAuth:Url"];
+                if (string.IsNullOrWhiteSpace(frontendRedirect) ||
+                    frontendRedirect.Contains("/account/signin-google", StringComparison.OrdinalIgnoreCase))
+                {
+                    var baseUrl = _config["AppSettings:FrontendBaseUrl"] ?? "https://frontend-alquimia.vercel.app/";
+                    frontendRedirect = baseUrl.TrimEnd('/') + "/Login/RedirectGoogle";
+                }
+
+                if (result.Succeeded)
+                {
+                    var existingUser = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+                    var roles = await _userManager.GetRolesAsync(existingUser);
+                    var token = _jwtService.GenerateToken(existingUser, roles);
+                    await _signInManager.SignInAsync(existingUser, isPersistent: false);
+
+                    _logger.LogInformation("Usuario existente logueado con Google: {Email}", info.Principal.FindFirstValue(ClaimTypes.Email));
+
+                    if (debug)
+                    {
+                        return Ok(new
+                        {
+                            token,
+                            existingUser = true,
+                            email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                            name = info.Principal.FindFirstValue(ClaimTypes.Name)
+                        });
+                    }
+
+                    return Redirect(frontendRedirect);
+                }
+
+                // Usuario no existe, se crea
+                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                var name = info.Principal.FindFirstValue(ClaimTypes.Name);
+
+                var newUser = new User
+                {
+                    Email = email,
+                    UserName = GenerateUserNameSeguro(email),
+                    Name = name,
+                    SecurityStamp = Guid.NewGuid().ToString()
+                };
+
+                var createResult = await _userManager.CreateAsync(newUser);
+                if (!createResult.Succeeded)
+                {
+                    _logger.LogError("Error al crear usuario con Google: {Errores}", createResult.Errors);
+                    return Redirect("https://frontend-alquimia.vercel.app/Login?error=creation");
+                }
+
+                await _userManager.AddLoginAsync(newUser, info);
+                var newRoles = await _userManager.GetRolesAsync(newUser);
+                var newToken = _jwtService.GenerateToken(newUser, newRoles);
+                await _signInManager.SignInAsync(newUser, isPersistent: false);
+
+                _logger.LogInformation("Nuevo usuario creado desde Google: {Email}", email);
+
                 if (debug)
                 {
                     return Ok(new
                     {
-                        token = tokenExisting,
-                        existingUser = true,
-                        email = info.Principal.FindFirstValue(ClaimTypes.Email),
-                        name = info.Principal.FindFirstValue(ClaimTypes.Name)
+                        token = newToken,
+                        newUser = true,
+                        email,
+                        name
                     });
                 }
+
                 return Redirect(frontendRedirect);
             }
-
-            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-            var name = info.Principal.FindFirstValue(ClaimTypes.Name);
-
-            var newUser = new User
+            catch (Exception ex)
             {
-                Email = email,
-                UserName = GenerateUserNameSeguro(email),
-                Name = name,
-                SecurityStamp = Guid.NewGuid().ToString()
-            };
-
-            var createResult = await _userManager.CreateAsync(newUser);
-            if (!createResult.Succeeded)
-                return Redirect("http://localhost:3000/Login?error=creation");
-
-            await _userManager.AddLoginAsync(newUser, info);
-            var roles = await _userManager.GetRolesAsync(newUser);
-            var token = _jwtService.GenerateToken(newUser, roles);
-            await _signInManager.SignInAsync(newUser, isPersistent: false);
-            _logger.LogInformation("Google login info recibida para: {Email}", email);
-
-            if (debug)
-            {
-                return Ok(new
+                _logger.LogError(ex, "Error inesperado en GoogleLoginCallback.");
+                if (debug)
                 {
-                    token,
-                    newUser = true,
-                    email,
-                    name
-                });
+                    return StatusCode(500, new { mensaje = "Error interno", error = ex.Message });
+                }
+                return Redirect("https://frontend-alquimia.vercel.app/Login?error=server");
             }
-            return Redirect(frontendRedirect);
         }
 
         [HttpGet("debug/google-config")]
@@ -222,6 +248,18 @@ namespace alquimia.Api.Controllers
                 loginEndpoint,
                 callback,
                 frontendRedirect
+            });
+        }
+
+        [HttpGet("debug/google-login")]
+        public IActionResult GoogleLoginDebug()
+        {
+            var loginUrl = Url.Action("LoginWithGoogle", "Account", new { debug = true }, Request.Scheme);
+            var callbackUrl = Url.Action("GoogleLoginCallback", "Account", new { debug = true }, Request.Scheme);
+            return Ok(new
+            {
+                loginUrl,
+                callbackUrl
             });
         }
 
