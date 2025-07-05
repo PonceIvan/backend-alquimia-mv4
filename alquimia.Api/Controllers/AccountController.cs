@@ -117,8 +117,10 @@ namespace alquimia.Api.Controllers
 [HttpGet("login-google")]
 public IActionResult LoginWithGoogle()
 {
-    var redirectUrl = Url.Action("GoogleLoginCallback", "Account", null, Request.Scheme);
-    var absoluteRedirectUri = $"{Request.Scheme}://{Request.Host}{redirectUrl}";
+var redirectUrl = Url.Action("GoogleLoginCallback", "Account", null, Request.Scheme);
+_logger.LogInformation("🔁 redirect_uri usado para Google OAuth: {RedirectUrl}", redirectUrl);
+var properties = _signInManager.ConfigureExternalAuthenticationProperties("Google", redirectUrl);
+return Challenge(properties, "Google");
 
     return Content($"Redirect URI: {absoluteRedirectUri}");
 }
