@@ -114,13 +114,14 @@ namespace alquimia.Api.Controllers
             return Ok(new { mensaje = "Login exitoso ✅", token });
         }
 
-        [HttpGet("login-google")]
-        public IActionResult LoginWithGoogle()
-        {
-            var redirectUrl = Url.Action("GoogleLoginCallback", "Cuenta");
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties("Google", redirectUrl);
-            return Challenge(properties, "Google");
-        }
+ [HttpGet("login-google")]
+public IActionResult LoginWithGoogle()
+{
+    var redirectUrl = Url.Action("GoogleLoginCallback", "Account");
+    _logger.LogInformation("🔁 redirect_uri usado: {RedirectUrl}", redirectUrl);
+    var properties = _signInManager.ConfigureExternalAuthenticationProperties("Google", redirectUrl);
+    return Challenge(properties, "Google");
+}
 
         [HttpGet("signin-google")]
         public async Task<IActionResult> GoogleLoginCallback()
