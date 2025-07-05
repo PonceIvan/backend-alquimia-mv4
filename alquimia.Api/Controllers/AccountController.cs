@@ -114,34 +114,64 @@ namespace alquimia.Api.Controllers
             return Ok(new { mensaje = "Login exitoso ✅", token });
         }
 
-[HttpGet("login-google")]
-public IActionResult LoginWithGoogle()
-{
-var redirectUrl = Url.Action("GoogleLoginCallback", "Account", null, Request.Scheme);
-_logger.LogInformation("🔁 redirect_uri usado para Google OAuth: {RedirectUrl}", redirectUrl);
-var properties = _signInManager.ConfigureExternalAuthenticationProperties("Google", redirectUrl);
-return Challenge(properties, "Google");
+        [HttpGet("login-google")]
+        public IActionResult LoginWithGoogle([FromQuery] bool debug = false)
+        {
+            var redirectUrl = Url.Action("GoogleLoginCallback", "Account", null, Request.Scheme);
+            _logger.LogInformation("🔁 redirect_uri usado para Google OAuth: {RedirectUrl}", redirectUrl);
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties("Google", redirectUrl);
+            if (debug)
+            {
+                return Ok(new
+                {
+                    redirectUrl,
+                    callback = redirectUrl
+                });
+            }
+            return Challenge(properties, "Google");
 
-
-}
+        }
 
         [HttpGet("signin-google")]
-        public async Task<IActionResult> GoogleLoginCallback()
+        public async Task<IActionResult> GoogleLoginCallback([FromQuery] bool debug = false)
         {
             _logger.LogInformation("Callback de login con Google recibido");
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
                 _logger.LogError("Fallo al obtener la información de login externo.");
+                if (debug)
+                    return BadRequest(new { mensaje = "No se pudo obtener la información externa." });
                 return Redirect("http://localhost:3000/Login?error=callback");
             }
 
-
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
+
+            var frontendRedirect = _config["OAuth:Url"];
+            if (string.IsNullOrWhiteSpace(frontendRedirect) ||
+                frontendRedirect.Contains("/account/signin-google", StringComparison.OrdinalIgnoreCase))
+            {
+                var baseUrl = _config["AppSettings:FrontendBaseUrl"] ?? "https://frontend-alquimia.vercel.app/";
+                frontendRedirect = baseUrl.TrimEnd('/') + "/Login/RedirectGoogle";
+            }
 
             if (result.Succeeded)
             {
-              return Redirect("https://frontend-alquimia.vercel.app/Login/RedirectGoogle");
+                var existingUser = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+                var rolesExisting = await _userManager.GetRolesAsync(existingUser);
+                var tokenExisting = _jwtService.GenerateToken(existingUser, rolesExisting);
+                await _signInManager.SignInAsync(existingUser, isPersistent: false);
+                if (debug)
+                {
+                    return Ok(new
+                    {
+                        token = tokenExisting,
+                        existingUser = true,
+                        email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                        name = info.Principal.FindFirstValue(ClaimTypes.Name)
+                    });
+                }
+                return Redirect(frontendRedirect);
             }
 
             // Crear el usuario si no existe
@@ -153,7 +183,7 @@ return Challenge(properties, "Google");
                 Email = email,
                 UserName = GenerateUserNameSeguro(email),
                 Name = name,
-                SecurityStamp = Guid.NewGuid().ToString() // ✅ agregado
+                SecurityStamp = Guid.NewGuid().ToString()
             };
 
             var createResult = await _userManager.CreateAsync(newUser);
@@ -164,7 +194,38 @@ return Challenge(properties, "Google");
             await _userManager.AddLoginAsync(newUser, info);
             await _signInManager.SignInAsync(newUser, isPersistent: false);
             _logger.LogInformation("Google login info recibida para: {Email}", info.Principal.FindFirstValue(ClaimTypes.Email));
-            return Redirect("http://localhost:3000/Login/RedirectGoogle");
+            if (debug)
+            {
+                return Ok(new
+                {
+                    token,
+                    newUser = true,
+                    email,
+                    name
+                });
+            }
+            return Redirect(frontendRedirect);
+        }
+
+        [HttpGet("debug/google-config")]
+        public IActionResult GoogleConfigDebug()
+        {
+            var loginEndpoint = Url.Action("LoginWithGoogle", "Account", null, Request.Scheme);
+            var callback = Url.Action("GoogleLoginCallback", "Account", null, Request.Scheme);
+            var frontendRedirect = _config["OAuth:Url"];
+            if (string.IsNullOrWhiteSpace(frontendRedirect) ||
+                frontendRedirect.Contains("/account/signin-google", StringComparison.OrdinalIgnoreCase))
+            {
+                var baseUrl = _config["AppSettings:FrontendBaseUrl"] ?? "https://frontend-alquimia.vercel.app/";
+                frontendRedirect = baseUrl.TrimEnd('/') + "/Login/RedirectGoogle";
+            }
+            return Ok(new
+            {
+                clientIdDefined = !string.IsNullOrWhiteSpace(_config["OAuth:ClientID"]),
+                loginEndpoint,
+                callback,
+                frontendRedirect
+            });
         }
         [HttpPost("register-provider")]
         public async Task<IActionResult> RegisterProvider([FromBody] RegisterProviderDTO dto)
