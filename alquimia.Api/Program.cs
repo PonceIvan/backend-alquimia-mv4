@@ -108,6 +108,8 @@ builder.Services.AddAuthentication(options =>
     options.ClientSecret = builder.Configuration["OAuth:ClientSecret"];
     options.CallbackPath = "/account/signin-google";
     options.ClaimActions.MapJsonKey("urn:google:picture", "picture", "url");
+    options.CorrelationCookie.SameSite = SameSiteMode.None;
+    options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
 });
 
 // 🔑 Data Protection – persistencia de claves para reset de contraseña
