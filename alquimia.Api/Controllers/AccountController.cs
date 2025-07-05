@@ -166,6 +166,59 @@ namespace alquimia.Api.Controllers
             _logger.LogInformation("Google login info recibida para: {Email}", info.Principal.FindFirstValue(ClaimTypes.Email));
             return Redirect($"{frontendBaseUrl}Login/RedirectGoogle");
         }
+
+        // Endpoints de depuración para el flujo de Google
+        [HttpGet("login-google-debug")]
+        public IActionResult LoginWithGoogleDebug()
+        {
+            var redirectUrl = Url.Action("GoogleLoginCallbackDebug", "Account");
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties("GoogleDebug", redirectUrl);
+            return Challenge(properties, "GoogleDebug");
+        }
+
+        [HttpGet("signin-google-debug")]
+        public async Task<IActionResult> GoogleLoginCallbackDebug()
+        {
+            _logger.LogInformation("Callback de login con Google (debug) recibido");
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                _logger.LogError("Fallo al obtener la información de login externo.");
+                return BadRequest(new { mensaje = "No se obtuvo información externa" });
+            }
+
+            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
+
+            if (result.Succeeded)
+            {
+                var usuario = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+                var rolesUsuario = await _userManager.GetRolesAsync(usuario);
+                var tokenUsuario = _jwtService.GenerateToken(usuario, rolesUsuario);
+                return Ok(new { mensaje = "Login con Google exitoso", token = tokenUsuario });
+            }
+
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+            var name = info.Principal.FindFirstValue(ClaimTypes.Name);
+
+            var newUser = new User
+            {
+                Email = email,
+                UserName = GenerateUserNameSeguro(email),
+                Name = name,
+                SecurityStamp = Guid.NewGuid().ToString()
+            };
+
+            var createResult = await _userManager.CreateAsync(newUser);
+            if (!createResult.Succeeded)
+            {
+                return BadRequest(new { mensaje = "Error al crear usuario", createResult.Errors });
+            }
+            await _userManager.AddLoginAsync(newUser, info);
+            await _signInManager.SignInAsync(newUser, isPersistent: false);
+            var roles = await _userManager.GetRolesAsync(newUser);
+            var token = _jwtService.GenerateToken(newUser, roles);
+            return Ok(new { mensaje = "Usuario registrado via Google", token });
+        }
         [HttpPost("register-provider")]
         public async Task<IActionResult> RegisterProvider([FromBody] RegisterProviderDTO dto)
         {

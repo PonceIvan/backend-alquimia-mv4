@@ -106,7 +106,16 @@ builder.Services.AddAuthentication()
     {
         options.ClientId = builder.Configuration["OAuth:ClientID"];
         options.ClientSecret = builder.Configuration["OAuth:ClientSecret"];
-        options.CallbackPath = "/signin-google";
+        // Coincidir con la ruta configurada en el controlador
+        options.CallbackPath = "/account/signin-google";
+        options.ClaimActions.MapJsonKey("urn:google:picture", "picture", "url");
+    })
+    // Esquema adicional para depuración
+    .AddGoogle("GoogleDebug", options =>
+    {
+        options.ClientId = builder.Configuration["OAuth:ClientID"];
+        options.ClientSecret = builder.Configuration["OAuth:ClientSecret"];
+        options.CallbackPath = "/account/signin-google-debug";
         options.ClaimActions.MapJsonKey("urn:google:picture", "picture", "url");
     });
 
