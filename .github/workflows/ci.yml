@@ -3,11 +3,12 @@ on:
     branches:
       - main
       - rama-develop-pre-presentacion
+      - codex
   pull_request:
     branches:
       - main
       - rama-develop-pre-presentacion
-
+      - codex
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
