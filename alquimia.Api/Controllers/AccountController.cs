@@ -141,7 +141,7 @@ return Challenge(properties, "Google");
 
             if (result.Succeeded)
             {
-                return Redirect("http://localhost:3000/login/redirectgoogle");
+              return Redirect("https://frontend-alquimia.vercel.app/Login/RedirectGoogle");
             }
 
             // Crear el usuario si no existe
