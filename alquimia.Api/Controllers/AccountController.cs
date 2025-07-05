@@ -1,11 +1,10 @@
-﻿using alquimia.Services.Interfaces;
+using alquimia.Services.Interfaces;
 using alquimia.Services.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Security.Claims;
-//using Humanizer;
 using User = alquimia.Data.Entities.User;
 
 namespace alquimia.Api.Controllers
@@ -23,7 +22,8 @@ namespace alquimia.Api.Controllers
         private readonly IEmailTemplateService _emailTemplate;
 
         public AccountController(UserManager<User> userManager, SignInManager<User> signInManager,
-            ILogger<AccountController> logger, IJwtService jwtService, IEmailService emailService, IConfiguration config, IEmailTemplateService emailTemplate)
+            ILogger<AccountController> logger, IJwtService jwtService, IEmailService emailService,
+            IConfiguration config, IEmailTemplateService emailTemplate)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -49,7 +49,7 @@ namespace alquimia.Api.Controllers
             {
                 UserName = GenerateUserNameSeguro(dto.Email),
                 Email = dto.Email,
-                SecurityStamp = Guid.NewGuid().ToString(), // Obligatorio
+                SecurityStamp = Guid.NewGuid().ToString(),
                 Name = dto.Name?.Trim()
             };
 
@@ -60,12 +60,10 @@ namespace alquimia.Api.Controllers
                 return BadRequest(result.Errors);
             }
 
-            // 🔁 Recuperar desde base de datos para garantizar que Id esté persistido
             var usuarioPersistido = await _userManager.FindByEmailAsync(dto.Email);
             if (usuarioPersistido == null)
                 return StatusCode(500, new { mensaje = "No se pudo recuperar el usuario recién creado." });
 
-            // ✅ Asignar rol si no lo tiene
             if (!await _userManager.IsInRoleAsync(usuarioPersistido, dto.Rol))
             {
                 var roleResult = await _userManager.AddToRoleAsync(usuarioPersistido, dto.Rol);
@@ -107,6 +105,7 @@ namespace alquimia.Api.Controllers
 
             if (!result.Succeeded)
                 return Unauthorized(new { mensaje = "Credenciales inválidas." });
+
             var roles = await _userManager.GetRolesAsync(usuario);
             var token = _jwtService.GenerateToken(usuario, roles);
             await _signInManager.SignInAsync(usuario, isPersistent: false);
@@ -129,82 +128,106 @@ namespace alquimia.Api.Controllers
                 });
             }
             return Challenge(properties, "Google");
-
         }
 
         [HttpGet("signin-google")]
         public async Task<IActionResult> GoogleLoginCallback([FromQuery] bool debug = false)
         {
-            _logger.LogInformation("Callback de login con Google recibido");
-            var info = await _signInManager.GetExternalLoginInfoAsync();
-            if (info == null)
+            try
             {
-                _logger.LogError("Fallo al obtener la información de login externo.");
-                if (debug)
-                    return BadRequest(new { mensaje = "No se pudo obtener la información externa." });
-                return Redirect("http://localhost:3000/Login?error=callback");
-            }
+                _logger.LogInformation("Callback de login con Google recibido");
 
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
+                var info = await _signInManager.GetExternalLoginInfoAsync();
+                if (info == null)
+                {
+                    _logger.LogWarning("No se pudo obtener la información externa del login.");
+                    if (debug)
+                        return BadRequest(new { mensaje = "No se pudo obtener la información externa." });
 
-            var frontendRedirect = _config["OAuth:Url"];
-            if (string.IsNullOrWhiteSpace(frontendRedirect) ||
-                frontendRedirect.Contains("/account/signin-google", StringComparison.OrdinalIgnoreCase))
-            {
-                var baseUrl = _config["AppSettings:FrontendBaseUrl"] ?? "https://frontend-alquimia.vercel.app/";
-                frontendRedirect = baseUrl.TrimEnd('/') + "/Login/RedirectGoogle";
-            }
+                    return Redirect("https://frontend-alquimia.vercel.app/Login?error=callback");
+                }
 
-            if (result.Succeeded)
-            {
-                var existingUser = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
-                var rolesExisting = await _userManager.GetRolesAsync(existingUser);
-                var tokenExisting = _jwtService.GenerateToken(existingUser, rolesExisting);
-                await _signInManager.SignInAsync(existingUser, isPersistent: false);
+                var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
+
+                var frontendRedirect = _config["OAuth:Url"];
+                if (string.IsNullOrWhiteSpace(frontendRedirect) ||
+                    frontendRedirect.Contains("/account/signin-google", StringComparison.OrdinalIgnoreCase))
+                {
+                    var baseUrl = _config["AppSettings:FrontendBaseUrl"] ?? "https://frontend-alquimia.vercel.app/";
+                    frontendRedirect = baseUrl.TrimEnd('/') + "/Login/RedirectGoogle";
+                }
+
+                if (result.Succeeded)
+                {
+                    var existingUser = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+                    var roles = await _userManager.GetRolesAsync(existingUser);
+                    var token = _jwtService.GenerateToken(existingUser, roles);
+                    await _signInManager.SignInAsync(existingUser, isPersistent: false);
+
+                    _logger.LogInformation("Usuario existente logueado con Google: {Email}", info.Principal.FindFirstValue(ClaimTypes.Email));
+
+                    if (debug)
+                    {
+                        return Ok(new
+                        {
+                            token,
+                            existingUser = true,
+                            email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                            name = info.Principal.FindFirstValue(ClaimTypes.Name)
+                        });
+                    }
+
+                    return Redirect(frontendRedirect);
+                }
+
+                // Usuario no existe, se crea
+                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                var name = info.Principal.FindFirstValue(ClaimTypes.Name);
+
+                var newUser = new User
+                {
+                    Email = email,
+                    UserName = GenerateUserNameSeguro(email),
+                    Name = name,
+                    SecurityStamp = Guid.NewGuid().ToString()
+                };
+
+                var createResult = await _userManager.CreateAsync(newUser);
+                if (!createResult.Succeeded)
+                {
+                    _logger.LogError("Error al crear usuario con Google: {Errores}", createResult.Errors);
+                    return Redirect("https://frontend-alquimia.vercel.app/Login?error=creation");
+                }
+
+                await _userManager.AddLoginAsync(newUser, info);
+                var newRoles = await _userManager.GetRolesAsync(newUser);
+                var newToken = _jwtService.GenerateToken(newUser, newRoles);
+                await _signInManager.SignInAsync(newUser, isPersistent: false);
+
+                _logger.LogInformation("Nuevo usuario creado desde Google: {Email}", email);
+
                 if (debug)
                 {
                     return Ok(new
                     {
-                        token = tokenExisting,
-                        existingUser = true,
-                        email = info.Principal.FindFirstValue(ClaimTypes.Email),
-                        name = info.Principal.FindFirstValue(ClaimTypes.Name)
+                        token = newToken,
+                        newUser = true,
+                        email,
+                        name
                     });
                 }
+
                 return Redirect(frontendRedirect);
             }
-
-            // Crear el usuario si no existe
-            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-            var name = info.Principal.FindFirstValue(ClaimTypes.Name);
-
-            var newUser = new User
+            catch (Exception ex)
             {
-                Email = email,
-                UserName = GenerateUserNameSeguro(email),
-                Name = name,
-                SecurityStamp = Guid.NewGuid().ToString()
-            };
-
-            var createResult = await _userManager.CreateAsync(newUser);
-            if (!createResult.Succeeded)
-                return Redirect("http://localhost:3000/Login?error=creation");
-            var roles = await _userManager.GetRolesAsync(newUser);
-            var token = _jwtService.GenerateToken(newUser, roles);
-            await _userManager.AddLoginAsync(newUser, info);
-            await _signInManager.SignInAsync(newUser, isPersistent: false);
-            _logger.LogInformation("Google login info recibida para: {Email}", info.Principal.FindFirstValue(ClaimTypes.Email));
-            if (debug)
-            {
-                return Ok(new
+                _logger.LogError(ex, "Error inesperado en GoogleLoginCallback.");
+                if (debug)
                 {
-                    token,
-                    newUser = true,
-                    email,
-                    name
-                });
+                    return StatusCode(500, new { mensaje = "Error interno", error = ex.Message });
+                }
+                return Redirect("https://frontend-alquimia.vercel.app/Login?error=server");
             }
-            return Redirect(frontendRedirect);
         }
 
         [HttpGet("debug/google-config")]
@@ -239,6 +262,7 @@ namespace alquimia.Api.Controllers
                 callbackUrl
             });
         }
+
         [HttpPost("register-provider")]
         public async Task<IActionResult> RegisterProvider([FromBody] RegisterProviderDTO dto)
         {
@@ -261,7 +285,6 @@ namespace alquimia.Api.Controllers
                 Cuil = dto.Cuil,
                 Rubro = dto.Rubro,
                 OtroProducto = string.Join(",", dto.OtroProducto),
-                //TarjetaNombre = dto.TarjetaNombre,
                 TarjetaNumero = dto.TarjetaNumero,
                 TarjetaVencimiento = dto.TarjetaVencimiento,
                 TarjetaCVC = dto.TarjetaCVC
@@ -274,12 +297,10 @@ namespace alquimia.Api.Controllers
                 return BadRequest(result.Errors);
             }
 
-            // Reconfirmar existencia
             var usuarioPersistido = await _userManager.FindByEmailAsync(dto.Email);
             if (usuarioPersistido == null)
                 return StatusCode(500, new { mensaje = "No se pudo recuperar el proveedor recién creado." });
 
-            // Asignar rol de "Creador" inicialmente
             var rolInicial = "Creador";
             if (!await _userManager.IsInRoleAsync(usuarioPersistido, rolInicial))
             {
@@ -320,7 +341,8 @@ namespace alquimia.Api.Controllers
             var user = await _userManager.FindByEmailAsync(userEmail);
             var roles = await _userManager.GetRolesAsync(user);
             return Ok(new
-            {   id = user.Id,
+            {
+                id = user.Id,
                 nombre = user.Name,
                 email = user.Email,
                 rol = roles.FirstOrDefault()
@@ -332,19 +354,14 @@ namespace alquimia.Api.Controllers
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
-            {
                 throw new KeyNotFoundException("Usuario no encontrado");
-            }
+
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var encodedToken = WebUtility.UrlEncode(token);
-
             var frontendBaseUrl = _config["AppSettings:FrontendBaseUrl"];
             var callbackUrl = $"{frontendBaseUrl}restablecer-contrasenia?email={model.Email}&token={encodedToken}";
-
             var message = _emailTemplate.GetPasswordResetEmail(user.Name, callbackUrl);
-
             await _emailService.SendEmailAsync(model.Email, "Recuperar contraseña - Alquimia", message);
-
             return Ok("Se envió un enlace para restablecer la contraseña.");
         }
 
@@ -356,28 +373,23 @@ namespace alquimia.Api.Controllers
                 throw new KeyNotFoundException("Usuario no encontrado");
 
             var result = await _userManager.ResetPasswordAsync(user, WebUtility.UrlDecode(model.Token), model.NewPassword);
-
             if (!result.Succeeded)
-                throw new ArgumentException("Ocurrió un error:" + result.Errors.Select(e => e.Description));
+                throw new ArgumentException("Ocurrió un error:" + string.Join(", ", result.Errors.Select(e => e.Description)));
 
             return Ok("Contraseña restablecida correctamente.");
         }
+
         private string GenerateUserNameSeguro(string email)
         {
             if (string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
                 return Guid.NewGuid().ToString("N").Substring(0, 8);
 
             var nombre = email.Split('@')[0];
-
-            // Eliminar caracteres no permitidos
             nombre = new string(nombre.Where(char.IsLetterOrDigit).ToArray());
 
-            // Si quedó vacío, generamos uno al azar
             return string.IsNullOrWhiteSpace(nombre)
                 ? Guid.NewGuid().ToString("N").Substring(0, 8)
                 : nombre;
         }
-
-
     }
 }
