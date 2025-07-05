@@ -126,22 +126,36 @@ return Challenge(properties, "Google");
 }
 
         [HttpGet("signin-google")]
-        public async Task<IActionResult> GoogleLoginCallback()
+        public async Task<IActionResult> GoogleLoginCallback([FromQuery] bool debug = false)
         {
             _logger.LogInformation("Callback de login con Google recibido");
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
                 _logger.LogError("Fallo al obtener la información de login externo.");
+                if (debug)
+                    return BadRequest(new { mensaje = "No se pudo obtener la información externa." });
                 return Redirect("http://localhost:3000/Login?error=callback");
             }
 
+            if (debug)
+            {
+                return Ok(new
+                {
+                    provider = info.LoginProvider,
+                    key = info.ProviderKey,
+                    email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                    name = info.Principal.FindFirstValue(ClaimTypes.Name)
+                });
+            }
 
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
 
+            var frontendRedirect = _config["OAuth:Url"] ?? "https://frontend-alquimia.vercel.app/Login/RedirectGoogle";
+
             if (result.Succeeded)
             {
-              return Redirect("https://frontend-alquimia.vercel.app/Login/RedirectGoogle");
+                return Redirect(frontendRedirect);
             }
 
             // Crear el usuario si no existe
@@ -153,7 +167,7 @@ return Challenge(properties, "Google");
                 Email = email,
                 UserName = GenerateUserNameSeguro(email),
                 Name = name,
-                SecurityStamp = Guid.NewGuid().ToString() // ✅ agregado
+                SecurityStamp = Guid.NewGuid().ToString()
             };
 
             var createResult = await _userManager.CreateAsync(newUser);
@@ -164,7 +178,21 @@ return Challenge(properties, "Google");
             await _userManager.AddLoginAsync(newUser, info);
             await _signInManager.SignInAsync(newUser, isPersistent: false);
             _logger.LogInformation("Google login info recibida para: {Email}", info.Principal.FindFirstValue(ClaimTypes.Email));
-            return Redirect("http://localhost:3000/Login/RedirectGoogle");
+            return Redirect(frontendRedirect);
+        }
+
+        [HttpGet("debug/google-config")]
+        public IActionResult GoogleConfigDebug()
+        {
+            var loginEndpoint = Url.Action("LoginWithGoogle", "Account", null, Request.Scheme);
+            var callback = Url.Action("GoogleLoginCallback", "Account", null, Request.Scheme);
+            return Ok(new
+            {
+                clientIdDefined = !string.IsNullOrWhiteSpace(_config["OAuth:ClientID"]),
+                loginEndpoint,
+                callback,
+                frontendRedirect = _config["OAuth:Url"]
+            });
         }
         [HttpPost("register-provider")]
         public async Task<IActionResult> RegisterProvider([FromBody] RegisterProviderDTO dto)
