@@ -108,6 +108,13 @@ builder.Services.AddAuthentication()
         options.ClientSecret = builder.Configuration["OAuth:ClientSecret"];
         options.CallbackPath = "/signin-google";
         options.ClaimActions.MapJsonKey("urn:google:picture", "picture", "url");
+    })
+    .AddGoogle("GoogleDebug", options =>
+    {
+        options.ClientId = builder.Configuration["OAuth:ClientID"];
+        options.ClientSecret = builder.Configuration["OAuth:ClientSecret"];
+        options.CallbackPath = "/signin-google-debug";
+        options.ClaimActions.MapJsonKey("urn:google:picture", "picture", "url");
     });
 
 // 🍪 Cookies
