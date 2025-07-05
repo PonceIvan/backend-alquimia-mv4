@@ -106,7 +106,7 @@ builder.Services.AddAuthentication(options =>
 {
     options.ClientId = builder.Configuration["OAuth:ClientID"];
     options.ClientSecret = builder.Configuration["OAuth:ClientSecret"];
-    options.CallbackPath = "/signin-google";
+    options.CallbackPath = "/account/signin-google";
     options.ClaimActions.MapJsonKey("urn:google:picture", "picture", "url");
 });
 
