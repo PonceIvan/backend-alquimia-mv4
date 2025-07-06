@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Security.Claims;
 using User = alquimia.Data.Entities.User;
-
+//
 namespace alquimia.Api.Controllers
 {
     [ApiController]
@@ -347,6 +347,7 @@ namespace alquimia.Api.Controllers
                 return Guid.NewGuid().ToString("N").Substring(0, 8);
 
             var nombre = email.Split('@')[0];
+
             nombre = new string(nombre.Where(char.IsLetterOrDigit).ToArray());
 
             return string.IsNullOrWhiteSpace(nombre)
