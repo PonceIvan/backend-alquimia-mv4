@@ -9,6 +9,6 @@ namespace alquimia.Services.Interfaces
         Task<List<Formula>> BringMyFormulasAsync();
         Task<UserProfileDto?> BringMyData();
         Task<List<ProductDTO>> GetUserWishlistAsync(string userId);
-        Task<UserProfileDto?> UpdateMyData(UserProfileDto updatedData);
+        Task<UserProfileDto?> UpdateMyData(UserProfileUpdateDto updatedData);
     }
 }

@@ -18,7 +18,7 @@ namespace alquimia.Services.Handler
         {
             var heart = await _noteService.GetNoteNamesBySectorAsync("Corazón");
 
-            var msg = $"Las notas de corazón son las que emergen después de que las notas de salida se disipan y forman el cuerpo principal del perfume Algunas de ellas son: {string.Join(", ", heart.Take(3))}";
+            var msg = $"Las <strong>notas de corazón</strong> son las que emergen después de que las notas de salida se disipan y forman el <strong>cuerpo principal</strong> del perfume. \nAlgunas de ellas son: {string.Join(", ", heart.Take(3))}";
 
             return new ChatNode
             {

@@ -47,6 +47,8 @@ builder.Services.AddScoped<IChatDynamicNodeHandler, DinamicHeartNotesHandler>();
 builder.Services.AddScoped<IChatDynamicNodeHandler, DinamicBaseNotesHandler>();
 builder.Services.AddScoped<IChatDynamicNodeHandler, DinamicFamilyHandler>();
 builder.Services.AddScoped<IChatDynamicNodeHandler, DinamicIntensitiesHandler>();
+builder.Services.AddScoped<IChatDynamicNodeHandler, DinamicStateProviderHelpResponse>();
+builder.Services.AddScoped<IChatDynamicNodeHandler, DinamicStateProviderHelp>();
 
 //builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 //{

@@ -13,6 +13,8 @@ namespace alquimia.Services.Models
         public string Email { get; set; } = null!;
         public bool EsProveedor { get; set; }
         public string? CUIL { get; set; }
+        public string? Empresa { get; set; }
+        public string? Rubro { get; set; }
         public string? Ubicacion { get; set; }
         public string? CodigoPostal { get; set; }
         public int? IdEstado { get; set; }
