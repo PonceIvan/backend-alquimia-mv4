@@ -1,13 +1,15 @@
-﻿    
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
+import requests
+from bs4 import BeautifulSoup
 import pandas as pd
 
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  
+    allow_origins=["http://localhost:3000",
+    "https://frontend-alquimia.vercel.app"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -104,25 +106,59 @@ accord_translations = {
 @app.get("/api/perfume")
 def search_perfume(name: str = Query(..., alias="q")):
     normalized_name = name.replace(" ", "-").lower()
-    result = df[df["Perfume"].str.lower().str.contains(normalized_name, na=False)]
+    results = df[df["Perfume"].str.lower().str.contains(normalized_name, na=False)]
 
-    if result.empty:
+    if results.empty:
         return {"message": "Perfume not found", "notes": []}
     
-    perfume = result.iloc[0]  # Tomamos el primero que coincida
-    notes = [
-        perfume.get("mainaccord1"),
-        perfume.get("mainaccord2"),
-        perfume.get("mainaccord3")
-    ]
+    #perfume = results.iloc[0]  # Tomamos el primero que coincida
+    #notes = [
+    #    perfume.get("mainaccord1"),
+    #    perfume.get("mainaccord2"),
+    #    perfume.get("mainaccord3")
+    #]
+    perfumes_list = []
+    for _, row in results.head(4).iterrows():
+        notes = [
+            row.get("mainaccord1"),
+            row.get("mainaccord2"),
+            row.get("mainaccord3")
+        ]
+        translated_notes = [accord_translations.get(n.lower(), n) for n in notes if pd.notna(n)]
+        perfumes_list.append({
+            "perfume": row["Perfume"],
+            "brand": row["Brand"],
+            "notes": translated_notes,
+            "url": row.get("url")
+        })
+
+    return {"results": perfumes_list}
+        #translated_notes = [accord_translations.get(n.lower(), n) for n in notes if pd.notna(n)]
+        #return {
+        #    "perfume": perfume["Perfume"],
+        #    "brand": perfume["Brand"],
+        #    #"notes": [n for n in notes if pd.notna(n)]
+        #    "notes": translated_notes
+        #}
+
+
     
-    translated_notes = [accord_translations.get(n.lower(), n) for n in notes if pd.notna(n)]
-    return {
-        "perfume": perfume["Perfume"],
-        "brand": perfume["Brand"],
-        #"notes": [n for n in notes if pd.notna(n)]
-        "notes": translated_notes
+ZENROWS_API_KEY = "34f48787a0e21abd82d019522938fcb88289c84c"
+
+@app.get("/api/perfume-image")
+def get_perfume_image(url: str = Query(...)):
+    zenrows_url = "https://api.zenrows.com/v1/"
+    params = {
+        "apikey": ZENROWS_API_KEY,
+        "url": url,
+        "js_render": "true"
     }
-
-
-    
+    response = requests.get(zenrows_url, params=params)
+    if response.status_code != 200:
+        return {"error": "Error fetching page"}
+    soup = BeautifulSoup(response.text, "html.parser")
+    img_element = soup.find("img", src=lambda x: x and "perfume-thumbs" in x)
+    if img_element:
+        return {"image": img_element["src"]}
+    else:
+        return {"image": None}
