@@ -1,13 +1,9 @@
-﻿    
-from fastapi import FastAPI, Query
+﻿from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
+
 app = FastAPI()
 
 app.add_middleware(
@@ -147,35 +143,22 @@ def search_perfume(name: str = Query(..., alias="q")):
 
 
     
+ZENROWS_API_KEY = "34f48787a0e21abd82d019522938fcb88289c84c"
+
 @app.get("/api/perfume-image")
 def get_perfume_image(url: str = Query(...)):
-    chrome_options = Options()
-    chrome_options.binary_location = r"C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe"  
-    #chrome_options.add_argument("--headless=new")
-    chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-
-    service = Service("./chromedriver.exe")
-    driver = webdriver.Chrome(service=service, options=chrome_options)
-
-    driver.get(url)
-    driver.implicitly_wait(5)
-
-    imgs = driver.find_elements("tag name", "img")
-    perfume_img = None
-
-    for i, im in enumerate(imgs):
-        try:
-            src = im.get_attribute("src")
-            if src and "/mdimg/perfume-thumbs/" in src:
-                perfume_img = src
-                break
-        except Exception as e:
-            print(f"Error en imagen {i}: {e}")
-
-    driver.quit()
-
-    return {"image": perfume_img}
-
-
+    zenrows_url = "https://api.zenrows.com/v1/"
+    params = {
+        "apikey": ZENROWS_API_KEY,
+        "url": url,
+        "js_render": "true"
+    }
+    response = requests.get(zenrows_url, params=params)
+    if response.status_code != 200:
+        return {"error": "Error fetching page"}
+    soup = BeautifulSoup(response.text, "html.parser")
+    img_element = soup.find("img", src=lambda x: x and "perfume-thumbs" in x)
+    if img_element:
+        return {"image": img_element["src"]}
+    else:
+        return {"image": None}
