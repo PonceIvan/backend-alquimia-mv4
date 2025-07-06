@@ -122,6 +122,21 @@ namespace alquimia.Services
             }).ToList();
         }
 
+        public async Task<bool> RemoveFromWishlistAsync(string userId, int productId)
+        {
+            var wishlistItem = await _context.UserProducts
+                .FirstOrDefaultAsync(w =>
+                    w.UsuarioId.ToString() == userId &&
+                    w.ProductoId == productId);
+
+            if (wishlistItem == null)
+                return false;
+
+            _context.UserProducts.Remove(wishlistItem);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
 
         public async Task<UserProfileDto?> UpdateMyData(UserProfileUpdateDto dto)
         {

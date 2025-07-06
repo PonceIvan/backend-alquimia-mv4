@@ -54,6 +54,21 @@ namespace alquimia.Api.Controllers
             var wishlist = await _profileService.GetUserWishlistAsync(userId);
             return Ok(wishlist);
         }
+        [HttpDelete("wishlist/{productId}")]
+        public async Task<IActionResult> RemoveFromWishlist(int productId)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            var result = await _profileService.RemoveFromWishlistAsync(userId, productId);
+
+            if (!result)
+                return NotFound("El producto no se encontró en la wishlist o no pudo eliminarse.");
+
+            return NoContent(); 
+        }
 
         [HttpPut("data")]
         public async Task<IActionResult> UpdateMyData([FromBody] UserProfileUpdateDto updatedData)
