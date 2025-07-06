@@ -50,6 +50,7 @@ builder.Services.AddScoped<IDesignLabelService, DesignLabelService>();
 builder.Services.AddScoped<IEmailTemplateService, EmailTemplateService>(); // 🔄 Registro único
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddScoped<IMercadoPagoService, MercadoPagoService>();
+builder.Services.AddScoped<IMercadoLibreService, MercadoLibreService>();
 builder.Services.AddScoped<IChatbotService, ChatbotService>();
 
 // Handlers dinámicos
