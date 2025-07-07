@@ -1,5 +1,4 @@
 ﻿using alquimia.Api.Controllers;
-using alquimia.Data;
 using alquimia.Data.Entities;
 using alquimia.Services;
 using alquimia.Services.Models;
@@ -8,9 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using System;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace alquimia.Tests.TestControllers
@@ -20,7 +17,7 @@ namespace alquimia.Tests.TestControllers
         private AlquimiaDbContext GetDbContext()
         {
             var options = new DbContextOptionsBuilder<AlquimiaDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString()) // DB única por test
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
 
             return new AlquimiaDbContext(options);
@@ -60,7 +57,6 @@ namespace alquimia.Tests.TestControllers
         [Fact]
         public async Task GetMyData_UserFound_ReturnsOkWithUserProfile()
         {
-            // Arrange
             var context = GetDbContext();
             var user = new User
             {
@@ -82,10 +78,8 @@ namespace alquimia.Tests.TestControllers
             var service = new ProfileService(userManager, context, httpContextAccessor);
             var controller = new ProfileController(service);
 
-            // Act
             var result = await controller.GetMyData();
 
-            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var profile = Assert.IsType<UserProfileDto>(okResult.Value);
             Assert.Equal("User One", profile.Name);
@@ -95,18 +89,15 @@ namespace alquimia.Tests.TestControllers
         [Fact]
         public async Task GetMyData_UserNotFound_ReturnsNotFound()
         {
-            // Arrange
             var context = GetDbContext();
             var userManager = GetUserManagerMock();
-            var httpContextAccessor = GetHttpContextAccessor(999); // ID inexistente
+            var httpContextAccessor = GetHttpContextAccessor(999);
 
             var service = new ProfileService(userManager, context, httpContextAccessor);
             var controller = new ProfileController(service);
 
-            // Act
             var result = await controller.GetMyData();
 
-            // Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             Assert.Equal("Usuario no encontrado", notFoundResult.Value);
         }

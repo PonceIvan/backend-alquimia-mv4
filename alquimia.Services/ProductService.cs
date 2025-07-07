@@ -117,7 +117,6 @@ namespace alquimia.Services
             }
             catch (DbUpdateException ex)
             {
-                // Log de la excepción con inner exception
                 var innerMessage = ex.InnerException?.Message ?? ex.Message;
                 Console.WriteLine($"[Error al guardar producto] {innerMessage}");
                 throw new Exception($"Error al guardar producto: {innerMessage}");
@@ -138,10 +137,8 @@ namespace alquimia.Services
             if (producto == null)
                 return false;
 
-            // Eliminar variantes primero
             _context.ProductVariants.RemoveRange(producto.ProductVariants);
 
-            // Luego eliminar el producto
             _context.Products.Remove(producto);
 
             await _context.SaveChangesAsync();

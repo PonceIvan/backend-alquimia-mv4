@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace alquimia.Services.Models
 {
@@ -22,8 +17,7 @@ namespace alquimia.Services.Models
         public string Empresa { get; set; } = "";
         public string Cuil { get; set; } = "";
         public string Rubro { get; set; } = "";
-        public string OtroProducto { get; set; } = "";// new();
-        //public string TarjetaNombre { get; set; } = "";
+        public string OtroProducto { get; set; } = "";
         public string TarjetaNumero { get; set; } = "";
         public string TarjetaVencimiento { get; set; } = "";
         public string TarjetaCVC { get; set; } = "";

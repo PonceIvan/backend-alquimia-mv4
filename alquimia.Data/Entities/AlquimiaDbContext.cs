@@ -92,10 +92,7 @@ namespace alquimia.Data.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder); // ✅ SIEMPRE antes de todo
-
-
-
+            base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<ProductVariant>(entity =>
             {
@@ -297,8 +294,6 @@ namespace alquimia.Data.Entities
                     .HasFilter("([NormalizedUserName] IS NOT NULL)");
 
                 entity.HasOne(d => d.IdEstadoNavigation).WithMany(p => p.Users).HasConstraintName("FK_estado_Users");
-
-                //entity.HasOne(d => d.IdFormulasNavigation).WithMany(p => p.Users).HasConstraintName("FK_formulas_Users");
 
                 entity.HasOne(d => d.IdQuizNavigation).WithMany(p => p.Users).HasConstraintName("FK_quiz_Users");
 

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 namespace alquimia.Api.Controllers
 {
-    //[Authorize]
     [Route("product")]
     [ApiController]
     public class ProductController : ControllerBase
@@ -35,8 +34,7 @@ namespace alquimia.Api.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreateProduct([FromBody] CreateProductoDTO dto)
         {
-            // Simular proveedor autenticado
-            var idProveedor = 1; // TODO: reemplazar por el id real del proveedor autenticado
+            var idProveedor = 1;
 
             try
             {
@@ -117,7 +115,5 @@ namespace alquimia.Api.Controllers
             await _productService.RemoveFromWishlistAsync(userId, productId);
             return Ok(new { message = "Producto eliminado de tu biblioteca." });
         }
-
-
     }
 }

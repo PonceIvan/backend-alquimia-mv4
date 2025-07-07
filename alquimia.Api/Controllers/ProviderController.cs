@@ -17,7 +17,6 @@ namespace alquimia.Api.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AlquimiaDbContext _context;
 
-
         public ProviderController(
             IProductService productoservice,
             IHttpContextAccessor httpcontextaccessor,
@@ -34,8 +33,6 @@ namespace alquimia.Api.Controllers
             return int.Parse(userIdClaim.Value);
         }
 
-        /// /////////////////////////////////////////////////////////////////////
-
         [HttpGet("home")]
         public async Task<IActionResult> GetHomeData()
         {
@@ -44,8 +41,6 @@ namespace alquimia.Api.Controllers
             return Ok(data);
         }
 
-        /// /////////////////////////////////////////////////////////////////////
-
         [HttpGet("products")]
         public async Task<IActionResult> GetProducts()
         {
@@ -53,9 +48,6 @@ namespace alquimia.Api.Controllers
             var productos = await _productService.GetProductsByProviderAsync(idProveedor);
             return Ok(productos);
         }
-
-
-        /// /////////////////////////////////////////////////////////////////////
 
         [HttpGet("product-types")]
         public async Task<IActionResult> GetProductTypes()
@@ -69,7 +61,6 @@ namespace alquimia.Api.Controllers
 
             return Ok(tipos);
         }
-        /// /////////////////////////////////////////////////////////////////////
 
         [HttpPost("create/{idProveedor:int}")]
         public async Task<IActionResult> CreateProduct(int idProveedor, [FromBody] CreateProductoDTO dto)
@@ -90,7 +81,6 @@ namespace alquimia.Api.Controllers
                 return StatusCode(500, new { mensaje = "Error interno: " + ex.Message });
             }
         }
-        /// /////////////////////////////////////////////////////////////////////
 
         [HttpGet("products/{idProducto}")]
         public async Task<IActionResult> GetProduct(int idProducto)
@@ -103,7 +93,7 @@ namespace alquimia.Api.Controllers
 
             return Ok(producto);
         }
-        /// /////////////////////////////////////////////////////////////////////
+
         [HttpDelete("products/{idProducto}")]
         public async Task<IActionResult> DeleteProduct(int idProducto)
         {
@@ -115,7 +105,7 @@ namespace alquimia.Api.Controllers
                 if (!resultado)
                     return NotFound(new { mensaje = "Producto no encontrado o no pertenece al proveedor" });
 
-                return NoContent(); // 204 No Content es lo estándar para DELETE exitoso
+                return NoContent();
             }
             catch (Exception ex)
             {
@@ -123,16 +113,14 @@ namespace alquimia.Api.Controllers
                 return StatusCode(500, new { mensaje = "Error interno al eliminar el producto" });
             }
         }
-        /// /////////////////////////////////////////////////////////////////////
 
-        // POST api/products/{productId}/variants
         [HttpPost("{productId}/variants")]
         public async Task<IActionResult> AddVariants(int productId, [FromBody] CreateProductVariantDTO dto)
         {
             try
             {
                 await _productService.AddVariantsToProductAsync(productId, dto);
-                return NoContent(); // 204 OK, porque solo agregamos datos
+                return NoContent();
             }
             catch (KeyNotFoundException ex)
             {
@@ -140,12 +128,9 @@ namespace alquimia.Api.Controllers
             }
             catch (Exception ex)
             {
-                // Loggear ex.Message si tenés un logger configurado
                 return StatusCode(500, "Error interno al agregar variantes");
             }
         }
-        /// /////////////////////////////////////////////////////////////////////
-        //ACTUALIZAR VARIANTE!!!!
 
         [HttpPut("variants/{variantId}")]
         public async Task<IActionResult> UpdateVariant(int variantId, [FromBody] UpdateProductVariantDTO dto)
@@ -153,8 +138,6 @@ namespace alquimia.Api.Controllers
             await _productService.UpdateVariantAsync(variantId, dto);
             return NoContent();
         }
-
-        /// /////////////////////////////////////////////////////////////////////
 
         [HttpDelete("variants/{variantId}")]
         public async Task<IActionResult> DeleteVariant(int variantId)
@@ -166,15 +149,13 @@ namespace alquimia.Api.Controllers
             return NoContent();
         }
 
-
-        /// /////////////////////////////////////////////////////////////////////
         [HttpGet("me")]
         public IActionResult GetMyInfo()
         {
             var idProveedor = GetIdProvider();
             return Ok(new { idProveedor });
         }
-        /// /////////////////////////////////////////////////////////////////////
+
         [HttpPut("products/{idProducto}")]
         public async Task<IActionResult> UpdateProduct(int idProducto, [FromBody] UpdateProductoDTO dto)
         {

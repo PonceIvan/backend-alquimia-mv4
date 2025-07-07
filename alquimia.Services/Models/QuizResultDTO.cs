@@ -8,8 +8,6 @@
 
     }
 
-
-
     public class ExampleFormulaDTO
     {
         public string TopNote { get; set; } = string.Empty;
