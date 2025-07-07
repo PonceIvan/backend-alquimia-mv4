@@ -1,12 +1,10 @@
-﻿using alquimia.Api.Controllers;
-using alquimia.Services.Interfaces;
+﻿using alquimia.Services.Interfaces;
 using alquimia.Services.Models;
 using Alquimia.Api.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Xunit;
 
 public class MpControllerTests
@@ -14,7 +12,6 @@ public class MpControllerTests
     [Fact]
     public async Task GeneratePaymentLink_ReturnsOkResultWithUrl()
     {
-        // Arrange
         var dto = new CreatePaymentPreferenceDTO
         {
             ProductVariantId = 123,
@@ -29,13 +26,10 @@ public class MpControllerTests
 
         var controller = new MpController(mockService.Object);
 
-        // Act
         var result = await controller.GeneratePaymentLink(dto);
 
-        // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
 
-        // ✅ Deserializamos el JSON dinámicamente
         var json = JsonSerializer.Serialize(okResult.Value);
         using var doc = JsonDocument.Parse(json);
 
@@ -47,7 +41,6 @@ public class MpControllerTests
     [Fact]
     public async Task GeneratePaymentLink_ReturnsNotFound_WhenVariantNotFound()
     {
-        // Arrange
         var dto = new CreatePaymentPreferenceDTO { ProductVariantId = 999 };
 
         var mockService = new Mock<IMercadoPagoService>();
@@ -57,10 +50,8 @@ public class MpControllerTests
 
         var controller = new MpController(mockService.Object);
 
-        // Act
         var result = await controller.GeneratePaymentLink(dto);
 
-        // Assert
         var notFound = Assert.IsType<NotFoundObjectResult>(result);
         Assert.Equal("No encontrado", notFound.Value);
     }
@@ -68,7 +59,6 @@ public class MpControllerTests
     [Fact]
     public async Task GeneratePaymentLink_Returns500_OnGeneralException()
     {
-        // Arrange
         var dto = new CreatePaymentPreferenceDTO { ProductVariantId = 1 };
 
         var mockService = new Mock<IMercadoPagoService>();
@@ -78,10 +68,8 @@ public class MpControllerTests
 
         var controller = new MpController(mockService.Object);
 
-        // Act
         var result = await controller.GeneratePaymentLink(dto);
 
-        // Assert
         var serverError = Assert.IsType<ObjectResult>(result);
         Assert.Equal(500, serverError.StatusCode);
         Assert.Equal("Error interno", serverError.Value);
@@ -99,7 +87,6 @@ public class MpControllerTests
             }
         };
 
-        // 🔧 Important: set scheme for URL generation
         controller.ControllerContext.HttpContext.Request.Scheme = "https";
 
         var result = controller.PaymentSuccess("123", "approved", "pedido-123");

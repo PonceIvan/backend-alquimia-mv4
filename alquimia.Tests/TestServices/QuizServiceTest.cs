@@ -1,14 +1,9 @@
-﻿using alquimia.Data;
-using alquimia.Data.Entities;
+﻿using alquimia.Data.Entities;
 using alquimia.Services;
 using alquimia.Services.Interfaces;
 using alquimia.Services.Models;
-using alquimia.Tests.TestUtils;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace alquimia.Tests.TestServices
@@ -84,25 +79,16 @@ namespace alquimia.Tests.TestServices
         };
         }
 
-
-        // ✅ Este test verifica que el método GetResultAsync devuelve un resultado válido
-        // para un perfil fresco, basado en respuestas seleccionadas que suman puntos
-        // en subfamilias como Marino y Cítrico. Se espera que la superfamilia dominante
-        // sea "Fresca", que la subfamilia "Marino" esté presente, que se genere una fórmula
-        // válida y que se devuelva correctamente "Body Splash" como tipo de concentración.
         [Fact]
         public async Task GetResultAsync_Returns_Valid_Response_For_Fresh_Profile()
         {
-            // Arrange
             var context = GetTestDbContext();
             var mockNoteService = new Mock<INoteService>();
             var quizService = new QuizService(context, mockNoteService.Object);
             var answers = GetSampleAnswersForFreshProfile();
 
-            // Act
             var result = await quizService.GetResultAsync(answers);
 
-            // Assert
             Assert.NotNull(result);
             Assert.Equal("Fresca", result.SuperFamily);
             Assert.Contains("Marino", result.AllSubFamilies);
@@ -111,39 +97,27 @@ namespace alquimia.Tests.TestServices
             Assert.True(result.TopMatchedSubFamilies.Any());
         }
 
-
-
-
-        // ✅ Este test valida que el servicio no falla cuando se le pasa una lista vacía
-        // de respuestas. En ese caso, GetResultAsync debería seguir devolviendo un objeto
-        // válido con ConcentrationType = "Desconocido", y sin lanzar excepciones.
         [Fact]
         public async Task GetResultAsync_Returns_Null_When_Empty_Answers()
         {
-            // Arrange
+
             var context = GetTestDbContext();
             var mockNoteService = new Mock<INoteService>();
             var quizService = new QuizService(context, mockNoteService.Object);
             var emptyAnswers = new List<AnswerDTO>();
 
-            // Act
+
             var result = await quizService.GetResultAsync(emptyAnswers);
 
-            // Assert
+
             Assert.NotNull(result);
             Assert.Equal("Desconocido", result.ConcentrationType);
         }
 
-
-
-        // ✅ Este test comprueba que el servicio usa correctamente las subfamilias de
-        // fallback cuando las dos subfamilias más matcheadas no tienen suficientes notas
-        // para construir una fórmula. En este caso, las respuestas apuntan al perfil
-        // "Oriental" y la concentración elegida es "Eau de Parfum".
         [Fact]
         public async Task GetResultAsync_Uses_Fallback_When_Not_Enough_Notes()
         {
-            // Arrange
+
             var context = GetTestDbContext();
             var mockNoteService = new Mock<INoteService>();
             var quizService = new QuizService(context, mockNoteService.Object);
@@ -155,31 +129,25 @@ namespace alquimia.Tests.TestServices
             new AnswerDTO { QuestionId = 10, SelectedOption = "3" } // Eau de Parfum
         };
 
-            // Act
+
             var result = await quizService.GetResultAsync(answers);
 
-            // Assert
+
             Assert.NotNull(result);
             Assert.Equal("Oriental", result.SuperFamily);
             Assert.Equal("Eau de Parfum", result.ConcentrationType);
         }
 
-
-
-        //test unitario para verificar que el método GetQuestionsAsync
-        //devuelve la pregunta con Id = 1 (la de la piel)
-
         [Fact]
         public async Task GetQuestionsAsync_Returns_Question1_With_Options()
         {
-            // Arrange
+
             var options = new DbContextOptionsBuilder<AlquimiaDbContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
             var context = new AlquimiaDbContext(options);
 
-            // Agregamos la entidad de opciones (con 4 opciones e imágenes)
             var opciones = new Option
             {
                 Id = 1,
@@ -208,10 +176,9 @@ namespace alquimia.Tests.TestServices
             var mockNoteService = new Mock<INoteService>();
             var service = new QuizService(context, mockNoteService.Object);
 
-            // Act
+
             var result = await service.GetQuestionsAsync();
 
-            // Assert
             var question1 = result.FirstOrDefault(q => q.Id == 1);
             Assert.NotNull(question1);
             Assert.Equal("¿Cuál es tu tono de piel natural?", question1.Pregunta);
@@ -219,9 +186,4 @@ namespace alquimia.Tests.TestServices
             Assert.Contains(question1.Opciones, o => o.Texto == "Muy clara" && o.ImagenUrl == "\\quiz\\01-piel\\fair.png");
         }
     }
-
-
-
-
-
-    }
+}

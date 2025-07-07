@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Security.Claims;
-//using Humanizer;
 using User = alquimia.Data.Entities.User;
 
 namespace alquimia.Api.Controllers
@@ -182,7 +181,6 @@ namespace alquimia.Api.Controllers
                 Cuil = dto.Cuil,
                 Rubro = dto.Rubro,
                 OtroProducto = string.Join(",", dto.OtroProducto),
-                //TarjetaNombre = dto.TarjetaNombre,
                 TarjetaNumero = dto.TarjetaNumero,
                 TarjetaVencimiento = dto.TarjetaVencimiento,
                 TarjetaCVC = dto.TarjetaCVC
@@ -308,6 +306,5 @@ namespace alquimia.Api.Controllers
 
             return Ok(new { token });
         }
-
     }
 }

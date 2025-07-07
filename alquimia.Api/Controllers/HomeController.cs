@@ -20,7 +20,6 @@ namespace alquimia.Api.Controllers
             return Ok("Bienvenido a la API de Alquimia");
         }
 
-        //[Authorize]
         [HttpGet("user")]
         public IActionResult GetUserInfo()
         {

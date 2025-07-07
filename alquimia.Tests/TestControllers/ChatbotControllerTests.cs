@@ -83,8 +83,5 @@ namespace alquimia.Tests.TestControllers
 
             await Assert.ThrowsAsync<KeyNotFoundException>(() => _controller.GetNode(nodeId));
         }
-        //GetNode returns a dinamic node when a dynamic node is requested
-        //GetNode does not return static node when a dynamic node is requested
-        //GetNode throws KeyNotFound when StaticNode Not Found SERVICE
     }
 }

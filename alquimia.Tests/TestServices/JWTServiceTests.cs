@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using alquimia.Data.Entities;
+﻿using alquimia.Data.Entities;
 using alquimia.Services;
 using Microsoft.Extensions.Configuration;
 using Xunit;
@@ -15,7 +10,6 @@ namespace alquimia.Tests.TestServices
         [Fact]
         public void GenerateToken_ShouldIncludeCorrectClaims_WhenCalledWithUserAndRoles()
         {
-            // Arrange
             var configMock = new ConfigurationBuilder()
                 .AddInMemoryCollection(new Dictionary<string, string>
                 {
@@ -28,12 +22,10 @@ namespace alquimia.Tests.TestServices
             var user = new User { Id = 42, Email = "user@test.com", Name = "Test User" };
             var roles = new List<string> { "Creador" };
 
-            // Act
             var token = service.GenerateToken(user, roles);
 
-            // Assert
             Assert.NotNull(token);
-            Assert.Contains("ey", token); 
+            Assert.Contains("ey", token);
         }
     }
 }

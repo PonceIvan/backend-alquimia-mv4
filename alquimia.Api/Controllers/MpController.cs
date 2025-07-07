@@ -1,5 +1,4 @@
-﻿using alquimia.Services;
-using alquimia.Services.Interfaces;
+﻿using alquimia.Services.Interfaces;
 using alquimia.Services.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,10 +15,6 @@ namespace Alquimia.Api.Controllers
             _mpService = mpService;
         }
 
-        /// <summary>
-        /// Crea la preferencia y devuelve la URL init_point.
-        /// Body: { productVariantId, quantity, externalReference }
-        /// </summary>
         [HttpPost("generate-link")]
         public async Task<IActionResult> GeneratePaymentLink(
             [FromBody] CreatePaymentPreferenceDTO dto)
@@ -38,10 +33,6 @@ namespace Alquimia.Api.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-
-        // ────────────────────── CALLBACKS ──────────────────────
-        // Mercado Pago redirige aquí según el estado del pago.
-        // Si deseas manejar IPN/webhooks, crea otro endpoint aparte.
 
         [HttpGet("success")]
         public IActionResult PaymentSuccess(

@@ -21,7 +21,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AlquimiaDbContext>(options =>
 {
     options.UseSqlServer(connectionString);
-    options.EnableSensitiveDataLogging(); // 👈 para debug
+    options.EnableSensitiveDataLogging();
 });
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Email"));
@@ -50,19 +50,6 @@ builder.Services.AddScoped<IChatDynamicNodeHandler, DinamicIntensitiesHandler>()
 builder.Services.AddScoped<IChatDynamicNodeHandler, DinamicStateProviderHelpResponse>();
 builder.Services.AddScoped<IChatDynamicNodeHandler, DinamicStateProviderHelp>();
 
-//builder.Services.AddControllersWithViews().AddJsonOptions(options =>
-//{
-//    options.JsonSerializerOptions.PropertyNamingPolicy = null;
-//});
-
-//builder.Services.AddControllers()
-//    .AddJsonOptions(x =>
-//        x.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles)
-//    .AddJsonOptions(options =>
-//    {
-//        options.JsonSerializerOptions.PropertyNamingPolicy = null;
-//    });
-
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -75,7 +62,6 @@ builder.Services.AddIdentity<User, Role>()
     .AddEntityFrameworkStores<AlquimiaDbContext>()
     .AddDefaultTokenProviders();
 
-// 🔐 JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]);
 
@@ -100,7 +86,6 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// 🌐 Google Authentication (opcional)
 builder.Services.AddAuthentication()
     .AddGoogle(options =>
     {
@@ -110,20 +95,17 @@ builder.Services.AddAuthentication()
         options.ClaimActions.MapJsonKey("urn:google:picture", "picture", "url");
     });
 
-// 🍪 Cookies
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.SameSite = SameSiteMode.None;
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
 
-// 📃 Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Alquimia API", Version = "v1" });
 
-    // 🔐 Configuración para JWT
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = @"JWT Authorization header usando el esquema Bearer.  
@@ -153,7 +135,6 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// 🔓 CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("FrontendPolicy", policy =>
@@ -175,7 +156,6 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.User.RequireUniqueEmail = true;
 });
 
-// 🏁 Build y Middleware
 var app = builder.Build();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
@@ -185,7 +165,6 @@ using (var scope = app.Services.CreateScope())
     await RoleSeeder.SeedRolesAsync(services);
     await UserSeeder.SeedAdminAsync(services);
     await ProductSeeder.SeedTiposProductoAsync(services);
-    //await UserSeeder.SeedProveedoresAsync(services);
 }
 
 app.UseSwagger();

@@ -36,8 +36,6 @@ namespace alquimia.Services
                 CUIL = user.Cuil,
                 cantidadFavoritos = user.UserProducts.Count,
                 cantidadFormulas = user.Formulas.Count,
-                //Ubicacion = user.Ubicacion,
-                //CodigoPostal = user.CodigoPostal
                 Empresa = user.Empresa,
                 Rubro = user.Rubro,
             };
@@ -45,12 +43,10 @@ namespace alquimia.Services
 
         private async Task<User?> GetCurrentUserAsync()
         {
-            // --- 1. Obtener el Id del usuario autenticado ---------------------------
             var userIdString = _userManager.GetUserId(_httpContextAccessor.HttpContext?.User);
             if (!int.TryParse(userIdString, out var userId))
                 return null;
 
-            // --- 2. Traer el usuario con sus colecciones “ligeras” -------------------
             var user = await _context.Users
                 .Where(u => u.Id == userId)
                 .Include(u => u.Products)
@@ -61,12 +57,11 @@ namespace alquimia.Services
             if (user == null)
                 return null;
 
-            // --- 3. Cargar las fórmulas con TODOS los detalles -----------------------
-            await _context.Entry(user)                         // apunta a la entidad en el ChangeTracker
-                .Collection(u => u.Formulas)            // navega a la colección
-                .Query()                                       // convierte a IQueryable<Formula>
-                .IncludeFormulaNotesWithDetails()              // tu extensión con todos los Include
-                .LoadAsync();                                  // ejecuta y llena la colección
+            await _context.Entry(user)
+                .Collection(u => u.Formulas)
+                .Query()
+                .IncludeFormulaNotesWithDetails()
+                .LoadAsync();
 
             return user;
         }
@@ -151,14 +146,9 @@ namespace alquimia.Services
                 user.Cuil = dto.CUIL;
             if (dto.Rubro != null)
                 user.Rubro = dto.Rubro;
-            //user.Ubicacion = dto.Ubicacion;
-            //user.CodigoPostal = dto.CodigoPostal;
 
-            // Persist the changes using the identity user manager to
-            // ensure all related identity fields are handled correctly
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
-
 
             return new UserProfileDto
             {
