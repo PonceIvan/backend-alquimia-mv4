@@ -137,4 +137,5 @@ namespace alquimia.Tests.TestServices
             Directory.Delete(tempDir, recursive: true);
         }
     }
+}
 
