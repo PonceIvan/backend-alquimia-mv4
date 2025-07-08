@@ -34,8 +34,8 @@ namespace alquimia.Tests.TestControllers
             _controller = new ProviderController(
                 _mockProductService.Object,
                 _mockHttpContextAccessor.Object,
-
-                null
+                 null,
+                _mockMeliService.Object
             );
         }
 
