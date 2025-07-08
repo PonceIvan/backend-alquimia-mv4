@@ -354,5 +354,18 @@ namespace alquimia.Api.Controllers
                 ? Guid.NewGuid().ToString("N").Substring(0, 8)
                 : nombre;
         }
+
+        [HttpPost("external-login")]
+        public async Task<IActionResult> ExternalLogin([FromBody] ExternalLoginDTO dto)
+        {
+            var user = await _userManager.FindByEmailAsync(dto.Email);
+            if (user == null)
+                return Unauthorized(new { mensaje = "Usuario no encontrado." });
+
+            var roles = await _userManager.GetRolesAsync(user);
+            var token = _jwtService.GenerateToken(user, roles);
+
+            return Ok(new { token });
+        }
     }
 }

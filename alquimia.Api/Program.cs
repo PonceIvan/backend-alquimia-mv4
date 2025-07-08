@@ -1,3 +1,4 @@
+
 // Program.cs – Alquimia API (corrigido)
 using alquimia.Services.Models;
 using Microsoft.AspNetCore.DataProtection; 
@@ -53,6 +54,7 @@ builder.Services.AddScoped<IMercadoPagoService, MercadoPagoService>();
 builder.Services.AddScoped<IMercadoLibreService, MercadoLibreService>();
 builder.Services.AddScoped<IChatbotService, ChatbotService>();
 
+
 // Handlers dinámicos
 builder.Services.AddScoped<IChatDynamicNodeHandler, DinamicNotesHandler>();
 builder.Services.AddScoped<IChatDynamicNodeHandler, DinamicTopNotesHandler>();
@@ -104,6 +106,7 @@ builder.Services.AddAuthentication(options =>
 })
 // Google OAuth
 .AddGoogle(options =>
+
 {
     options.ClientId = builder.Configuration["OAuth:ClientID"];
     options.ClientSecret = builder.Configuration["OAuth:ClientSecret"];
@@ -224,6 +227,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapGet("/health", () => Results.Ok(new { status = "Healthy" }));
+
 
 app.MapControllers();
 

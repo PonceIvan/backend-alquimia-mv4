@@ -25,7 +25,6 @@ namespace alquimia.Tests.TestServices
         {
             await CleanDatabaseAsync();
 
-            // Arrange
             var pyramid = new OlfactoryPyramid { Sector = "Corazón", Duracion = new TimeOnly(1, 0) };
             var family = new OlfactoryFamily { Nombre = "Floral", Description = "Una familia de flores" };
             var note = new Note
@@ -39,10 +38,8 @@ namespace alquimia.Tests.TestServices
             _context.Notes.Add(note);
             await _context.SaveChangesAsync();
 
-            // Act
             var result = await _noteService.GetNotesGroupedByFamilyAsync("Corazón");
 
-            // Assert
             Assert.Single(result);
             var floralFamily = result.FirstOrDefault(g => g.Family == "Floral");
             Assert.NotNull(floralFamily);
@@ -55,7 +52,7 @@ namespace alquimia.Tests.TestServices
         {
             await CleanDatabaseAsync();
 
-            // Arrange
+
             var pyramid = new OlfactoryPyramid { Sector = "Salida", Duracion = new TimeOnly(1, 0) };
             var family = new OlfactoryFamily { Nombre = "Cítrica", Description = "Naranjas y esas" };
             var note = new Note
@@ -69,10 +66,10 @@ namespace alquimia.Tests.TestServices
             _context.Notes.Add(note);
             await _context.SaveChangesAsync();
 
-            // Act
+
             var result = await _noteService.GetNotesGroupedByFamilyAsync("Salida");
 
-            // Assert
+
             Assert.Single(result);
             var citricFamily = result.FirstOrDefault(g => g.Family == "Cítrica");
             Assert.NotNull(citricFamily);
@@ -85,7 +82,6 @@ namespace alquimia.Tests.TestServices
         {
             await CleanDatabaseAsync();
 
-            // Arrange
             var pyramid = new OlfactoryPyramid { Sector = "Fondo", Duracion = new TimeOnly(2, 0) };
             var family = new OlfactoryFamily { Nombre = "Amaderado", Description = "Tronquitos si" };
             var note = new Note
@@ -99,14 +95,11 @@ namespace alquimia.Tests.TestServices
             _context.Notes.Add(note);
             await _context.SaveChangesAsync();
 
-            // Act
             var result = await _noteService.GetNotesGroupedByFamilyAsync("Fondo");
 
-            // Assert
             Assert.Single(result);
             var woodyFamily = result.FirstOrDefault(g => g.Family == "Amaderado");
             Assert.NotNull(woodyFamily);
-            //Assert.Single(woodyFamily.Notes);
             Assert.Equal("Sándalo", woodyFamily.Notes.First().Name);
         }
 
@@ -115,7 +108,6 @@ namespace alquimia.Tests.TestServices
         {
             await CleanDatabaseAsync();
 
-            // Arrange
             var pyramid = new OlfactoryPyramid { Sector = "Fondo", Duracion = new TimeOnly(2, 0) };
             var compatiblePyramid = new OlfactoryPyramid { Sector = "Corazón", Duracion = new TimeOnly(1, 0) };
 
@@ -144,10 +136,8 @@ namespace alquimia.Tests.TestServices
 
             var selectedNotes = new List<int> { note1.Id };
 
-            // Act
             var result = await _noteService.GetCompatibleNotesAsync(selectedNotes, "Corazón");
 
-            // Assert
             Assert.NotEmpty(result);
             Assert.Equal("Floral", result.FirstOrDefault()?.Family);
         }
@@ -157,7 +147,6 @@ namespace alquimia.Tests.TestServices
         {
             await CleanDatabaseAsync();
 
-            // Arrange
             var pyramid = new OlfactoryPyramid { Sector = "Salida", Duracion = new TimeOnly(1, 0) };
             var family = new OlfactoryFamily { Nombre = "Frutal", Description = "Que fruta noble la papa" };
             var note = new Note
@@ -171,10 +160,8 @@ namespace alquimia.Tests.TestServices
             _context.Notes.Add(note);
             await _context.SaveChangesAsync();
 
-            // Act
             var result = await _noteService.GetNoteInfoAsync(note.Id);
 
-            // Assert
             Assert.Equal("Manzana", result.Name);
             Assert.Equal("Frutal", result.Family);
         }
@@ -182,7 +169,6 @@ namespace alquimia.Tests.TestServices
         [Fact]
         public async Task GetNoteInfoAsync_ShouldThrowException_WhenNoteNotFound()
         {
-            // Act & Assert
             var exception = await Assert.ThrowsAsync<KeyNotFoundException>(() =>
                 _noteService.GetNoteInfoAsync(999));
 
@@ -195,6 +181,5 @@ namespace alquimia.Tests.TestServices
             _context.OlfactoryFamilies.RemoveRange(_context.OlfactoryFamilies);
             await _context.SaveChangesAsync();
         }
-
     }
 }

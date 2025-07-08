@@ -32,7 +32,6 @@ public partial class Note
     [InverseProperty("Notes")]
     public virtual OlfactoryPyramid OlfactoryPyramid { get; set; } = null!;
 
-    // Relaciones adicionales (si las entidades están bien configuradas)
     [InverseProperty("NotaId1Navigation")]
     public virtual ICollection<FormulaNote> FormulaNoteNotaId1Navigations { get; set; } = new List<FormulaNote>();
 

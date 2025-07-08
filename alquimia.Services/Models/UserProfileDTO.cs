@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using alquimia.Data.Entities;
-
-namespace alquimia.Services.Models
+﻿namespace alquimia.Services.Models
 {
     public class UserProfileDto
     {
@@ -18,7 +11,6 @@ namespace alquimia.Services.Models
         public string? Ubicacion { get; set; }
         public string? CodigoPostal { get; set; }
         public int? IdEstado { get; set; }
-
         public int? cantidadFavoritos { get; set; }
         public int? cantidadFormulas { get; set; }
     }

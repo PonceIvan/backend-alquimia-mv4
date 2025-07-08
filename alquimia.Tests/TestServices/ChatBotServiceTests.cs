@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using alquimia.Services;
+﻿using alquimia.Services;
 using alquimia.Services.Interfaces;
 using alquimia.Services.Models;
 using Microsoft.AspNetCore.Hosting;
@@ -28,7 +23,6 @@ namespace alquimia.Tests.TestServices
         [Fact]
         public async Task GetNodeByIdAsync_ReturnsNode_WhenNodeExists()
         {
-            // Arrange
             var nodeId = "node1";
             var jsonContent = $@"
     [
@@ -41,7 +35,7 @@ namespace alquimia.Tests.TestServices
         }}
     ]";
 
-            // Crear carpeta temporal Data
+
             var tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             var dataDir = Path.Combine(tempDir, "Data");
             Directory.CreateDirectory(dataDir);
@@ -54,17 +48,16 @@ namespace alquimia.Tests.TestServices
 
             var service = new ChatbotService(_envMock.Object, _handlers, _configMock.Object);
 
-            // Act
+
             var node = await service.GetNodeByIdAsync(nodeId);
 
-            // Assert
+
             Assert.NotNull(node);
             Assert.Equal(nodeId, node.Id);
             Assert.Equal("Hola, soy un nodo de prueba", node.Message);
             Assert.Single(node.Options);
             Assert.Equal("Opción 1", node.Options[0].Label);
 
-            // Cleanup
             Directory.Delete(tempDir, recursive: true);
         }
 
@@ -75,7 +68,6 @@ namespace alquimia.Tests.TestServices
             _envMock.Setup(e => e.ContentRootPath).Returns(Directory.GetCurrentDirectory());
             _configMock.Setup(c => c["AppSettings:FrontendBaseUrl"]).Returns("https://example.com");
 
-
             var service = new ChatbotService(_envMock.Object, _handlers, _configMock.Object);
 
 
@@ -85,7 +77,6 @@ namespace alquimia.Tests.TestServices
         [Fact]
         public async Task GetDynamicNodeByIdAsync_ReturnsNode_WhenHandlerCanHandle()
         {
-            // Arrange
             var dynamicNodeId = "dinamico1";
 
             var handlerMock = new Mock<IChatDynamicNodeHandler>();
@@ -104,8 +95,6 @@ namespace alquimia.Tests.TestServices
             var tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             var dataDir = Path.Combine(tempDir, "Data");
             Directory.CreateDirectory(dataDir);
-
-            // Crea un JSON válido pero vacío
             var filePath = Path.Combine(dataDir, "chatFlow.json");
             File.WriteAllText(filePath, "[]");
 
@@ -114,10 +103,7 @@ namespace alquimia.Tests.TestServices
 
             var service = new ChatbotService(_envMock.Object, new[] { handlerMock.Object }, _configMock.Object);
 
-            // Act
             var node = await service.GetDynamicNodeByIdAsync(dynamicNodeId);
-
-            // Assert
             Assert.NotNull(node);
             Assert.Equal(dynamicNodeId, node.Id);
             Assert.Equal("Soy dinámico", node.Message);
@@ -131,7 +117,6 @@ namespace alquimia.Tests.TestServices
         [Fact]
         public async Task GetDynamicNodeByIdAsync_Throws_WhenNoHandlerCanHandle()
         {
-            // Arrange
             var handlerMock = new Mock<IChatDynamicNodeHandler>();
             handlerMock.Setup(h => h.CanHandle(It.IsAny<string>())).Returns(false);
 
@@ -139,7 +124,6 @@ namespace alquimia.Tests.TestServices
             var dataDir = Path.Combine(tempDir, "Data");
             Directory.CreateDirectory(dataDir);
 
-            // Crea un JSON válido pero vacío
             var filePath = Path.Combine(dataDir, "chatFlow.json");
             File.WriteAllText(filePath, "[]");
 
@@ -148,10 +132,10 @@ namespace alquimia.Tests.TestServices
 
             var service = new ChatbotService(_envMock.Object, new[] { handlerMock.Object }, _configMock.Object);
 
-            // Act & Assert
             await Assert.ThrowsAsync<KeyNotFoundException>(() => service.GetDynamicNodeByIdAsync("dinamicoInexistente"));
 
             Directory.Delete(tempDir, recursive: true);
         }
     }
 }
+

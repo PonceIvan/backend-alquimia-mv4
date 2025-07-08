@@ -111,7 +111,6 @@ namespace alquimia.Tests.TestControllers
         [Fact]
         public async Task PostCompatibleNotes_ShouldReturnEmptyList_WhenNoSelectedNotes()
         {
-            // Arrange
             var dto = new SelectedNotesDTO
             {
                 ListaDeIdsSeleccionadas = new List<int>(),
@@ -121,10 +120,8 @@ namespace alquimia.Tests.TestControllers
             _mockNoteService.Setup(s => s.GetCompatibleNotesAsync(dto.ListaDeIdsSeleccionadas, dto.Sector))
                             .ReturnsAsync(new List<NotesGroupedByFamilyDTO>());
 
-            // Act
             var result = await _controller.PostCompatibleNotes(dto);
 
-            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var data = Assert.IsType<List<NotesGroupedByFamilyDTO>>(okResult.Value);
             Assert.Empty(data);
@@ -133,7 +130,6 @@ namespace alquimia.Tests.TestControllers
         [Fact]
         public async Task PostCompatibleNotes_ShouldReturnCompatibleNotes_WhenCompatibleNotesExist()
         {
-            // Arrange
             var dto = new SelectedNotesDTO
             {
                 ListaDeIdsSeleccionadas = new List<int> { 1, 2 },
@@ -155,10 +151,8 @@ namespace alquimia.Tests.TestControllers
             _mockNoteService.Setup(s => s.GetCompatibleNotesAsync(dto.ListaDeIdsSeleccionadas, dto.Sector))
                             .ReturnsAsync(mockCompatibleNotes);
 
-            // Act
             var result = await _controller.PostCompatibleNotes(dto);
 
-            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var data = Assert.IsType<List<NotesGroupedByFamilyDTO>>(okResult.Value);
             Assert.Single(data);
@@ -168,7 +162,6 @@ namespace alquimia.Tests.TestControllers
         [Fact]
         public async Task SaveDesign_ShouldReturnBadRequest_WhenModelStateIsInvalid()
         {
-            // Arrange
             var dto = new DesignDTO
             {
                 Text = "",
@@ -179,10 +172,8 @@ namespace alquimia.Tests.TestControllers
 
             _controller.ModelState.AddModelError("Text", "El campo Text es obligatorio.");
 
-            // Act
             var result = await _controller.SaveDesign(dto);
 
-            // Assert
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             var errors = Assert.IsType<SerializableError>(badRequestResult.Value);
             Assert.True(errors.ContainsKey("Text"));
@@ -191,7 +182,6 @@ namespace alquimia.Tests.TestControllers
         [Fact]
         public async Task SaveFormula_ShouldReturnBadRequest_WhenModelStateIsInvalid()
         {
-            // Arrange
             var dto = new POSTFormulaDTO
             {
                 IntensityId = 0,
@@ -203,14 +193,11 @@ namespace alquimia.Tests.TestControllers
 
             _controller.ModelState.AddModelError("TopNotes", "TopNotes es obligatorio.");
 
-            // Act
             var result = await _controller.SaveFormula(dto);
 
-            // Assert
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             var errors = Assert.IsType<SerializableError>(badRequestResult.Value);
             Assert.True(errors.ContainsKey("TopNotes"));
         }
-
     }
 }

@@ -6,7 +6,6 @@ using Microsoft.Extensions.Configuration;
 using Moq;
 using Moq.Protected;
 using System.Net;
-using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using Xunit;
@@ -16,7 +15,7 @@ public class MercadoPagoServiceTests
     [Fact]
     public async Task GeneratePaymentLinkAsync_ReturnsInitPointUrl()
     {
-        // Arrange
+
         var configMock = new Mock<IConfiguration>();
         configMock.Setup(c => c["MercadoPago:AccessToken"]).Returns("TEST-TOKEN");
         configMock.Setup(c => c["MercadoPago:Currency"]).Returns("ARS");
@@ -71,10 +70,8 @@ public class MercadoPagoServiceTests
             Quantity = 2
         };
 
-        // Act
         var result = await service.GeneratePaymentLinkAsync(dto);
 
-        // Assert
         Assert.Equal("https://mp.com/init123", result);
     }
 }

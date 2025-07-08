@@ -103,7 +103,7 @@ namespace alquimia.Services
             return resultado;
         }
 
-        public async Task<NoteDTO> GetNoteInfoAsync(int id) // returns a note, its family and olfactory pyramid
+        public async Task<NoteDTO> GetNoteInfoAsync(int id)
         {
             var found = await _context.Notes
                 .Include(n => n.OlfactoryPyramid)
