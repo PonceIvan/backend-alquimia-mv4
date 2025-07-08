@@ -13,12 +13,14 @@ namespace alquimia.Tests.TestControllers
     {
         private Mock<IProductService> _mockProductService;
         private Mock<IHttpContextAccessor> _mockHttpContextAccessor;
+        private Mock<IMercadoLibreService> _mockMeliService;
         private ProviderController _controller;
 
         public ProviderControllerTests()
         {
             _mockProductService = new Mock<IProductService>();
             _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            _mockMeliService = new Mock<IMercadoLibreService>();
 
 
             var claims = new List<Claim> {
@@ -32,6 +34,7 @@ namespace alquimia.Tests.TestControllers
             _controller = new ProviderController(
                 _mockProductService.Object,
                 _mockHttpContextAccessor.Object,
+
                 null
             );
         }
@@ -125,6 +128,17 @@ namespace alquimia.Tests.TestControllers
             var result = await _controller.DeleteProduct(1);
 
             Assert.IsType<NoContentResult>(result);
+        }
+
+        [Fact]
+        public async Task SyncMercadoLibreProducts_ReturnsNoContent()
+        {
+            var dto = new MercadoLibreSyncDTO { AccessToken = "abc" };
+
+            var result = await _controller.SyncMercadoLibreProducts(dto);
+
+            Assert.IsType<NoContentResult>(result);
+            _mockMeliService.Verify(m => m.SyncProductsAsync(1, "abc"), Times.Once);
         }
     }
 }

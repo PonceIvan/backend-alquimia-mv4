@@ -35,6 +35,7 @@ namespace alquimia.Tests.TestServices
         }}
     ]";
 
+
             var tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             var dataDir = Path.Combine(tempDir, "Data");
             Directory.CreateDirectory(dataDir);
@@ -47,7 +48,9 @@ namespace alquimia.Tests.TestServices
 
             var service = new ChatbotService(_envMock.Object, _handlers, _configMock.Object);
 
+
             var node = await service.GetNodeByIdAsync(nodeId);
+
 
             Assert.NotNull(node);
             Assert.Equal(nodeId, node.Id);
@@ -61,10 +64,12 @@ namespace alquimia.Tests.TestServices
         [Fact]
         public async Task GetNodeByIdAsync_Throws_WhenNodeDoesNotExist()
         {
+
             _envMock.Setup(e => e.ContentRootPath).Returns(Directory.GetCurrentDirectory());
             _configMock.Setup(c => c["AppSettings:FrontendBaseUrl"]).Returns("https://example.com");
 
             var service = new ChatbotService(_envMock.Object, _handlers, _configMock.Object);
+
 
             await Assert.ThrowsAsync<KeyNotFoundException>(() => service.GetNodeByIdAsync("inexistente"));
         }
@@ -90,7 +95,6 @@ namespace alquimia.Tests.TestServices
             var tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             var dataDir = Path.Combine(tempDir, "Data");
             Directory.CreateDirectory(dataDir);
-
             var filePath = Path.Combine(dataDir, "chatFlow.json");
             File.WriteAllText(filePath, "[]");
 
@@ -100,7 +104,6 @@ namespace alquimia.Tests.TestServices
             var service = new ChatbotService(_envMock.Object, new[] { handlerMock.Object }, _configMock.Object);
 
             var node = await service.GetDynamicNodeByIdAsync(dynamicNodeId);
-
             Assert.NotNull(node);
             Assert.Equal(dynamicNodeId, node.Id);
             Assert.Equal("Soy dinámico", node.Message);
@@ -134,4 +137,4 @@ namespace alquimia.Tests.TestServices
             Directory.Delete(tempDir, recursive: true);
         }
     }
-}
+
