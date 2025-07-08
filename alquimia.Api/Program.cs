@@ -35,6 +35,7 @@ builder.Services.AddDbContext<AlquimiaDbContext>(options =>
 
 // 💡 Servicios y dependencias
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Email"));
+builder.Services.Configure<MercadoLibreSettings>(builder.Configuration.GetSection("MercadoLibre"));
 builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();
 
@@ -50,6 +51,7 @@ builder.Services.AddScoped<IDesignLabelService, DesignLabelService>();
 builder.Services.AddScoped<IEmailTemplateService, EmailTemplateService>(); // 🔄 Registro único
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddScoped<IMercadoPagoService, MercadoPagoService>();
+builder.Services.AddScoped<IMercadoLibreService, MercadoLibreService>();
 builder.Services.AddScoped<IChatbotService, ChatbotService>();
 
 // Handlers dinámicos
