@@ -61,6 +61,7 @@ jobs:
             [
               { "name": "Jwt__Key", "value": "${{ secrets.JWT_SECRET_KEY }}", "slotSetting": false },
               { "name": "Jwt__Issuer", "value": "AlquimiaAPI", "slotSetting": false },
+              { "name": "ZENROWS_API_KEY", "value": "${{ secrets.ZENROWS_API_KEY }}" },
               { "name": "Jwt__Audience", "value": "AlquimiaFrontend", "slotSetting": false },
               { "name": "Jwt__DurationInMinutes", "value": "60", "slotSetting": false },
               { "name": "OAuth__ClientID", "value": "${{ secrets.GOOGLE_CLIENT_ID }}", "slotSetting": false },
