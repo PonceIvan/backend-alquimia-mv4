@@ -1,8 +1,7 @@
 ﻿namespace alquimia.Services.Models
 {
-    public class LoginDTO
+    public class ExternalLoginDTO
     {
         public string Email { get; set; }
-        public string Password { get; set; }
     }
 }

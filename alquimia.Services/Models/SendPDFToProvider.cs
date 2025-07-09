@@ -8,7 +8,6 @@ namespace alquimia.Services.Models
         [FromForm]
         public string Email { get; set; } = string.Empty;
 
-        /*= "Diseño de etiqueta.pdf";*/
         [FromForm]
         public string FileName { get; set; }
 

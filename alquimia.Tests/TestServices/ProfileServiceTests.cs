@@ -46,7 +46,6 @@ namespace alquimia.Tests.TestServices
         [Fact]
         public async Task BringMyData_UserExists_ReturnsUserProfileDto()
         {
-            // Arrange
             var context = GetDbContext();
 
             var user = new User
@@ -66,10 +65,8 @@ namespace alquimia.Tests.TestServices
 
             var service = new ProfileService(userManager, context, httpContextAccessor);
 
-            // Act
             var result = await service.BringMyData();
 
-            // Assert
             Assert.NotNull(result);
             Assert.Equal("Test User", result.Name);
             Assert.Equal("testuser@example.com", result.Email);
@@ -79,7 +76,6 @@ namespace alquimia.Tests.TestServices
         [Fact]
         public async Task BringMyData_UserDoesNotExist_ReturnsNull()
         {
-            // Arrange
             var context = GetDbContext();
 
             var userManager = GetUserManagerMock();
@@ -88,10 +84,8 @@ namespace alquimia.Tests.TestServices
 
             var service = new ProfileService(userManager, context, httpContextAccessor);
 
-            // Act
             var result = await service.BringMyData();
 
-            // Assert
             Assert.Null(result);
         }
 
