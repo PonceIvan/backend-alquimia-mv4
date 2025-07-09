@@ -3,6 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+from dotenv import load_dotenv
+if os.getenv("ENVIRONMENT") != "production":
+    load_dotenv()
 
 app = FastAPI()
 
@@ -143,7 +146,9 @@ def search_perfume(name: str = Query(..., alias="q")):
 
 
     
-ZENROWS_API_KEY = "34f48787a0e21abd82d019522938fcb88289c84c"
+ZENROWS_API_KEY = os.getenv("ZENROWS_API_KEY")
+if not ZENROWS_API_KEY:
+    raise ValueError("ZENROWS_API_KEY is not set in environment variables")
 
 @app.get("/api/perfume-image")
 def get_perfume_image(url: str = Query(...)):

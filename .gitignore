@@ -22,7 +22,7 @@ alquimia.Data/bin/*
 alquimia.Data/obj/*
 alquimia.Services/bin/*
 alquimia.Services/bin/*
-
+.env
 alquimia.Tests/obj/*
 alquimia.Tests/bin/*
 /.idea/workspace.xml
