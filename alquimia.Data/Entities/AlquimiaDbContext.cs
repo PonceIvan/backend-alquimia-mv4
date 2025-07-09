@@ -74,19 +74,7 @@ namespace alquimia.Data.Entities
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer(
-            "Server=tcp:alquimiadb.database.windows.net,1433;" +
-            "Initial Catalog=alquimiaDB1;" +
-            "Persist Security Info=False;" +
-            "User ID=alquimia;" +
-            "Password=NahuelRapeti10!;" +
-            "MultipleActiveResultSets=False;" +
-            "Encrypt=True;" +
-        "TrustServerCertificate=False;" +
-            "Connection Timeout=30");
-            }
+    
         }
 
 
